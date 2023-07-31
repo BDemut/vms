@@ -1,4 +1,4 @@
-package com.example.vms.main
+package com.example.vms.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -18,30 +18,30 @@ import com.example.vms.R
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import java.util.*
 
-class MainActivity : ComponentActivity() {
+class HomeActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VisitorManagementSystemTheme {
-                MainActivityContent()
+                HomeScreen()
             }
         }
     }
 }
 
 @Composable
-fun MainActivityContent(
-    model: MainActivityViewModel = viewModel()
+fun HomeScreen(
+    model: HomeViewModel = viewModel()
 ) {
-    val currentScreen = model.currentScreen.collectAsStateWithLifecycle()
+    val currentTab = model.currentTab.collectAsStateWithLifecycle()
     Scaffold(
         topBar = { HomeToolbar() },
         bottomBar = {
             HomeBottomBar(
-                currentScreen = currentScreen.value,
-                onBottomNavigationClicked = { newScreen -> model.currentScreen.value = newScreen }
+                currentScreen = currentTab.value,
+                onBottomNavigationClicked = { newScreen -> model.currentTab.value = newScreen }
             )
         }
     ) {
@@ -51,10 +51,10 @@ fun MainActivityContent(
                 .padding(it),
             color = MaterialTheme.colors.background
         ) {
-            HomeScreen(
-                visits = visits,
-                onVisitClick = {}
-            )
+            when (currentTab.value) {
+                Tab.VISITS -> VisitsTab(visits = visits, onVisitClick = {})
+                Tab.REQUESTS -> Unit //TODO()
+            }
         }
     }
 }

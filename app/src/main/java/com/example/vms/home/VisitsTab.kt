@@ -1,4 +1,4 @@
-package com.example.vms.main
+package com.example.vms.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun HomeScreen(
+fun VisitsTab(
     visits: List<Visit>,
     onVisitClick: (Int) -> Unit
 ) {
@@ -68,7 +68,7 @@ fun VisitItem(
 @Composable
 fun DefaultPreview() {
     VisitorManagementSystemTheme {
-        HomeScreen(
+        VisitsTab(
             visits = visits,
             onVisitClick = {}
         )
