@@ -1,4 +1,4 @@
-package com.example.vms.home
+package com.example.vms.home.visits
 
 import java.time.LocalDateTime
 

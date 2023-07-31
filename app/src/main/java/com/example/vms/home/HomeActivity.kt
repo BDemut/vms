@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vms.R
+import com.example.vms.home.requests.RequestsTab
+import com.example.vms.home.visits.VisitsTab
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import java.util.*
 
@@ -35,13 +37,13 @@ class HomeActivity : ComponentActivity() {
 fun HomeScreen(
     model: HomeViewModel = viewModel()
 ) {
-    val currentTab = model.currentTab.collectAsStateWithLifecycle()
+    val state = model.state.collectAsStateWithLifecycle().value
     Scaffold(
         topBar = { HomeToolbar() },
         bottomBar = {
             HomeBottomBar(
-                currentScreen = currentTab.value,
-                onBottomNavigationClicked = { newScreen -> model.currentTab.value = newScreen }
+                currentScreen = state.currentTab,
+                onBottomNavigationClicked = { newTab -> model.changeTab(newTab) }
             )
         }
     ) {
@@ -51,9 +53,9 @@ fun HomeScreen(
                 .padding(it),
             color = MaterialTheme.colors.background
         ) {
-            when (currentTab.value) {
-                Tab.VISITS -> VisitsTab(visits = visits, onVisitClick = {})
-                Tab.REQUESTS -> Unit //TODO()
+            when (state.currentTab) {
+                Tab.VISITS -> VisitsTab(visits = state.visits)
+                Tab.REQUESTS -> RequestsTab(requests = state.requests)
             }
         }
     }

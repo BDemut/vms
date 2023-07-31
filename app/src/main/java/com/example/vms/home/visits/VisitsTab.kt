@@ -1,4 +1,4 @@
-package com.example.vms.home
+package com.example.vms.home.visits
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun VisitsTab(
     visits: List<Visit>,
-    onVisitClick: (Int) -> Unit
+    onVisitClick: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier.padding(8.dp),
@@ -52,13 +52,15 @@ fun VisitItem(
     ) {
         Column {
             Text(
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(8.dp),
                 text = visit.title,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                modifier = Modifier.padding(4.dp),
-                text = "${visit.start.format(visitItemDateFormatter)}, ${visit.start.format(visitItemTimeFormatter)} - ${visit.end.format(visitItemTimeFormatter)}"
+                modifier = Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
+                text = "${visit.start.format(visitItemDateFormatter)}, ${visit.start.format(
+                    visitItemTimeFormatter
+                )} - ${visit.end.format(visitItemTimeFormatter)}"
             )
         }
     }
@@ -69,8 +71,7 @@ fun VisitItem(
 fun DefaultPreview() {
     VisitorManagementSystemTheme {
         VisitsTab(
-            visits = visits,
-            onVisitClick = {}
+            visits = testVisits,
         )
     }
 }
@@ -78,7 +79,7 @@ fun DefaultPreview() {
 private val visitItemDateFormatter = DateTimeFormatter.ofPattern("dd MMM")
 private val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
-val visits = listOf(
+val testVisits = listOf(
     Visit(
         0, "wizyta prezesa",
         LocalDateTime.now(), LocalDateTime.now().plusHours(1)
