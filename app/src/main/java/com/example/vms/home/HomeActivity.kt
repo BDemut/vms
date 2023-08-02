@@ -6,18 +6,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vms.R
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeActivity : ComponentActivity() {
@@ -38,13 +38,19 @@ fun HomeScreen(
     model: HomeViewModel = viewModel()
 ) {
     val state = model.state.collectAsStateWithLifecycle().value
+    val scaffoldState = rememberScaffoldState()
     Scaffold(
-        topBar = { HomeToolbar() },
+        scaffoldState = scaffoldState,
+        topBar = { HomeToolbar(scaffoldState) },
         bottomBar = {
             HomeBottomBar(
                 currentScreen = state.currentTab,
                 onBottomNavigationClicked = { newTab -> model.changeTab(newTab) }
             )
+        },
+        drawerContent = {
+            DrawerHeader()
+            DrawerContent(onMenuItemClick = { item -> model.menuItemClicked(item) })
         }
     ) {
         Surface(
@@ -62,12 +68,16 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeToolbar() {
+fun HomeToolbar(scaffoldState: ScaffoldState) {
+    val scope = rememberCoroutineScope()
     TopAppBar {
-        IconButton(onClick = { /* navigation drawer */ }) {
+        IconButton(onClick = {
+            scope.launch {
+                scaffoldState.drawerState.open()
+            }
+        }) {
             Icon(
-                modifier = Modifier.padding(4.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.ic_menu),
+                imageVector = Icons.Default.Menu,
                 contentDescription = "menu icon"
             )
         }

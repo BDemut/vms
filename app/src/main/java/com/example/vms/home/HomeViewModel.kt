@@ -21,6 +21,10 @@ class HomeViewModel : ViewModel() {
         )
     }
 
+    fun menuItemClicked(item: MenuItemType) {
+        //TODO
+    }
+
     data class State(
         val currentTab: Tab,
         val visits: List<Visit>,
