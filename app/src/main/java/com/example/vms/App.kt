@@ -1,0 +1,32 @@
+package com.example.vms
+
+import android.app.Application
+import android.content.Context
+import com.example.vms.di.AppComponent
+import com.example.vms.di.AppModule
+import com.example.vms.di.DaggerAppComponent
+
+/**
+ * Created by mśmiech on 05.08.2023.
+ */
+class App: Application() {
+    lateinit var appComponent: AppComponent
+        private set
+
+    override fun onCreate() {
+        super.onCreate()
+        setupAppComponent()
+    }
+
+    private fun setupAppComponent() {
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
+    }
+}
+
+fun Application.appComponent(): AppComponent =
+    (this as App).appComponent
+
+fun Context.appComponent(): AppComponent =
+    (this.applicationContext as App).appComponent
