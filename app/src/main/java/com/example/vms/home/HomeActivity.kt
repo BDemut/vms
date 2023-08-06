@@ -1,9 +1,11 @@
 package com.example.vms.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,29 +15,46 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.lifecycleScope
+import com.example.vms.auditlog.AuditLogActivity
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
+import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VisitorManagementSystemTheme {
-                HomeScreen()
+                HomeScreen(model = homeViewModel)
             }
         }
+        homeViewModel.events.onEach { event ->
+            when (event) {
+                is HomeEvent.NavigateToSettings -> launchSettingsActivity()
+                is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
+                is HomeEvent.ShowLogoutDialog -> TODO()
+            }
+        }.launchIn(lifecycleScope)
     }
+
+    private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
+
+    private fun launchAuditLogActivity() = startActivity(Intent(this, AuditLogActivity::class.java))
 }
 
 @Composable
 fun HomeScreen(
-    model: HomeViewModel = viewModel()
+    model: HomeViewModel
 ) {
     val state = model.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()

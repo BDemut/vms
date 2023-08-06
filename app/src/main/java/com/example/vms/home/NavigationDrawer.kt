@@ -27,10 +27,6 @@ fun DrawerContent(
 ) {
     Column {
         MenuItem(
-            type = MenuItemType.HOME,
-            onMenuItemClick = onMenuItemClick
-        )
-        MenuItem(
             type = MenuItemType.SETTINGS,
             onMenuItemClick = onMenuItemClick
         )
@@ -59,7 +55,6 @@ private fun MenuItem(
 }
 
 enum class MenuItemType(val description: String) {
-    HOME("Home"),
     SETTINGS("Settings"),
     AUDIT_LOG("Audit log"),
     LOGOUT("Logout")
