@@ -42,7 +42,6 @@ class HomeActivity : ComponentActivity() {
             when (event) {
                 is HomeEvent.NavigateToSettings -> launchSettingsActivity()
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
-                is HomeEvent.ShowLogoutDialog -> TODO()
             }
         }.launchIn(lifecycleScope)
     }
@@ -68,7 +67,6 @@ fun HomeScreen(
             )
         },
         drawerContent = {
-            DrawerHeader()
             DrawerContent(onMenuItemClick = { item -> model.menuItemClicked(item) })
         }
     ) {
@@ -81,6 +79,12 @@ fun HomeScreen(
             when (state.currentTab) {
                 Tab.VISITS -> VisitsTab(visits = state.visits)
                 Tab.REQUESTS -> RequestsTab(requests = state.requests)
+            }
+            if (state.isLogoutDialogShowing) {
+                LogoutDialog(
+                    onDismissDialog = { model.logoutDialogDismissed() },
+                    onLogoutClicked = { model.logout() }
+                )
             }
         }
     }

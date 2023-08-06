@@ -6,25 +6,29 @@ import com.example.vms.home.requests.Request
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
 import com.example.vms.home.visits.testVisits
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    val state = MutableStateFlow(State(
+    val state = MutableStateFlow(HomeState(
         currentTab = Tab.VISITS,
         visits = testVisits,
-        requests = testRequests
+        requests = testRequests,
+        isLogoutDialogShowing = false,
+        isLoggedIn = true
     ))
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
 
     fun changeTab(newTab: Tab) {
-        state.value = state.value.copy(
-            currentTab = newTab
-        )
+        state.update {
+            it.copy(currentTab = newTab)
+        }
     }
 
     fun menuItemClicked(item: MenuItemType) {
@@ -32,14 +36,16 @@ class HomeViewModel : ViewModel() {
             when(item) {
                 MenuItemType.SETTINGS -> _events.emit(HomeEvent.NavigateToSettings)
                 MenuItemType.AUDIT_LOG -> _events.emit(HomeEvent.NavigateToAuditLog)
-                MenuItemType.LOGOUT -> _events.emit(HomeEvent.ShowLogoutDialog)
+                MenuItemType.LOGOUT -> state.update { it.copy(isLogoutDialogShowing = true) }
             }
         }
     }
 
-    data class State(
-        val currentTab: Tab,
-        val visits: List<Visit>,
-        val requests: List<Request>
-    )
+    fun logout() {
+        state.update { it.copy(isLoggedIn = false) }
+    }
+
+    fun logoutDialogDismissed() {
+        state.update { it.copy(isLogoutDialogShowing = false) }
+    }
 }

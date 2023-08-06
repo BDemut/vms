@@ -25,6 +25,7 @@ fun DrawerHeader() {
 fun DrawerContent(
     onMenuItemClick: (MenuItemType) -> Unit
 ) {
+    DrawerHeader()
     Column {
         MenuItem(
             type = MenuItemType.SETTINGS,
@@ -47,7 +48,8 @@ private fun MenuItem(
     onMenuItemClick: (MenuItemType) -> Unit
 ) {
     Text(
-        modifier = Modifier.clickable {  onMenuItemClick(type)  }
+        modifier = Modifier
+            .clickable { onMenuItemClick(type) }
             .padding(horizontal = 8.dp, vertical = 16.dp)
             .fillMaxWidth(),
         text = type.description
