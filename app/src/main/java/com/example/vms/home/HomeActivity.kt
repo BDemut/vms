@@ -13,9 +13,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.example.vms.R
 import com.example.vms.auditlog.AuditLogActivity
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
@@ -30,7 +32,6 @@ class HomeActivity : ComponentActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -101,11 +102,11 @@ fun HomeToolbar(scaffoldState: ScaffoldState) {
         }) {
             Icon(
                 imageVector = Icons.Default.Menu,
-                contentDescription = "menu icon"
+                contentDescription = stringResource(R.string.menu_icon_content_description)
             )
         }
         Text(
-            text = "Hello Janek!",
+            text = stringResource(R.string.hello, "Janek"),
             fontWeight = FontWeight.Bold
         )
     }

@@ -1,13 +1,16 @@
 package com.example.vms.home
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.vms.R
 
 @Composable
 fun DrawerHeader() {
@@ -52,12 +55,12 @@ private fun MenuItem(
             .clickable { onMenuItemClick(type) }
             .padding(horizontal = 8.dp, vertical = 16.dp)
             .fillMaxWidth(),
-        text = type.description
+        text = stringResource(type.description)
     )
 }
 
-enum class MenuItemType(val description: String) {
-    SETTINGS("Settings"),
-    AUDIT_LOG("Audit log"),
-    LOGOUT("Logout")
+enum class MenuItemType(@StringRes val description: Int) {
+    SETTINGS(R.string.settings_menu_item),
+    AUDIT_LOG(R.string.audit_log_menu_item),
+    LOGOUT(R.string.logout_menu_item)
 }

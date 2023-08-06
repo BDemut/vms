@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,7 +63,7 @@ fun RequestItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            RequestDescription(request.type.description, request.visitName)
+            RequestDescription(stringResource(request.type.description), request.visitName)
             RequestButtons(request.id, onRequestAccept, onRequestDecline)
         }
     }
@@ -97,7 +98,7 @@ fun RequestButtons(
             Icon(
                 modifier = Modifier.padding(4.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.ic_yes),
-                contentDescription = "accept icon",
+                contentDescription = stringResource(R.string.accept_request_button_content_description),
                 tint = Color.Green
             )
         }
@@ -105,7 +106,7 @@ fun RequestButtons(
             Icon(
                 modifier = Modifier.padding(4.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.ic_no),
-                contentDescription = "decline icon",
+                contentDescription = stringResource(R.string.decline_request_button_content_description),
                 tint = Color.Red
             )
         }

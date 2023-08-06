@@ -4,6 +4,8 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.vms.R
 
 @Composable
 fun LogoutDialog(
@@ -12,16 +14,16 @@ fun LogoutDialog(
 ) {
     AlertDialog(
         onDismissRequest = { onDismissDialog() },
-        title = { Text("Logging out") },
-        text = { Text("You will need to provide your credentials to access the app again") },
+        title = { Text(stringResource(R.string.logout_dialog_title)) },
+        text = { Text(stringResource(R.string.logout_dialog_description)) },
         confirmButton = {
             TextButton(onClick = { onLogoutClicked() }) {
-                Text("LOGOUT")
+                Text(stringResource(R.string.logout_dialog_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismissDialog() }) {
-                Text("CANCEL")
+                Text(stringResource(R.string.logout_dialog_cancel))
             }
         },
     )
