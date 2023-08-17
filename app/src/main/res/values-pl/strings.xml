@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Visitor Management System</string>
+    <string name="requests">Zapytania?</string>
+    <string name="visits">Wizyty</string>
+    <string name="menu_icon_content_description">ikona menu</string>
+    <string name="hello">Witaj %s!</string>
+    <string name="logout_dialog_title">Wylogowanie</string>
+    <string name="logout_dialog_description">Będziesz musiał podać dane logowania aby uzyskać znowu dostęp do aplikacji</string>
+    <string name="logout_dialog_confirm">WYLOGUJ</string>
+    <string name="logout_dialog_cancel">ANULUJ</string>
+    <string name="settings_menu_item">Ustawienia</string>
+    <string name="audit_log_menu_item">Audit log</string>
+    <string name="logout_menu_item">Wyloguj</string>
+    <string name="instant_visit">Wizyta ad-hoc</string>
+    <string name="host_change">Zmiana hosta</string>
+    <string name="accept_request_button_content_description">akceptuj</string>
+    <string name="decline_request_button_content_description">odrzuć</string>
+</resources>
