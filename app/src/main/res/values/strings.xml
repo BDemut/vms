@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Visitor Management System</string>
+    <string name="requests">Requests</string>
+    <string name="visits">Requests</string>
+    <string name="menu_icon_content_description">menu icon</string>
+    <string name="hello">Hello %s!</string>
+    <string name="logout_dialog_title">Logging out</string>
+    <string name="logout_dialog_description">You will need to provide your credentials to access the app again</string>
+    <string name="logout_dialog_confirm">LOGOUT</string>
+    <string name="logout_dialog_cancel">CANCEL</string>
+    <string name="settings_menu_item">Settings</string>
+    <string name="audit_log_menu_item">Audit log</string>
+    <string name="logout_menu_item">Logout</string>
+    <string name="instant_visit">Instant visit</string>
+    <string name="host_change">Host change</string>
+    <string name="accept_request_button_content_description">accept</string>
+    <string name="decline_request_button_content_description">decline</string>
 </resources>
