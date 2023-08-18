@@ -16,4 +16,5 @@
     <string name="host_change">Zmiana hosta</string>
     <string name="accept_request_button_content_description">akceptuj</string>
     <string name="decline_request_button_content_description">odrzuć</string>
+    <string name="login">ZALOGUJ</string>
 </resources>

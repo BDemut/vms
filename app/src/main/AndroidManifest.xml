@@ -26,6 +26,8 @@
 
         <activity android:name=".settings.SettingsActivity"/>
         <activity android:name=".auditlog.AuditLogActivity"/>
+        <activity android:name=".login.LoginActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
