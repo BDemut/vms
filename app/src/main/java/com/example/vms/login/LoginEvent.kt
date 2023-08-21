@@ -5,4 +5,5 @@ package com.example.vms.login
  */
 sealed class LoginEvent {
     object NavigateToHome: LoginEvent()
+    class ShowLoginError(val messageResId: Int): LoginEvent()
 }

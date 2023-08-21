@@ -21,6 +21,7 @@ import com.example.vms.R
 import com.example.vms.auditlog.AuditLogActivity
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
+import com.example.vms.login.LoginActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import kotlinx.coroutines.flow.launchIn
@@ -43,6 +44,7 @@ class HomeActivity : ComponentActivity() {
             when (event) {
                 is HomeEvent.NavigateToSettings -> launchSettingsActivity()
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
+                is HomeEvent.NavigateToLogin -> launchLoginActivity()
             }
         }.launchIn(lifecycleScope)
     }
@@ -50,6 +52,8 @@ class HomeActivity : ComponentActivity() {
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
 
     private fun launchAuditLogActivity() = startActivity(Intent(this, AuditLogActivity::class.java))
+
+    private fun launchLoginActivity() = startActivity(Intent(this, LoginActivity::class.java))
 }
 
 @Composable

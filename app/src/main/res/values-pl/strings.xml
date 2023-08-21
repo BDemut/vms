@@ -16,5 +16,14 @@
     <string name="host_change">Zmiana hosta</string>
     <string name="accept_request_button_content_description">akceptuj</string>
     <string name="decline_request_button_content_description">odrzuć</string>
+    <string name="username_label">Nazwa użytkownika</string>
+    <string name="username_placeholder">Wprowadź nazwę użytkownika</string>
+    <string name="password_label">Hasło</string>
+    <string name="password_placeholder">Wprowadź hasło</string>
+    <string name="hide_password_icon_content_description">ukryj hasło</string>
     <string name="login">ZALOGUJ</string>
+    <string name="login_error_incorrect_username_or_password">Nieprawidłowa nazwa lub hasło</string>
+    <string name="login_error_unknown">Logowanie nie powiodło się</string>
+    <string name="username_invalid">Nieprawidłowa nazwa</string>
+    <string name="password_invalid">NIeprawidłowe hasło</string>
 </resources>
