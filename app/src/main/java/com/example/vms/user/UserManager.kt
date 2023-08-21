@@ -2,6 +2,7 @@ package com.example.vms.user
 
 import com.example.vms.di.UserComponent
 import com.example.vms.di.UserModule
+import com.example.vms.login.Authentication
 
 /**
  * Created by mśmiech on 06.08.2023.
@@ -12,7 +13,7 @@ class UserManager(
     var userComponent: UserComponent? = null
         private set
 
-    suspend fun startUserSession(user: User) {
+    fun startUserSession(user: User) {
         userComponent = userComponentBuilder
             .userModule(UserModule(user))
             .build()

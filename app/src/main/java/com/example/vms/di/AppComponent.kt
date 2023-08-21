@@ -4,6 +4,7 @@ import com.example.vms.home.HomeViewModel
 import com.example.vms.login.Authentication
 import com.example.vms.login.LoginActivity
 import com.example.vms.login.LoginViewModel
+import com.example.vms.user.UserManager
 import dagger.Component
 import javax.inject.Singleton
 
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 interface AppComponent {
     fun userComponentBuilder(): UserComponent.Builder
     fun getAuthentication(): Authentication
+    fun getUserManager(): UserManager
 
     fun inject(activity: LoginActivity)
     fun inject(viewModel: LoginViewModel)

@@ -47,7 +47,6 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             val username = username.value
             val password = password.value
             state.update { it.copy(isLoading = true) }
-//            authentication.signIn("michal.smiech1@gmail.com", "XSW@zaq1")
             val signInResult = authentication.signIn(username, password)
             state.update { it.copy(isLoading = false) }
             handleSignInResult(signInResult)

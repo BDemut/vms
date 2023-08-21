@@ -18,10 +18,14 @@ class AppModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideUserManager(userComponentBuilder: UserComponent.Builder): UserManager
-        = UserManager(userComponentBuilder)
+    fun provideUserManager(
+        userComponentBuilder: UserComponent.Builder,
+    ): UserManager = UserManager(userComponentBuilder)
 
     @Provides
     @Singleton
-    fun provideLoginManager(context: Context) = Authentication(context)
+    fun provideAuthentication(
+        context: Context,
+        userManager: UserManager
+    ) = Authentication(context, userManager)
 }
