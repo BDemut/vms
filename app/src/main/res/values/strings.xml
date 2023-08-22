@@ -25,4 +25,8 @@
     <string name="login">LOGIN</string>
     <string name="login_error_incorrect_username_or_password">Incorrect username or password.</string>
     <string name="login_error_unknown">Login failed</string>
+    <string name="close_icon_content_description">close icon</string>
+    <string name="datetime_icon_content_description">date icon</string>
+    <string name="location_icon_content_description">location icon</string>
+    <string name="guests_icon_content_description">guests icon</string>
 </resources>

@@ -13,15 +13,17 @@
         android:theme="@style/Theme.VisitorManagementSystem"
         tools:targetApi="31">
         <activity
+            android:name=".editvisit.EditVisitActivity"
+            android:exported="true" />
+        <activity
             android:name=".home.HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.VisitorManagementSystem">
-        </activity>
-
-        <activity android:name=".settings.SettingsActivity"/>
-        <activity android:name=".auditlog.AuditLogActivity"/>
-        <activity android:name=".login.LoginActivity"
+            android:theme="@style/Theme.VisitorManagementSystem"/>
+        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".auditlog.AuditLogActivity" />
+        <activity
+            android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
