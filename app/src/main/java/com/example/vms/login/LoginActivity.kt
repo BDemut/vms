@@ -80,19 +80,20 @@ fun LoginScreen(
         color = MaterialTheme.colors.background,
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Username(viewModel, state.displayValidErrors)
+            Username(state.username, { viewModel.setUsername(it) }, !state.displayValidErrors || state.isUsernameValid)
             Spacer(modifier = Modifier.height(8.dp))
-            Password(viewModel, state.displayValidErrors)
+            Password(state.password, { viewModel.setPassword(it) }, !state.displayValidErrors || state.isPasswordValid)
             TextButton(onClick = viewModel::onLoginButtonClicked) {
                 Text(stringResource(R.string.login))
             }
         }
-        if(state.isLoading) {
+        if (state.isLoading) {
             Surface(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -110,18 +111,20 @@ fun LoginScreen(
 }
 
 @Composable
-fun Username(viewModel: LoginViewModel, displayValidErrors: Boolean) {
-    val username = viewModel.username.collectAsState().value
-    val isUsernameValid = viewModel.isUsernameValid.collectAsState().value
+fun Username(
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    isUsernameValid: Boolean
+) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = username,
-        onValueChange = viewModel::setUsername,
+        onValueChange = { onUsernameChange(it) },
         label = { Text(text = stringResource(id = R.string.username_label)) },
         placeholder = { Text(text = stringResource(id = R.string.username_placeholder)) },
-        isError = displayValidErrors && !isUsernameValid,
+        isError = !isUsernameValid,
     )
-    if (displayValidErrors && !isUsernameValid) {
+    if (!isUsernameValid) {
         TextFieldError(stringResource(id = R.string.username_invalid))
     }
 }
@@ -139,17 +142,19 @@ fun TextFieldError(textError: String) {
 }
 
 @Composable
-fun Password(viewModel: LoginViewModel, displayValidErrors: Boolean) {
-    val password = viewModel.password.collectAsState().value
-    val isPasswordValid = viewModel.isPasswordValid.collectAsState().value
+fun Password(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    isPasswordValid: Boolean
+) {
     var showPassword by remember { mutableStateOf(value = false) }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = password,
-        onValueChange = viewModel::setPassword,
+        onValueChange = { onPasswordChange(it) },
         label = { Text(text = stringResource(id = R.string.password_label)) },
         placeholder = { Text(text = stringResource(id = R.string.password_placeholder)) },
-        isError = displayValidErrors && !isPasswordValid,
+        isError = !isPasswordValid,
         visualTransformation = if (showPassword) {
             VisualTransformation.None
         } else {
@@ -175,7 +180,7 @@ fun Password(viewModel: LoginViewModel, displayValidErrors: Boolean) {
             }
         }
     )
-    if (displayValidErrors && !isPasswordValid) {
+    if (!isPasswordValid) {
         TextFieldError(stringResource(id = R.string.password_invalid))
     }
 }

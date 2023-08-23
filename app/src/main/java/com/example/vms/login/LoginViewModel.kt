@@ -20,16 +20,14 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val events: SharedFlow<LoginEvent> = _events
     val state = MutableStateFlow<LoginState>(
         LoginState(
-            false,
-            false,
+            isLoading = false,
+            displayValidErrors = false,
+            username = "",
+            isUsernameValid = isUsernameValid(""),
+            password = "",
+            isPasswordValid = isPasswordValid("")
         )
     )
-    private val _username = MutableStateFlow("")
-    val username = _username.asStateFlow()
-    val isUsernameValid = username.map { isUsernameValid(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
-    private val _password = MutableStateFlow("")
-    val password = _password.asStateFlow()
-    val isPasswordValid = password.map { isPasswordValid(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     @Inject
     lateinit var authentication: Authentication
@@ -40,15 +38,14 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     fun onLoginButtonClicked() {
         viewModelScope.launch {
-            if (!isUsernameValid.value || !isPasswordValid.value) {
-                state.update { it.copy(displayValidErrors = true) }
+            val state = state.value
+            if (!state.isValid) {
+                this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
                 return@launch
             }
-            val username = username.value
-            val password = password.value
-            state.update { it.copy(isLoading = true) }
-            val signInResult = authentication.signIn(username, password)
-            state.update { it.copy(isLoading = false) }
+            this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
+            val signInResult = authentication.signIn(state.username, state.password)
+            this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
             handleSignInResult(signInResult)
         }
     }
@@ -63,12 +60,22 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun setUsername(login: String) {
-        _username.value = login
+    fun setUsername(username: String) {
+        state.update {
+            it.copy(
+                username = username,
+                isUsernameValid = isUsernameValid(username)
+            )
+        }
     }
 
     fun setPassword(password: String) {
-        _password.value = password
+        state.update {
+            it.copy(
+                password = password,
+                isPasswordValid = isPasswordValid(password)
+            )
+        }
     }
 
     private fun isUsernameValid(username: String): Boolean {
@@ -86,24 +93,28 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                     _events.emit(LoginEvent.NavigateToHome)
                 }
             }
+
             UserState.SIGNED_OUT -> {
             }
+
             else -> {
             }
         }
     }
 
     private fun handleSignInResult(signInResult: Authentication.SignInResult) {
-        when(signInResult) {
+        when (signInResult) {
             is Authentication.SignInResult.Success -> {
                 val currentUserState = AWSMobileClient.getInstance().currentUserState()
                 handleUserState(currentUserState.userState)
             }
+
             is Authentication.SignInResult.Error -> {
                 viewModelScope.launch {
-                    val messageResId = if(signInResult.exception != null
+                    val messageResId = if (signInResult.exception != null
                         && signInResult.exception is NotAuthorizedException
-                        && signInResult.exception.errorMessage == "Incorrect username or password.") {
+                        && signInResult.exception.errorMessage == "Incorrect username or password."
+                    ) {
                         R.string.login_error_incorrect_username_or_password
                     } else {
                         R.string.login_error_unknown
