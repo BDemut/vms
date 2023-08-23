@@ -26,4 +26,15 @@
     <string name="login_error_unknown">Logowanie nie powiodło się</string>
     <string name="username_invalid">Nieprawidłowa nazwa</string>
     <string name="password_invalid">NIeprawidłowe hasło</string>
+    <string name="discard_icon_content_description">ikona zamknięcia</string>
+    <string name="datetime_icon_content_description">ikona daty</string>
+    <string name="location_icon_content_description">ikona lokalizacji</string>
+    <string name="guests_icon_content_description">ikona gości</string>
+    <string name="edit_visit_discard_dialog_description">Odrzucić tę wizyte?</string>
+    <string name="edit_visit_discard_dialog_confirm">Odrzuć</string>
+    <string name="edit_visit_discard_dialog_cancel">Edytuj dalej</string>
+    <string name="edit_visit_room_placeholder">Sala konferencyjna</string>
+    <string name="edit_visit_add_guest_button_label">Dodaj osoby</string>
+    <string name="edit_visit_title_placeholder">Dodaj tytuł</string>
+    <string name="edit_visit_save_button_label">Zapisz</string>
 </resources>

@@ -26,4 +26,15 @@
     <string name="login_error_unknown">Login failed</string>
     <string name="username_invalid">Invalid username</string>
     <string name="password_invalid">Invalid password</string>
+    <string name="discard_icon_content_description">discard icon</string>
+    <string name="datetime_icon_content_description">date icon</string>
+    <string name="location_icon_content_description">location icon</string>
+    <string name="guests_icon_content_description">guests icon</string>
+    <string name="edit_visit_discard_dialog_description">Discard this visit?</string>
+    <string name="edit_visit_discard_dialog_confirm">Discard</string>
+    <string name="edit_visit_discard_dialog_cancel">Keep editing</string>
+    <string name="edit_visit_room_placeholder">Conference room</string>
+    <string name="edit_visit_add_guest_button_label">Add guests</string>
+    <string name="edit_visit_title_placeholder">Add title</string>
+    <string name="edit_visit_save_button_label">Save</string>
 </resources>
