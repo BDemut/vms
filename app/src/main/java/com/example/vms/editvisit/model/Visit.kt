@@ -1,4 +1,4 @@
-package com.example.vms.editvisit
+package com.example.vms.editvisit.model
 
 import java.time.LocalDateTime
 
@@ -9,5 +9,7 @@ data class Visit(
     val id: Int,
     val title: String,
     val start: LocalDateTime,
-    val end: LocalDateTime
+    val end: LocalDateTime,
+    val room: Room?,
+    val guests: List<Guest>
 )

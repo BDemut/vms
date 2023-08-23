@@ -37,4 +37,5 @@
     <string name="edit_visit_title_placeholder">Add title</string>
     <string name="edit_visit_save_button_label">Save</string>
     <string name="remove_guest_content_description">remove guest icon</string>
+    <string name="new_guest_email_error">Invalid email</string>
 </resources>

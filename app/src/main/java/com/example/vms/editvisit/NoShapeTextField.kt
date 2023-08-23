@@ -1,14 +1,19 @@
 package com.example.vms.editvisit
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TextFieldDefaults.indicatorLine
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,6 +21,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 /**
  * Created by mśmiech on 23.08.2023.
@@ -78,7 +84,8 @@ fun NoShapeTextField(
                 enabled = enabled,
                 isError = isError,
                 interactionSource = interactionSource,
-                colors = colors
+                colors = colors,
+                contentPadding = PaddingValues(0.dp, 16.dp)
             )
         }))
 }

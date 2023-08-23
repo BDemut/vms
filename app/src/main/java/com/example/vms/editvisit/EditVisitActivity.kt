@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.People
@@ -38,10 +41,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vms.R
+import com.example.vms.editvisit.model.Guest
+import com.example.vms.editvisit.model.Room
+import com.example.vms.editvisit.model.Visit
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import java.time.LocalDate
 import java.time.LocalTime
@@ -49,7 +56,11 @@ import java.time.format.DateTimeFormatter
 
 class EditVisitActivity : ComponentActivity() {
     private var visit: Visit? = null
-    private val viewModel: EditVisitViewModel by viewModels(factoryProducer = { EditVisitViewModel.Factory(visit) })
+    private val viewModel: EditVisitViewModel by viewModels(factoryProducer = {
+        EditVisitViewModel.Factory(
+            visit
+        )
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,9 +139,15 @@ class EditVisitActivity : ComponentActivity() {
                         viewModel.onRoomButtonClicked()
                     })
                 Divider(modifier = Modifier.fillMaxWidth())
-                GuestsSection(state.guests,
+                GuestsSection(
+                    state.guests,
                     onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() },
-                    onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) })
+                    onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) },
+                    state.newGuestEmail,
+                    { viewModel.changeNewGuestEmail(it) },
+                    state.isNewGuestEmailValid,
+                    state.displayNewGuestEmailValidError
+                )
                 Divider(modifier = Modifier.fillMaxWidth())
             }
             if (state.isDiscardDialogShowing) {
@@ -185,10 +202,14 @@ class EditVisitActivity : ComponentActivity() {
                 value = title,
                 onValueChange = onTitleChange,
                 placeholder = {
-                    Text(text = stringResource(R.string.edit_visit_title_placeholder), fontSize = fontSize)
+                    Text(
+                        text = stringResource(R.string.edit_visit_title_placeholder),
+                        fontSize = fontSize
+                    )
                 },
                 singleLine = true,
-                textStyle = TextStyle.Default.copy(fontSize = fontSize)
+                textStyle = TextStyle.Default.copy(fontSize = fontSize),
+                modifier = Modifier.padding(start = 10.dp)
             )
         }
     }
@@ -260,9 +281,12 @@ class EditVisitActivity : ComponentActivity() {
     @Composable
     fun GuestsSection(
         guests: List<Guest>,
-        onAddGuestButtonClicked: () -> Unit,
-        onRemoveGuestButtonClicked: (Guest) -> Unit
-
+        onAddGuestButtonClicked: (String) -> Unit,
+        onRemoveGuestButtonClicked: (Guest) -> Unit,
+        newGuestEmail: String,
+        onNewGuestEmailChange: (String) -> Unit,
+        isNewGuestEmailValid: Boolean,
+        displayNewGuestEmailValidError: Boolean
     ) {
         Row {
             Icon(
@@ -271,14 +295,75 @@ class EditVisitActivity : ComponentActivity() {
                 contentDescription = stringResource(R.string.guests_icon_content_description)
             )
             Column {
-                TextButton(onClick = { onAddGuestButtonClicked() }) {
-                    Text(text = stringResource(id = R.string.edit_visit_add_guest_button_label))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(Modifier.padding(start = 10.dp)) {
+                        NoShapeTextField(
+                            value = newGuestEmail,
+                            onValueChange = { onNewGuestEmailChange(it) },
+                            placeholder = {
+                                Text(
+                                    text = "Dodaj osobę",
+                                    color = MaterialTheme.colors.primary
+                                )
+                            },
+                            modifier = Modifier.width(200.dp),
+                            isError = newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid
+                        )
+                        if (newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid) {
+                            Text(
+                                text = stringResource(R.string.new_guest_email_error),
+                                modifier = Modifier.width(200.dp).align(Alignment.BottomStart),
+                                color = MaterialTheme.colors.error
+                            )
+                        }
+                    }
+                    Row {
+                        if (newGuestEmail.isNotEmpty()) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = stringResource(R.string.remove_guest_content_description),
+                                modifier = Modifier
+                                    .padding(13.dp)
+                                    .clickable {
+                                        onNewGuestEmailChange("")
+                                    }
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(R.string.remove_guest_content_description),
+                                modifier = Modifier
+                                    .padding(13.dp)
+                                    .clickable {
+                                        onAddGuestButtonClicked(newGuestEmail)
+                                    },
+                                tint = MaterialTheme.colors.primary
+                            )
+                        }
+                    }
                 }
                 guests.forEach {
                     Guest(guest = it, onRemoveGuestButtonClicked)
                 }
             }
         }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun PreviewGuestsSection() {
+        GuestsSection(
+            guests = emptyList(),
+            onAddGuestButtonClicked = {},
+            onRemoveGuestButtonClicked = {},
+            "",
+            {},
+            true,
+            false
+        )
     }
 
     @Composable
@@ -294,7 +379,8 @@ class EditVisitActivity : ComponentActivity() {
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = stringResource(R.string.remove_guest_content_description),
-                modifier = Modifier.padding(13.dp)
+                modifier = Modifier
+                    .padding(13.dp)
                     .clickable {
                         onRemoveGuestButtonClicked(guest)
                     }

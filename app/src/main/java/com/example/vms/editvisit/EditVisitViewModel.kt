@@ -5,26 +5,31 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.vms.editvisit.model.Guest
+import com.example.vms.editvisit.model.Visit
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.LinkedList
 
 /**
  * Created by mśmiech on 22.08.2023.
  */
 class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app) {
     val state = MutableStateFlow(EditVisitState(
+        visit?.title ?: "",
+        visit?.start?.toLocalDate() ?: LocalDate.now(),
+        visit?.start?.toLocalTime() ?: LocalTime.now().plusHours(1).withMinute(0),
+        visit?.end?.toLocalTime() ?: LocalTime.now().plusHours(2).withMinute(0),
+        visit?.room,
+        visit?.guests ?: emptyList(),
+        false,
         "",
-        LocalDate.now(),
-        LocalTime.now().plusHours(1).withMinute(0),
-        LocalTime.now().plusHours(2).withMinute(0),
-        null,
-        testGuests,
+        validateNewGuestEmail(""),
         false
     ))
     private val _events: MutableSharedFlow<EditVisitEvent> = MutableSharedFlow()
@@ -63,7 +68,17 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun onAddGuestButtonClicked() {
-
+        val state = state.value
+        if (!state.isNewGuestEmailValid) {
+            this.state.update { it.copy(displayNewGuestEmailValidError = true) }
+        } else {
+            this.state.update { it.copy(
+                guests = LinkedList(it.guests).apply { addFirst(Guest(it.newGuestEmail)) },
+                newGuestEmail = "",
+                isNewGuestEmailValid = validateNewGuestEmail(""),
+                displayNewGuestEmailValidError = false
+            ) }
+        }
     }
 
     fun onRoomButtonClicked() {
@@ -74,17 +89,24 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
         state.update { it.copy(guests = it.guests.toMutableList().apply { remove(guest) }) }
     }
 
+    fun changeNewGuestEmail(newGuestEmail: String) {
+        state.update { it.copy(
+            newGuestEmail = newGuestEmail,
+            isNewGuestEmailValid = validateNewGuestEmail(newGuestEmail)
+        )}
+    }
+
+    private fun validateNewGuestEmail(email: String): Boolean {
+        return email.matches(Regex(".+@.+[.].+"))
+    }
+
     class Factory(val visit: Visit?): ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
             extras: CreationExtras
         ): T {
-            // Get the Application object from extras
             val application = checkNotNull(extras[APPLICATION_KEY])
-            // Create a SavedStateHandle for this ViewModel from extras
-            val savedStateHandle = extras.createSavedStateHandle()
-
             return EditVisitViewModel(
                 application,
                 visit
@@ -92,9 +114,3 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
         }
     }
 }
-
-val testGuests = listOf(
-    Guest("123", "jan@test.com"),
-    Guest("123", "bartek@test.com"),
-    Guest("123", "michal@test.com"),
-)
