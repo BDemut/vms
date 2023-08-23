@@ -37,4 +37,5 @@
     <string name="edit_visit_add_guest_button_label">Dodaj osoby</string>
     <string name="edit_visit_title_placeholder">Dodaj tytuł</string>
     <string name="edit_visit_save_button_label">Zapisz</string>
+    <string name="remove_guest_content_description">ikona usunięcia gościa</string>
 </resources>

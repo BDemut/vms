@@ -70,6 +70,10 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
 
     }
 
+    fun onRemoveGuestButtonClicked(guest: Guest) {
+        state.update { it.copy(guests = it.guests.toMutableList().apply { remove(guest) }) }
+    }
+
     class Factory(val visit: Visit?): ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(

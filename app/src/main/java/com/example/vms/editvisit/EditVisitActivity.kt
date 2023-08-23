@@ -8,6 +8,7 @@ import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,10 +31,13 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -125,7 +129,8 @@ class EditVisitActivity : ComponentActivity() {
                     })
                 Divider(modifier = Modifier.fillMaxWidth())
                 GuestsSection(state.guests,
-                    onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() })
+                    onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() },
+                    onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) })
                 Divider(modifier = Modifier.fillMaxWidth())
             }
             if (state.isDiscardDialogShowing) {
@@ -175,7 +180,7 @@ class EditVisitActivity : ComponentActivity() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Spacer(modifier = Modifier.width(50.dp))
-            val fontSize = 32.sp
+            val fontSize = 24.sp
             NoShapeTextField(
                 value = title,
                 onValueChange = onTitleChange,
@@ -208,7 +213,7 @@ class EditVisitActivity : ComponentActivity() {
                 onDateChange(it)
             }
             TextButton(onClick = { datePicker.show() }) {
-                Text(text = date.format(visitDateFormatter))
+                Text(text = date.format(visitDateFormatter).capitalize(Locale.current))
             }
         }
         val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -255,7 +260,9 @@ class EditVisitActivity : ComponentActivity() {
     @Composable
     fun GuestsSection(
         guests: List<Guest>,
-        onAddGuestButtonClicked: () -> Unit
+        onAddGuestButtonClicked: () -> Unit,
+        onRemoveGuestButtonClicked: (Guest) -> Unit
+
     ) {
         Row {
             Icon(
@@ -268,16 +275,30 @@ class EditVisitActivity : ComponentActivity() {
                     Text(text = stringResource(id = R.string.edit_visit_add_guest_button_label))
                 }
                 guests.forEach {
-                    Guest(guest = it)
+                    Guest(guest = it, onRemoveGuestButtonClicked)
                 }
             }
         }
     }
 
     @Composable
-    fun Guest(guest: Guest) {
-        Text(
-            text = guest.email, modifier = Modifier.padding(8.dp, 8.dp)
-        )
+    fun Guest(guest: Guest, onRemoveGuestButtonClicked: (Guest) -> Unit) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = guest.email, modifier = Modifier.padding(8.dp, 8.dp)
+            )
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(R.string.remove_guest_content_description),
+                modifier = Modifier.padding(13.dp)
+                    .clickable {
+                        onRemoveGuestButtonClicked(guest)
+                    }
+            )
+        }
     }
 }
