@@ -40,7 +40,10 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun changeStartTime(startTime: LocalTime) {
-        state.update { it.copy(startTime = startTime) }
+        state.update { it.copy(
+            startTime = startTime,
+            endTime = startTime.plusHours(1)
+        ) }
     }
 
     fun changeEndTime(endTime: LocalTime) {

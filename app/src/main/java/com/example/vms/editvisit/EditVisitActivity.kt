@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -34,12 +35,16 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.People
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -209,9 +214,16 @@ class EditVisitActivity : ComponentActivity() {
                 },
                 singleLine = true,
                 textStyle = TextStyle.Default.copy(fontSize = fontSize),
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
         }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun PreviewTitle() {
+        Title(title = "", onTitleChange = {})
     }
 
     @Composable
@@ -234,7 +246,9 @@ class EditVisitActivity : ComponentActivity() {
                 onDateChange(it)
             }
             TextButton(onClick = { datePicker.show() }) {
-                Text(text = date.format(visitDateFormatter).capitalize(Locale.current))
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = date.format(visitDateFormatter).capitalize(Locale.current))
+                }
             }
         }
         val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -244,9 +258,11 @@ class EditVisitActivity : ComponentActivity() {
         TextButton(
             onClick = { startTimePicker.show() }, modifier = Modifier.padding(start = 50.dp)
         ) {
-            Text(
-                text = startTime.format(visitItemTimeFormatter)
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = startTime.format(visitItemTimeFormatter),
+                )
+            }
         }
         val endTimePicker = createTimePicker(LocalContext.current, endTime) {
             onEndTimeChange(it)
@@ -254,8 +270,25 @@ class EditVisitActivity : ComponentActivity() {
         TextButton(
             onClick = { endTimePicker.show() }, modifier = Modifier.padding(start = 50.dp)
         ) {
-            Text(
-                text = endTime.format(visitItemTimeFormatter)
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(text = endTime.format(visitItemTimeFormatter))
+            }
+        }
+    }
+
+    @Preview(
+        showBackground = true
+    )
+    @Composable
+    fun PreviewDateTimeSection() {
+        Column {
+            DateTimeSection(
+                date = LocalDate.now(),
+                startTime = LocalTime.now(),
+                endTime = LocalTime.now(),
+                onDateChange = {},
+                onStartTimeChange = {},
+                onEndTimeChange = {}
             )
         }
     }
@@ -273,7 +306,9 @@ class EditVisitActivity : ComponentActivity() {
                 contentDescription = stringResource(R.string.location_icon_content_description)
             )
             TextButton(onClick = { onClick() }) {
-                Text(text = roomLabel)
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = roomLabel)
+                }
             }
         }
     }
@@ -288,6 +323,7 @@ class EditVisitActivity : ComponentActivity() {
         isNewGuestEmailValid: Boolean,
         displayNewGuestEmailValidError: Boolean
     ) {
+        val focusRequester = remember { FocusRequester() }
         Row {
             Icon(
                 modifier = Modifier.padding(13.dp),
@@ -300,23 +336,29 @@ class EditVisitActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(Modifier.padding(start = 10.dp)) {
+                    Box(
+                        Modifier
+                            .padding(start = 10.dp)
+                            .weight(1.0f)) {
                         NoShapeTextField(
                             value = newGuestEmail,
                             onValueChange = { onNewGuestEmailChange(it) },
                             placeholder = {
                                 Text(
-                                    text = "Dodaj osobę",
-                                    color = MaterialTheme.colors.primary
+                                    text = stringResource(R.string.edit_visit_add_guest_placeholder),
+                                    color = MaterialTheme.colors.primary,
                                 )
                             },
-                            modifier = Modifier.width(200.dp),
+                            modifier = Modifier
+                                .focusRequester(focusRequester),
                             isError = newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid
                         )
                         if (newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid) {
                             Text(
                                 text = stringResource(R.string.new_guest_email_error),
-                                modifier = Modifier.width(200.dp).align(Alignment.BottomStart),
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .align(Alignment.BottomStart),
                                 color = MaterialTheme.colors.error
                             )
                         }
@@ -332,15 +374,18 @@ class EditVisitActivity : ComponentActivity() {
                                         onNewGuestEmailChange("")
                                     }
                             )
+                        }
+                        IconButton(
+                            onClick = {
+                                focusRequester.requestFocus()
+                                onAddGuestButtonClicked(newGuestEmail)
+                            },
+                            modifier = Modifier.padding(8.dp, 0.dp)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = stringResource(R.string.remove_guest_content_description),
-                                modifier = Modifier
-                                    .padding(13.dp)
-                                    .clickable {
-                                        onAddGuestButtonClicked(newGuestEmail)
-                                    },
-                                tint = MaterialTheme.colors.primary
+                                tint = MaterialTheme.colors.primary,
                             )
                         }
                     }

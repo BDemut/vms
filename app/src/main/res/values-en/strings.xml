@@ -34,7 +34,7 @@
     <string name="edit_visit_discard_dialog_confirm">Discard</string>
     <string name="edit_visit_discard_dialog_cancel">Keep editing</string>
     <string name="edit_visit_room_placeholder">Conference room</string>
-    <string name="edit_visit_add_guest_button_label">Add guests</string>
+    <string name="edit_visit_add_guest_placeholder">Add guest</string>
     <string name="edit_visit_title_placeholder">Add title</string>
     <string name="edit_visit_save_button_label">Save</string>
     <string name="remove_guest_content_description">remove guest icon</string>
