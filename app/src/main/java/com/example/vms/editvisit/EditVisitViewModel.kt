@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.vms.editvisit.model.Guest
 import com.example.vms.editvisit.model.Visit
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.LinkedList
@@ -74,7 +76,9 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
     }
 
     fun discard() {
-        //TODO
+        viewModelScope.launch {
+            _events.emit(EditVisitEvent.Finish)
+        }
     }
 
     fun onDiscardButtonClicked() {
@@ -82,11 +86,18 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
     }
 
     fun onSaveButtonClicked() {
-        val state = state.value
-        if (!state.isTitleValid) {
-            this.state.update { it.copy(displayTitleValidError = true) }
-            return
+        viewModelScope.launch {
+            val state = state.value
+            if (!state.isTitleValid) {
+                this@EditVisitViewModel.state.update { it.copy(displayTitleValidError = true) }
+                return@launch
+            }
+            saveVisit()
+            _events.emit(EditVisitEvent.Finish)
         }
+    }
+
+    private fun saveVisit() {
         //TODO
     }
 
