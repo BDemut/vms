@@ -75,5 +75,5 @@ fun TitleSection(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTitle() {
-    TitleSection(title = "", onTitleChange = {}, false)
+    TitleSection(title = "", onTitleChange = {}, true)
 }
