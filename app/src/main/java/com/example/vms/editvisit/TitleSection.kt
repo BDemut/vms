@@ -52,7 +52,7 @@ fun TitleSection(
             Icon(
                 modifier = Modifier.padding(13.dp),
                 imageVector = Icons.Default.Error,
-                contentDescription = stringResource(R.string.location_icon_content_description),
+                contentDescription = stringResource(R.string.title_error_icon_content_description),
                 tint = MaterialTheme.colors.error
             )
         } else {

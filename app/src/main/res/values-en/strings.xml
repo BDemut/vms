@@ -39,4 +39,5 @@
     <string name="edit_visit_save_button_label">Save</string>
     <string name="remove_guest_content_description">remove guest icon</string>
     <string name="new_guest_email_error">Invalid email</string>
+    <string name="title_error_icon_content_description">error icon</string>
 </resources>
