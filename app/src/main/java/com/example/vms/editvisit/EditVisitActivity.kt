@@ -92,8 +92,10 @@ class EditVisitActivity : ComponentActivity() {
                         viewModel.onSaveButtonClicked()
                     })
                 TitleSection(
-                    state.title
-                ) { viewModel.changeTitle(it) }
+                    state.title,
+                    onTitleChange = { viewModel.changeTitle(it) },
+                    !state.displayTitleValidError || state.isTitleValid
+                )
                 Divider(modifier = Modifier.fillMaxWidth())
                 DateTimeSection(
                     state.date,

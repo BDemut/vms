@@ -19,19 +19,23 @@ import java.util.LinkedList
 /**
  * Created by mśmiech on 22.08.2023.
  */
-class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app) {
-    val state = MutableStateFlow(EditVisitState(
-        visit?.title ?: "",
-        visit?.start?.toLocalDate() ?: LocalDate.now(),
-        visit?.start?.toLocalTime() ?: LocalTime.now().plusHours(1).withMinute(0),
-        visit?.end?.toLocalTime() ?: LocalTime.now().plusHours(2).withMinute(0),
-        visit?.room,
-        visit?.guests ?: emptyList(),
-        false,
-        "",
-        validateNewGuestEmail(""),
-        false
-    ))
+class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app) {
+    val state = MutableStateFlow(
+        EditVisitState(
+            visit?.title ?: "",
+            validateTitle(visit?.title ?: ""),
+            false,
+            visit?.start?.toLocalDate() ?: LocalDate.now(),
+            visit?.start?.toLocalTime() ?: LocalTime.now().plusHours(1).withMinute(0),
+            visit?.end?.toLocalTime() ?: LocalTime.now().plusHours(2).withMinute(0),
+            visit?.room,
+            visit?.guests ?: emptyList(),
+            false,
+            "",
+            validateNewGuestEmail(""),
+            false
+        )
+    )
     private val _events: MutableSharedFlow<EditVisitEvent> = MutableSharedFlow()
     val events: SharedFlow<EditVisitEvent> = _events
 
@@ -40,10 +44,12 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun changeStartTime(startTime: LocalTime) {
-        state.update { it.copy(
-            startTime = startTime,
-            endTime = startTime.plusHours(1)
-        ) }
+        state.update {
+            it.copy(
+                startTime = startTime,
+                endTime = startTime.plusHours(1)
+            )
+        }
     }
 
     fun changeEndTime(endTime: LocalTime) {
@@ -51,7 +57,16 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun changeTitle(title: String) {
-        state.update { it.copy(title = title) }
+        state.update {
+            it.copy(
+                title = title,
+                isTitleValid = validateTitle(title)
+            )
+        }
+    }
+
+    private fun validateTitle(title: String): Boolean {
+        return title.isNotBlank()
     }
 
     fun discardDialogDismissed() {
@@ -67,6 +82,11 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun onSaveButtonClicked() {
+        val state = state.value
+        if (!state.isTitleValid) {
+            this.state.update { it.copy(displayTitleValidError = true) }
+            return
+        }
         //TODO
     }
 
@@ -75,12 +95,14 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
         if (!state.isNewGuestEmailValid) {
             this.state.update { it.copy(displayNewGuestEmailValidError = state.newGuestEmail.isNotEmpty()) }
         } else {
-            this.state.update { it.copy(
-                guests = LinkedList(it.guests).apply { addFirst(Guest(it.newGuestEmail)) },
-                newGuestEmail = "",
-                isNewGuestEmailValid = validateNewGuestEmail(""),
-                displayNewGuestEmailValidError = false
-            ) }
+            this.state.update {
+                it.copy(
+                    guests = LinkedList(it.guests).apply { addFirst(Guest(it.newGuestEmail)) },
+                    newGuestEmail = "",
+                    isNewGuestEmailValid = validateNewGuestEmail(""),
+                    displayNewGuestEmailValidError = false
+                )
+            }
         }
     }
 
@@ -93,17 +115,19 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     }
 
     fun changeNewGuestEmail(newGuestEmail: String) {
-        state.update { it.copy(
-            newGuestEmail = newGuestEmail,
-            isNewGuestEmailValid = validateNewGuestEmail(newGuestEmail)
-        )}
+        state.update {
+            it.copy(
+                newGuestEmail = newGuestEmail,
+                isNewGuestEmailValid = validateNewGuestEmail(newGuestEmail)
+            )
+        }
     }
 
     private fun validateNewGuestEmail(email: String): Boolean {
         return email.matches(Regex(".+@.+[.].+"))
     }
 
-    class Factory(val visit: Visit?): ViewModelProvider.Factory {
+    class Factory(val visit: Visit?) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -113,7 +137,7 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
             return EditVisitViewModel(
                 application,
                 visit
-                ) as T
+            ) as T
         }
     }
 }

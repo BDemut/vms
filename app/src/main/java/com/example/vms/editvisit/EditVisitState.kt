@@ -10,6 +10,8 @@ import java.time.LocalTime
  */
 data class EditVisitState(
     val title: String,
+    val isTitleValid: Boolean,
+    val displayTitleValidError: Boolean,
     val date: LocalDate,
     val startTime: LocalTime,
     val endTime: LocalTime,
