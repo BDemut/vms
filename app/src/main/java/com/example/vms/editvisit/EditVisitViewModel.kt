@@ -118,7 +118,7 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
     }
 
     fun onRoomButtonClicked() {
-
+        //TODO
     }
 
     fun onRemoveGuestButtonClicked(guest: Guest) {
