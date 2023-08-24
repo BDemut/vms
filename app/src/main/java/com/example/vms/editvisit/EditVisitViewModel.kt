@@ -70,7 +70,7 @@ class EditVisitViewModel(app: Application, visit: Visit?): AndroidViewModel(app)
     fun onAddGuestButtonClicked() {
         val state = state.value
         if (!state.isNewGuestEmailValid) {
-            this.state.update { it.copy(displayNewGuestEmailValidError = true) }
+            this.state.update { it.copy(displayNewGuestEmailValidError = state.newGuestEmail.isNotEmpty()) }
         } else {
             this.state.update { it.copy(
                 guests = LinkedList(it.guests).apply { addFirst(Guest(it.newGuestEmail)) },
