@@ -3,7 +3,6 @@ package com.example.vms.login
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.example.vms.R
@@ -58,7 +57,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun onStart() {
         viewModelScope.launch {
             state.update { it.copy(isLoading = true) }
-            val currentUserState = authentication.getClient().currentUserState()
+            val currentUserState = authentication.currentUserState()
             state.update { it.copy(isLoading = false) }
             handleUserState(currentUserState.userState)
         }
@@ -106,10 +105,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun handleSignInResult(signInResult: Authentication.SignInResult) {
+    private suspend fun handleSignInResult(signInResult: Authentication.SignInResult) {
         when (signInResult) {
             is Authentication.SignInResult.Success -> {
-                val currentUserState = AWSMobileClient.getInstance().currentUserState()
+                val currentUserState = authentication.currentUserState()
                 handleUserState(currentUserState.userState)
             }
 

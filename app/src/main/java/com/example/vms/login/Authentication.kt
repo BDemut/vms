@@ -32,7 +32,7 @@ class Authentication(
         }
     }
 
-    suspend fun getClient(): AWSMobileClient {
+    private suspend fun getClient(): AWSMobileClient {
         ensureInit()
         return AWSMobileClient.getInstance()
     }
@@ -114,6 +114,10 @@ class Authentication(
 
     suspend fun getIdToken(): Token {
         return getClient().tokens.idToken
+    }
+
+    suspend fun currentUserState(): UserStateDetails {
+        return getClient().currentUserState()
     }
 
     sealed class SignInResult {
