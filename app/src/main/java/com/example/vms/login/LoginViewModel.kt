@@ -47,9 +47,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
                 return@launch
             }
-            this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
+            this@LoginViewModel.state.update { it.copy(isLoading = true) }
             val signInResult = authentication.signIn(state.username, state.password)
-            this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
+            this@LoginViewModel.state.update { it.copy(isLoading = false) }
             handleSignInResult(signInResult)
         }
     }
