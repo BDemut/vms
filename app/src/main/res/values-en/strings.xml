@@ -16,4 +16,14 @@
     <string name="host_change">Host change</string>
     <string name="accept_request_button_content_description">accept</string>
     <string name="decline_request_button_content_description">decline</string>
+    <string name="username_label">Username</string>
+    <string name="username_placeholder">Enter your username</string>
+    <string name="password_label">Password</string>
+    <string name="password_placeholder">Enter your password</string>
+    <string name="hide_password_icon_content_description">hide password</string>
+    <string name="login">LOGIN</string>
+    <string name="login_error_incorrect_username_or_password">Incorrect username or password.</string>
+    <string name="login_error_unknown">Login failed</string>
+    <string name="username_invalid">Invalid username</string>
+    <string name="password_invalid">Invalid password</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.vms.di
 
 import android.content.Context
+import com.example.vms.login.Authentication
 import com.example.vms.user.UserManager
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,14 @@ class AppModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideUserManager(userComponentBuilder: UserComponent.Builder): UserManager
-        = UserManager(userComponentBuilder)
+    fun provideUserManager(
+        userComponentBuilder: UserComponent.Builder,
+    ): UserManager = UserManager(userComponentBuilder)
+
+    @Provides
+    @Singleton
+    fun provideAuthentication(
+        context: Context,
+        userManager: UserManager
+    ) = Authentication(context, userManager)
 }

@@ -5,6 +5,10 @@ import android.content.Context
 import com.example.vms.di.AppComponent
 import com.example.vms.di.AppModule
 import com.example.vms.di.DaggerAppComponent
+import com.example.vms.di.UserComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by mśmiech on 05.08.2023.
@@ -16,6 +20,9 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         setupAppComponent()
+        CoroutineScope(Dispatchers.IO).launch {
+            appComponent.getAuthentication().ensureInit()
+        }
     }
 
     private fun setupAppComponent() {
@@ -30,3 +37,7 @@ fun Application.appComponent(): AppComponent =
 
 fun Context.appComponent(): AppComponent =
     (this.applicationContext as App).appComponent
+
+
+fun Application.userComponent(): UserComponent =
+    (this as App).appComponent.getUserManager().userComponent!!

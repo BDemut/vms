@@ -12,7 +12,7 @@ class UserManager(
     var userComponent: UserComponent? = null
         private set
 
-    suspend fun startUserSession(user: User) {
+    fun startUserSession(user: User) {
         userComponent = userComponentBuilder
             .userModule(UserModule(user))
             .build()

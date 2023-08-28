@@ -1,19 +1,20 @@
 package com.example.vms.home
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vms.home.requests.Request
 import com.example.vms.home.requests.testRequests
-import com.example.vms.home.visits.Visit
 import com.example.vms.home.visits.testVisits
-import kotlinx.coroutines.channels.Channel
+import com.example.vms.login.Authentication
+import com.example.vms.userComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val state = MutableStateFlow(HomeState(
         currentTab = Tab.VISITS,
@@ -24,6 +25,13 @@ class HomeViewModel : ViewModel() {
     ))
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
+
+    @Inject
+    lateinit var authentication: Authentication
+
+    init {
+        app.userComponent().inject(this)
+    }
 
     fun changeTab(newTab: Tab) {
         state.update {
@@ -43,6 +51,10 @@ class HomeViewModel : ViewModel() {
 
     fun logout() {
         state.update { it.copy(isLoggedIn = false) }
+        viewModelScope.launch {
+            authentication.signOut()
+            _events.emit(HomeEvent.NavigateToLogin)
+        }
     }
 
     fun logoutDialogDismissed() {
