@@ -1,5 +1,6 @@
 package com.example.vms.di
 
+import com.example.vms.home.HomeViewModel
 import dagger.Subcomponent
 
 /**
@@ -10,6 +11,8 @@ import dagger.Subcomponent
     UserModule::class
 ])
 interface UserComponent {
+    fun inject(viewModel: HomeViewModel)
+
     @Subcomponent.Builder
     interface Builder {
         fun userModule(userModule: UserModule): Builder

@@ -25,13 +25,13 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val state = MutableStateFlow<LoginState>(
         LoginState(
             isLoading = false,
-            displayValidErrors = false,
             username = "",
-            isUsernameValid = isUsernameValid(""),
+            isUsernameValid = true,
             password = "",
-            isPasswordValid = isPasswordValid("")
+            isPasswordValid = true
         )
     )
+    private var displayValidErrors = false
 
     @Inject
     lateinit var authentication: Authentication
@@ -42,9 +42,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     fun onLoginButtonClicked() {
         CoroutineScope(Dispatchers.IO).launch {
+            displayValidErrors = true
+            validate()
             val state = state.value
             if (!state.isValid) {
-                this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
                 return@launch
             }
             this@LoginViewModel.state.update { it.copy(isLoading = true) }
@@ -63,11 +64,20 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    private fun validate() {
+        state.update {
+            it.copy(
+                isUsernameValid = validateUsername(it.username),
+                isPasswordValid = validatePassword(it.password)
+            )
+        }
+    }
+
     fun setUsername(username: String) {
         state.update {
             it.copy(
                 username = username,
-                isUsernameValid = isUsernameValid(username)
+                isUsernameValid = !displayValidErrors || validateUsername(username)
             )
         }
     }
@@ -76,16 +86,16 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         state.update {
             it.copy(
                 password = password,
-                isPasswordValid = isPasswordValid(password)
+                isPasswordValid = !displayValidErrors || validatePassword(password)
             )
         }
     }
 
-    private fun isUsernameValid(username: String): Boolean {
+    private fun validateUsername(username: String): Boolean {
         return username.isNotBlank()
     }
 
-    private fun isPasswordValid(password: String): Boolean {
+    private fun validatePassword(password: String): Boolean {
         return password.isNotBlank()
     }
 
@@ -97,11 +107,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
 
-            UserState.SIGNED_OUT -> {
-            }
-
-            else -> {
-            }
+            else -> {}
         }
     }
 
@@ -116,7 +122,6 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 viewModelScope.launch {
                     val messageResId = if (signInResult.exception != null
                         && signInResult.exception is NotAuthorizedException
-                        && signInResult.exception.errorMessage == "Incorrect username or password."
                     ) {
                         R.string.login_error_incorrect_username_or_password
                     } else {

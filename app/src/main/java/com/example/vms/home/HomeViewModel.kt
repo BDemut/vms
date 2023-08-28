@@ -3,10 +3,10 @@ package com.example.vms.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vms.appComponent
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.testVisits
 import com.example.vms.login.Authentication
+import com.example.vms.userComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -30,7 +30,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     lateinit var authentication: Authentication
 
     init {
-        app.appComponent().inject(this)
+        app.userComponent().inject(this)
     }
 
     fun changeTab(newTab: Tab) {

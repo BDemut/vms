@@ -97,6 +97,10 @@ class Authentication(
         return result
     }
 
+    suspend fun isSignedIn(): Boolean {
+        return getClient().isSignedIn
+    }
+
     private fun isSignedIn(client: AWSMobileClient): Boolean {
         return client.isSignedIn
     }

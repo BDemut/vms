@@ -2,7 +2,6 @@ package com.example.vms.user
 
 import com.example.vms.di.UserComponent
 import com.example.vms.di.UserModule
-import com.example.vms.login.Authentication
 
 /**
  * Created by mśmiech on 06.08.2023.

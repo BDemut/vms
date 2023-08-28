@@ -65,10 +65,18 @@ class LoginActivity : ComponentActivity() {
         }
         loginViewModel.events.onEach { event ->
             when (event) {
-                is LoginEvent.NavigateToHome -> launchHomeActivity()
+                is LoginEvent.NavigateToHome -> {
+                    launchHomeActivity()
+                    finish()
+                }
+
                 is LoginEvent.ShowLoginError -> showLoginErrorToast(event.messageResId)
             }
         }.launchIn(lifecycleScope)
+    }
+
+    private fun launchHomeActivity() {
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 
     private fun showLoginErrorToast(messageResId: Int) {
@@ -78,13 +86,6 @@ class LoginActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         loginViewModel.onStart()
-    }
-
-    private fun launchHomeActivity() {
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
     }
 }
 
@@ -103,9 +104,6 @@ fun LoginScreen(
             onPasswordChange = { viewModel.setPassword(it) },
             onLoginButtonClicked = { viewModel.onLoginButtonClicked() }
         )
-        if (state.isLoading) {
-            LoadingView()
-        }
     }
 }
 
@@ -142,13 +140,13 @@ fun LoginContent(
         Username(
             username = state.username,
             onUsernameChange = onUsernameChange,
-            isUsernameValid = !state.displayValidErrors || state.isUsernameValid
+            isUsernameValid = state.isUsernameValid
         )
         Spacer(modifier = Modifier.height(8.dp))
         Password(
             password = state.password,
             onPasswordChange = onPasswordChange,
-            isPasswordValid = !state.displayValidErrors || state.isPasswordValid
+            isPasswordValid = state.isPasswordValid
         )
         TextButton(onClick = onLoginButtonClicked) {
             Text(stringResource(R.string.login))
