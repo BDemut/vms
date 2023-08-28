@@ -2,15 +2,11 @@ package com.example.vms.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.appComponent
-import com.example.vms.home.requests.Request
 import com.example.vms.home.requests.testRequests
-import com.example.vms.home.visits.Visit
 import com.example.vms.home.visits.testVisits
 import com.example.vms.login.Authentication
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -54,9 +50,9 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun logout() {
-        authentication.signOut()
         state.update { it.copy(isLoggedIn = false) }
         viewModelScope.launch {
+            authentication.signOut()
             _events.emit(HomeEvent.NavigateToLogin)
         }
     }

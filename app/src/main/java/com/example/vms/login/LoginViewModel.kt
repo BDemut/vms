@@ -58,9 +58,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun onStart() {
         viewModelScope.launch {
             state.update { it.copy(isLoading = true) }
-            authentication.ensureInit()
+            val currentUserState = authentication.getClient().currentUserState()
             state.update { it.copy(isLoading = false) }
-            val currentUserState = AWSMobileClient.getInstance().currentUserState()
             handleUserState(currentUserState.userState)
         }
     }

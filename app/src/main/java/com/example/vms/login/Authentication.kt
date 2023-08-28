@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
-import com.amazonaws.mobile.client.UserState
 import com.amazonaws.mobile.client.UserStateDetails
 import com.amazonaws.mobile.client.results.Token
 import com.example.vms.user.User
@@ -12,7 +11,6 @@ import com.example.vms.user.UserManager
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -29,14 +27,19 @@ class Authentication(
     suspend fun ensureInit() {
         clientMutex.withLock {
             if (!isClientInit) {
-                initAWSMobileClient()
+                initAWSMobileClient(AWSMobileClient.getInstance())
             }
         }
     }
 
-    private suspend fun initAWSMobileClient(): InitAWSMobileClientResult {
+    suspend fun getClient(): AWSMobileClient {
+        ensureInit()
+        return AWSMobileClient.getInstance()
+    }
+
+    private suspend fun initAWSMobileClient(client: AWSMobileClient): InitAWSMobileClientResult {
         val result = suspendCoroutine<InitAWSMobileClientResult> { continuation ->
-            AWSMobileClient.getInstance().initialize(
+            client.initialize(
                 context,
                 object : Callback<UserStateDetails?> {
                     override fun onResult(userStateDetails: UserStateDetails?) {
@@ -55,16 +58,16 @@ class Authentication(
                 }
             )
         }
-        if (result is InitAWSMobileClientResult.Success && isSignedIn()) {
-            getUser()?.let { userManager.startUserSession(it) }
+        if (result is InitAWSMobileClientResult.Success && isSignedIn(client)) {
+            getUser(client)?.let { userManager.startUserSession(it) }
         }
         return result
     }
 
     suspend fun signIn(username: String, password: String): SignInResult {
-        ensureInit()
+        val client = getClient()
         val result = suspendCoroutine<SignInResult> { continuation ->
-            AWSMobileClient.getInstance().signIn(
+            client.signIn(
                 username,
                 password,
                 null,
@@ -85,18 +88,18 @@ class Authentication(
             )
         }
         if (result is SignInResult.Success) {
-            getUser()?.let { userManager.startUserSession(it) }
+            getUser(client)?.let { userManager.startUserSession(it) }
         }
         return result
     }
 
-    private fun isSignedIn(): Boolean {
-        return AWSMobileClient.getInstance().isSignedIn
+    private fun isSignedIn(client: AWSMobileClient): Boolean {
+        return client.isSignedIn
     }
 
-    private fun getUser(): User? {
-        if (isSignedIn()) {
-            val userAttributes = AWSMobileClient.getInstance().userAttributes
+    private fun getUser(client: AWSMobileClient): User? {
+        if (isSignedIn(client)) {
+            val userAttributes = client.userAttributes
             return User(
                 userAttributes["sub"] as String,
                 userAttributes["email"] as String
@@ -106,22 +109,21 @@ class Authentication(
     }
 
     suspend fun getIdToken(): Token {
-        ensureInit()
-        return AWSMobileClient.getInstance().tokens.idToken
+        return getClient().tokens.idToken
     }
 
     sealed class SignInResult {
-        object Success: SignInResult()
-        class Error(val exception: java.lang.Exception?): SignInResult()
+        object Success : SignInResult()
+        class Error(val exception: java.lang.Exception?) : SignInResult()
     }
 
     sealed class InitAWSMobileClientResult {
-        object Success: InitAWSMobileClientResult()
-        class Error(val exception: java.lang.Exception?): InitAWSMobileClientResult()
+        object Success : InitAWSMobileClientResult()
+        class Error(val exception: java.lang.Exception?) : InitAWSMobileClientResult()
     }
 
-    fun signOut() {
-        AWSMobileClient.getInstance().signOut()
+    suspend fun signOut() {
+        getClient().signOut()
         userManager.closeUserSession()
     }
 }
