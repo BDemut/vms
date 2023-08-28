@@ -38,30 +38,34 @@ class Authentication(
     }
 
     private suspend fun initAWSMobileClient(client: AWSMobileClient): InitAWSMobileClientResult {
-        val result = suspendCoroutine<InitAWSMobileClientResult> { continuation ->
-            client.initialize(
+        val result = client.initialize(context)
+        if (result is InitAWSMobileClientResult.Success) {
+            isClientInit = true
+            if (isSignedIn(client)) {
+                getUser(client)?.let { userManager.startUserSession(it) }
+            }
+        }
+        if (result is InitAWSMobileClientResult.Error) {
+            Log.e("LoginManager", "AWSMobileClient initialize: error.", result.exception)
+        }
+        return result
+    }
+
+    private suspend fun AWSMobileClient.initialize(context: Context): InitAWSMobileClientResult {
+        return suspendCoroutine { continuation ->
+            this.initialize(
                 context,
                 object : Callback<UserStateDetails?> {
                     override fun onResult(userStateDetails: UserStateDetails?) {
-                        Log.i(
-                            "LoginManager",
-                            "AWSMobileClient initialize onResult: " + userStateDetails?.userState
-                        )
-                        isClientInit = true
                         continuation.resume(InitAWSMobileClientResult.Success)
                     }
 
                     override fun onError(e: Exception?) {
-                        Log.e("LoginManager", "AWSMobileClient initialize: error.", e)
                         continuation.resume(InitAWSMobileClientResult.Error(e))
                     }
                 }
             )
         }
-        if (result is InitAWSMobileClientResult.Success && isSignedIn(client)) {
-            getUser(client)?.let { userManager.startUserSession(it) }
-        }
-        return result
     }
 
     suspend fun signIn(username: String, password: String): SignInResult {
