@@ -208,26 +208,34 @@ fun Password(
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {
-            if (showPassword) {
-                IconButton(onClick = { showPassword = false }) {
-                    Icon(
-                        imageVector = Icons.Filled.Visibility,
-                        contentDescription = stringResource(id = R.string.hide_password_icon_content_description)
-                    )
-                }
-            } else {
-                IconButton(
-                    onClick = { showPassword = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.VisibilityOff,
-                        contentDescription = stringResource(id = R.string.hide_password_icon_content_description)
-                    )
-                }
-            }
+            ShowPasswordIcon(showPassword = showPassword,
+                onClick = {
+                    showPassword = it
+                })
         }
     )
     if (!isPasswordValid) {
         TextFieldError(stringResource(id = R.string.password_invalid))
+    }
+}
+
+@Composable
+fun ShowPasswordIcon(showPassword: Boolean, onClick: (Boolean) -> Unit) {
+    if (showPassword) {
+        IconButton(onClick = { onClick(false) }) {
+            Icon(
+                imageVector = Icons.Filled.Visibility,
+                contentDescription = stringResource(id = R.string.hide_password_icon_content_description)
+            )
+        }
+    } else {
+        IconButton(
+            onClick = { onClick(true) }) {
+            Icon(
+                imageVector = Icons.Filled.VisibilityOff,
+                contentDescription = stringResource(id = R.string.hide_password_icon_content_description)
+            )
+        }
     }
 }
 
