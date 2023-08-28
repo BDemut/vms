@@ -104,6 +104,9 @@ fun LoginScreen(
             onPasswordChange = { viewModel.setPassword(it) },
             onLoginButtonClicked = { viewModel.onLoginButtonClicked() }
         )
+        if (state.isLoading) {
+            LoadingView()
+        }
     }
 }
 
@@ -112,7 +115,7 @@ fun LoadingView() {
     Surface(
         modifier = Modifier
             .fillMaxSize(),
-        color = Color(0, 0, 0, 120)
+        color = Color.Black.copy(alpha = 120f)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
