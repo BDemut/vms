@@ -8,7 +8,12 @@ import com.amazonaws.mobile.client.UserState
 import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.example.vms.R
 import com.example.vms.appComponent
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +42,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun onLoginButtonClicked() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val state = state.value
             if (!state.isValid) {
                 this@LoginViewModel.state.update { it.copy(displayValidErrors = true) }
