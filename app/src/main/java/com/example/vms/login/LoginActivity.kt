@@ -115,7 +115,7 @@ fun LoadingView() {
     Surface(
         modifier = Modifier
             .fillMaxSize(),
-        color = Color.Black.copy(alpha = 120f)
+        color = Color.Black.copy(alpha = 0.47f)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
