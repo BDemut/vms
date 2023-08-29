@@ -31,6 +31,9 @@ import java.time.format.DateTimeFormatter
  * Created by mśmiech on 24.08.2023.
  */
 
+private val visitDateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy")
+private val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
 @Composable
 fun DateTimeSection(
     date: LocalDate,
@@ -40,13 +43,19 @@ fun DateTimeSection(
     onStartTimeChange: (LocalTime) -> Unit,
     onEndTimeChange: (LocalTime) -> Unit,
 ) {
+    EditableDate(date, onDateChange)
+    EditableTime(time = startTime, onTimeChange = onStartTimeChange)
+    EditableTime(time = endTime, onTimeChange = onEndTimeChange)
+}
+
+@Composable
+fun EditableDate(date: LocalDate, onDateChange: (LocalDate) -> Unit) {
     Row {
         Icon(
             modifier = Modifier.padding(13.dp),
             imageVector = Icons.Default.AccessTime,
             contentDescription = stringResource(R.string.datetime_icon_content_description)
         )
-        val visitDateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy")
         val datePicker = createDatePicker(LocalContext.current, date) {
             onDateChange(it)
         }
@@ -56,27 +65,20 @@ fun DateTimeSection(
             }
         }
     }
-    val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-    val startTimePicker = createTimePicker(LocalContext.current, startTime) {
-        onStartTimeChange(it)
+}
+
+@Composable
+fun EditableTime(time: LocalTime, onTimeChange: (LocalTime) -> Unit) {
+    val startTimePicker = createTimePicker(LocalContext.current, time) {
+        onTimeChange(it)
     }
     TextButton(
         onClick = { startTimePicker.show() }, modifier = Modifier.padding(start = 50.dp)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = startTime.format(visitItemTimeFormatter),
+                text = time.format(visitItemTimeFormatter),
             )
-        }
-    }
-    val endTimePicker = createTimePicker(LocalContext.current, endTime) {
-        onEndTimeChange(it)
-    }
-    TextButton(
-        onClick = { endTimePicker.show() }, modifier = Modifier.padding(start = 50.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Text(text = endTime.format(visitItemTimeFormatter))
         }
     }
 }
@@ -90,7 +92,7 @@ fun PreviewDateTimeSection() {
         DateTimeSection(
             date = LocalDate.now(),
             startTime = LocalTime.now(),
-            endTime = LocalTime.now(),
+            endTime = LocalTime.now().plusHours(1),
             onDateChange = {},
             onStartTimeChange = {},
             onEndTimeChange = {}
