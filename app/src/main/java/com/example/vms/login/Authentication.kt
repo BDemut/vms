@@ -8,6 +8,7 @@ import com.amazonaws.mobile.client.UserStateDetails
 import com.amazonaws.mobile.client.results.Token
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.resume
@@ -35,6 +36,11 @@ class Authentication(
     private suspend fun getClient(): AWSMobileClient {
         ensureInit()
         return AWSMobileClient.getInstance()
+    }
+
+    fun accessToken(): String {
+        val client = runBlocking { getClient() }
+        return client.tokens.idToken.tokenString
     }
 
     private suspend fun initAWSMobileClient(client: AWSMobileClient): InitAWSMobileClientResult {

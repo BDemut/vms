@@ -2,6 +2,8 @@ package com.example.vms.di
 
 import android.content.Context
 import com.example.vms.login.Authentication
+import com.example.vms.networking.AuthHeaderInterceptor
+import com.example.vms.networking.RetrofitFactory
 import com.example.vms.user.UserManager
 import dagger.Module
 import dagger.Provides
@@ -28,4 +30,15 @@ class AppModule(val context: Context) {
         context: Context,
         userManager: UserManager
     ) = Authentication(context, userManager)
+
+    @Provides
+    @Singleton
+    fun provideAuthHeaderInterceptor(
+        authentication: Authentication
+    ) = AuthHeaderInterceptor(authentication)
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(authHeaderInterceptor: AuthHeaderInterceptor) =
+        RetrofitFactory.createRetrofitInstance(authHeaderInterceptor)
 }

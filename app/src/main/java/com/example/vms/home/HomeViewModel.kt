@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.testVisits
 import com.example.vms.login.Authentication
+import com.example.vms.networking.VisitsClient
 import com.example.vms.userComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
 import javax.inject.Inject
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
@@ -29,6 +31,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     @Inject
     lateinit var authentication: Authentication
 
+    // temporary for testing
+    @Inject
+    lateinit var retrofit: Retrofit
+
     init {
         app.userComponent().inject(this)
     }
@@ -36,6 +42,18 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun changeTab(newTab: Tab) {
         state.update {
             it.copy(currentTab = newTab)
+        }
+    }
+
+    // temporary for testing
+    fun testRequest() {
+        val api = retrofit.create(VisitsClient::class.java)
+        viewModelScope.launch {
+            try {
+                api.getVisits()
+            } catch(e: Exception) {
+                e.hashCode()
+            }
         }
     }
 

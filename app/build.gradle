@@ -59,6 +59,10 @@ dependencies {
     implementation 'androidx.compose.material:material:1.5.0'
     implementation "androidx.compose.material:material-icons-extended:1.5.0"
     implementation 'com.google.dagger:dagger:2.45'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    implementation 'com.squareup.moshi:moshi-adapters:1.14.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
     kapt 'com.google.dagger:dagger-compiler:2.45'
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.73.0'
     testImplementation 'junit:junit:4.13.2'
