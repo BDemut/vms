@@ -2,13 +2,10 @@ package com.example.vms.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -36,16 +33,16 @@ import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import com.example.vms.user.UserSessionActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class HomeActivity : ComponentActivity() {
+class HomeActivity : UserSessionActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateWithUserSession(savedInstanceState: Bundle?) {
         setContent {
             VisitorManagementSystemTheme {
                 HomeScreen(model = homeViewModel)
@@ -55,7 +52,10 @@ class HomeActivity : ComponentActivity() {
             when (event) {
                 is HomeEvent.NavigateToSettings -> launchSettingsActivity()
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
-                is HomeEvent.NavigateToLogin -> launchLoginActivity()
+                is HomeEvent.NavigateToLogin -> {
+                    launchLoginActivity()
+                    finish()
+                }
                 is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
             }
         }.launchIn(lifecycleScope)
