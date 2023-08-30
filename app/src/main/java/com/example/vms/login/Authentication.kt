@@ -5,9 +5,9 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
-import com.amazonaws.mobile.client.results.Token
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.resume
@@ -21,26 +21,34 @@ class Authentication(
     private val context: Context,
     private val userManager: UserManager
 ) {
-    val clientMutex = Mutex()
-    var isClientInit = false
+    private val clientMutex = Mutex()
+    private var _client: AWSMobileClient? = null
 
     suspend fun ensureInit() {
         clientMutex.withLock {
-            if (!isClientInit) {
-                initAWSMobileClient(AWSMobileClient.getInstance())
+            if (_client == null) {
+                initAWSMobileClient()
             }
         }
     }
 
-    private suspend fun getClient(): AWSMobileClient {
-        ensureInit()
-        return AWSMobileClient.getInstance()
+    private fun getClient(): AWSMobileClient {
+        if (_client == null) {
+            runBlocking {
+                ensureInit()
+            }
+        }
+        return _client!!
     }
 
-    private suspend fun initAWSMobileClient(client: AWSMobileClient): InitAWSMobileClientResult {
+    fun accessToken(): String {
+        return getClient().tokens.idToken.tokenString
+    }
+
+    private suspend fun initAWSMobileClient() {
+        val client = AWSMobileClient.getInstance()
         val result = client.initialize(context)
         if (result is InitAWSMobileClientResult.Success) {
-            isClientInit = true
             if (isSignedIn(client)) {
                 getUser(client)?.let { userManager.startUserSession(it) }
             }
@@ -48,7 +56,7 @@ class Authentication(
         if (result is InitAWSMobileClientResult.Error) {
             Log.e("LoginManager", "AWSMobileClient initialize: error.", result.exception)
         }
-        return result
+        _client = client
     }
 
     private suspend fun AWSMobileClient.initialize(context: Context): InitAWSMobileClientResult {
@@ -97,7 +105,7 @@ class Authentication(
         return result
     }
 
-    suspend fun isSignedIn(): Boolean {
+    fun isSignedIn(): Boolean {
         return getClient().isSignedIn
     }
 
@@ -107,20 +115,14 @@ class Authentication(
 
     private fun getUser(client: AWSMobileClient): User? {
         if (isSignedIn(client)) {
-            val userAttributes = client.userAttributes
             return User(
-                userAttributes["sub"] as String,
-                userAttributes["email"] as String
+                client.username
             )
         }
         return null
     }
 
-    suspend fun getIdToken(): Token {
-        return getClient().tokens.idToken
-    }
-
-    suspend fun currentUserState(): UserStateDetails {
+    fun currentUserState(): UserStateDetails {
         return getClient().currentUserState()
     }
 
@@ -134,7 +136,7 @@ class Authentication(
         class Error(val exception: java.lang.Exception?) : InitAWSMobileClientResult()
     }
 
-    suspend fun signOut() {
+    fun signOut() {
         getClient().signOut()
         userManager.closeUserSession()
     }
