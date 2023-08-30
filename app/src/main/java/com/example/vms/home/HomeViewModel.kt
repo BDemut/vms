@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
-import com.example.vms.home.visits.testVisits
 import com.example.vms.login.Authentication
 import com.example.vms.model.repo.VisitRepository
 import com.example.vms.userComponent
@@ -20,7 +19,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val state = MutableStateFlow(HomeState(
         currentTab = Tab.VISITS,
-        visits = testVisits,
+        visits = emptyList(),
         requests = testRequests,
         isLogoutDialogShowing = false,
     ))
