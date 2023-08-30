@@ -40,4 +40,5 @@
     <string name="remove_guest_content_description">ikona usunięcia gościa</string>
     <string name="new_guest_email_error">Niepoprawny email</string>
     <string name="title_error_icon_content_description">ikona błędu</string>
+    <string name="invitation_status_icon_content_description">Ikona statusu zaproszenia</string>
 </resources>

@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun VisitsTab(
     visits: List<Visit>,
-    onVisitClick: (Int) -> Unit = {}
+    onVisitClick: (String) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier.padding(8.dp),
@@ -42,7 +42,7 @@ fun VisitsTab(
 @Composable
 fun VisitItem(
     visit: Visit,
-    onClick: (Int) -> Unit
+    onClick: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -81,11 +81,11 @@ private val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 val testVisits = listOf(
     Visit(
-        0, "wizyta prezesa",
+        "0", "wizyta prezesa",
         LocalDateTime.now(), LocalDateTime.now().plusHours(1)
     ),
     Visit(
-        0, "jakas inna wizyta",
+        "1", "jakas inna wizyta",
         LocalDateTime.now().plusHours(2), LocalDateTime.now().plusHours(3)
     ),
 )

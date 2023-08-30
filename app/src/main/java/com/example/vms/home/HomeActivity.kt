@@ -36,6 +36,7 @@ import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import com.example.vms.visitdetails.VisitDetailsActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -57,6 +58,7 @@ class HomeActivity : ComponentActivity() {
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                 is HomeEvent.NavigateToLogin -> launchLoginActivity()
                 is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
+                is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
             }
         }.launchIn(lifecycleScope)
     }
@@ -69,6 +71,9 @@ class HomeActivity : ComponentActivity() {
 
     private fun launchEditVisitActivity() =
         startActivity(Intent(this, EditVisitActivity::class.java))
+
+    private fun launchVisitDetailsActivity(visitId: String) =
+        startActivity(VisitDetailsActivity.getLaunchIntent(this, visitId))
 }
 
 @Composable
@@ -108,7 +113,7 @@ fun HomeScreen(
             color = MaterialTheme.colors.background
         ) {
             when (state.currentTab) {
-                Tab.VISITS -> VisitsTab(visits = state.visits)
+                Tab.VISITS -> VisitsTab(visits = state.visits, model::onVisitClicked)
                 Tab.REQUESTS -> RequestsTab(requests = state.requests)
             }
             if (state.isLogoutDialogShowing) {
