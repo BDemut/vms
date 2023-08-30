@@ -179,5 +179,5 @@ private val testVisit =
         end = LocalDateTime.now().plusHours(1),
         room = Room("1", "Sala 101"),
         guests = testGuests,
-        host = User("", "")
+        host = User("")
     )

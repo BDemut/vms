@@ -22,7 +22,7 @@ class TestVisitRepositoryImpl : VisitRepository {
                     LocalDateTime.now().plusHours(1),
                     null,
                     emptyList(),
-                    User("", "")
+                    User("")
                 ),
                 Visit(
                     "2",
@@ -31,7 +31,7 @@ class TestVisitRepositoryImpl : VisitRepository {
                     LocalDateTime.now().plusHours(5),
                     null,
                     emptyList(),
-                    User("", "")
+                    User("")
                 ),
                 Visit(
                     "3",
@@ -40,7 +40,7 @@ class TestVisitRepositoryImpl : VisitRepository {
                     LocalDateTime.now().plusHours(6),
                     null,
                     emptyList(),
-                    User("", "")
+                    User("")
                 )
             )
         )
@@ -66,5 +66,5 @@ val dummyVisit =
         LocalDateTime.now(),
         null,
         emptyList(),
-        User("", "")
+        User("")
     )

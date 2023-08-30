@@ -86,4 +86,4 @@ class VisitDetailsViewModel(
 }
 
 private val dummyVisit =
-    Visit("", "", LocalDateTime.now(), LocalDateTime.now(), null, emptyList(), User("", ""))
+    Visit("", "", LocalDateTime.now(), LocalDateTime.now(), null, emptyList(), User(""))
