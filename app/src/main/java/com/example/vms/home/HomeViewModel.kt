@@ -21,7 +21,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         visits = testVisits,
         requests = testRequests,
         isLogoutDialogShowing = false,
-        isLoggedIn = true
     ))
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
@@ -50,7 +49,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun logout() {
-        state.update { it.copy(isLoggedIn = false) }
         viewModelScope.launch {
             authentication.signOut()
             _events.emit(HomeEvent.NavigateToLogin)
@@ -59,5 +57,11 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun logoutDialogDismissed() {
         state.update { it.copy(isLogoutDialogShowing = false) }
+    }
+
+    fun onAddVisitClicked() {
+        viewModelScope.launch {
+            _events.emit(HomeEvent.NavigateToEditVisit)
+        }
     }
 }

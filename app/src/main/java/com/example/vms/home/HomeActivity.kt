@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -15,6 +17,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -26,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.R
 import com.example.vms.auditlog.AuditLogActivity
+import com.example.vms.editvisit.EditVisitActivity
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
@@ -54,6 +58,7 @@ class HomeActivity : UserSessionActivity() {
                     launchLoginActivity()
                     finish()
                 }
+                is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
             }
         }.launchIn(lifecycleScope)
     }
@@ -63,6 +68,9 @@ class HomeActivity : UserSessionActivity() {
     private fun launchAuditLogActivity() = startActivity(Intent(this, AuditLogActivity::class.java))
 
     private fun launchLoginActivity() = startActivity(Intent(this, LoginActivity::class.java))
+
+    private fun launchEditVisitActivity() =
+        startActivity(Intent(this, EditVisitActivity::class.java))
 }
 
 @Composable
@@ -82,7 +90,18 @@ fun HomeScreen(
         },
         drawerContent = {
             DrawerContent(onMenuItemClick = { item -> model.menuItemClicked(item) })
-        }
+        },
+        floatingActionButton = {
+            if (state.currentTab == Tab.VISITS) {
+                FloatingActionButton(onClick = { model.onAddVisitClicked() }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.title_error_icon_content_description),
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) {
         Surface(
             modifier = Modifier
