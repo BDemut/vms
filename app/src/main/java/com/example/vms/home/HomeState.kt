@@ -9,5 +9,4 @@ data class HomeState(
     val visits: List<Visit>,
     val requests: List<Request>,
     val isLogoutDialogShowing: Boolean,
-    val isLoggedIn: Boolean // TODO zaimplementować logikę
 )

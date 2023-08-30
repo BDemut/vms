@@ -22,20 +22,21 @@ import java.util.LinkedList
  * Created by mśmiech on 22.08.2023.
  */
 class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app) {
+    private var displayNewGuestEmailError = false
+    private var displayTitleValidError = false
     val state = MutableStateFlow(
         EditVisitState(
-            visit?.title ?: "",
-            validateTitle(visit?.title ?: ""),
-            false,
-            visit?.start?.toLocalDate() ?: LocalDate.now(),
-            visit?.start?.toLocalTime() ?: LocalTime.now().plusHours(1).withMinute(0),
-            visit?.end?.toLocalTime() ?: LocalTime.now().plusHours(2).withMinute(0),
-            visit?.room,
-            visit?.guests ?: emptyList(),
-            false,
-            "",
-            validateNewGuestEmail(""),
-            false
+            title = visit?.title ?: "",
+            isTitleError = isTitleError(visit?.title ?: ""),
+            date = visit?.date ?: LocalDate.now(),
+            startTime = visit?.startTime ?: LocalTime.now().plusHours(1).withMinute(0),
+            endTime = visit?.endTime ?: LocalTime.now().plusHours(2).withMinute(0),
+            room = visit?.room,
+            guests = visit?.guests ?: emptyList(),
+            isDiscardDialogShowing = false,
+            newGuestEmail = "",
+            isNewGuestEmailError = isNewGuestEmailError(""),
+            showNewGuestEmailClearInputButton = false
         )
     )
     private val _events: MutableSharedFlow<EditVisitEvent> = MutableSharedFlow()
@@ -54,6 +55,10 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
         }
     }
 
+    private fun isNewGuestEmailError(newGuestEmail: String): Boolean {
+        return displayNewGuestEmailError && !validateNewGuestEmail(newGuestEmail) && newGuestEmail.isNotEmpty()
+    }
+
     fun changeEndTime(endTime: LocalTime) {
         state.update { it.copy(endTime = endTime) }
     }
@@ -62,9 +67,13 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
         state.update {
             it.copy(
                 title = title,
-                isTitleValid = validateTitle(title)
+                isTitleError = isTitleError(title)
             )
         }
+    }
+
+    private fun isTitleError(title: String): Boolean {
+        return displayTitleValidError && !validateTitle(title)
     }
 
     private fun validateTitle(title: String): Boolean {
@@ -87,9 +96,9 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
 
     fun onSaveButtonClicked() {
         viewModelScope.launch {
-            val state = state.value
-            if (!state.isTitleValid) {
-                this@EditVisitViewModel.state.update { it.copy(displayTitleValidError = true) }
+            if (!validateTitle(state.value.title)) {
+                displayTitleValidError = true
+                this@EditVisitViewModel.state.update { it.copy(isTitleError = isTitleError(it.title)) }
                 return@launch
             }
             saveVisit()
@@ -102,16 +111,17 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
     }
 
     fun onAddGuestButtonClicked() {
-        val state = state.value
-        if (!state.isNewGuestEmailValid) {
-            this.state.update { it.copy(displayNewGuestEmailValidError = state.newGuestEmail.isNotEmpty()) }
+        if (!validateNewGuestEmail(state.value.newGuestEmail)) {
+            displayNewGuestEmailError = true
+            this.state.update { it.copy(isNewGuestEmailError = isNewGuestEmailError(it.newGuestEmail)) }
         } else {
+            displayNewGuestEmailError = false
             this.state.update {
                 it.copy(
                     guests = LinkedList(it.guests).apply { addFirst(Guest(it.newGuestEmail)) },
                     newGuestEmail = "",
-                    isNewGuestEmailValid = validateNewGuestEmail(""),
-                    displayNewGuestEmailValidError = false
+                    isNewGuestEmailError = isNewGuestEmailError(""),
+                    showNewGuestEmailClearInputButton = false
                 )
             }
         }
@@ -129,7 +139,8 @@ class EditVisitViewModel(app: Application, visit: Visit?) : AndroidViewModel(app
         state.update {
             it.copy(
                 newGuestEmail = newGuestEmail,
-                isNewGuestEmailValid = validateNewGuestEmail(newGuestEmail)
+                isNewGuestEmailError = isNewGuestEmailError(newGuestEmail),
+                showNewGuestEmailClearInputButton = newGuestEmail.isNotEmpty()
             )
         }
     }

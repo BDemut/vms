@@ -39,6 +39,7 @@
     <string name="remove_guest_content_description">remove guest icon</string>
     <string name="new_guest_email_error">Invalid email</string>
     <string name="title_error_icon_content_description">error icon</string>
+    <string name="add_guest_content_description">add guest icon</string>
+    <string name="clear_content_description">clear icon</string>
     <string name="invitation_status_icon_content_description">invitation status icon</string>
-
 </resources>

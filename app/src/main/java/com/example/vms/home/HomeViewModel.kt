@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
+import com.example.vms.home.visits.testVisits
 import com.example.vms.login.Authentication
 import com.example.vms.model.repo.VisitRepository
 import com.example.vms.userComponent
@@ -17,15 +18,12 @@ import javax.inject.Inject
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
-    val state = MutableStateFlow(
-        HomeState(
-            currentTab = Tab.VISITS,
-            visits = emptyList(),
-            requests = testRequests,
-            isLogoutDialogShowing = false,
-            isLoggedIn = true
-        )
-    )
+    val state = MutableStateFlow(HomeState(
+        currentTab = Tab.VISITS,
+        visits = testVisits,
+        requests = testRequests,
+        isLogoutDialogShowing = false,
+    ))
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
 
@@ -61,9 +59,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun logout() {
-        authentication.signOut()
-        state.update { it.copy(isLoggedIn = false) }
         viewModelScope.launch {
+            authentication.signOut()
             _events.emit(HomeEvent.NavigateToLogin)
         }
     }

@@ -3,12 +3,16 @@ package com.example.vms.login
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.UserState
 import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.example.vms.R
 import com.example.vms.appComponent
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,16 +24,14 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val events: SharedFlow<LoginEvent> = _events
     val state = MutableStateFlow<LoginState>(
         LoginState(
-            false,
-            false,
+            isLoading = false,
+            username = "",
+            isUsernameValid = true,
+            password = "",
+            isPasswordValid = true
         )
     )
-    private val _username = MutableStateFlow("")
-    val username = _username.asStateFlow()
-    val isUsernameValid = username.map { isUsernameValid(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
-    private val _password = MutableStateFlow("")
-    val password = _password.asStateFlow()
-    val isPasswordValid = password.map { isPasswordValid(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private var displayValidErrors = false
 
     @Inject
     lateinit var authentication: Authentication
@@ -39,16 +41,16 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun onLoginButtonClicked() {
-        viewModelScope.launch {
-            if (!isUsernameValid.value || !isPasswordValid.value) {
-                state.update { it.copy(displayValidErrors = true) }
+        CoroutineScope(Dispatchers.IO).launch {
+            displayValidErrors = true
+            validate()
+            val state = state.value
+            if (!state.isValid) {
                 return@launch
             }
-            val username = username.value
-            val password = password.value
-            state.update { it.copy(isLoading = true) }
-            val signInResult = authentication.signIn(username, password)
-            state.update { it.copy(isLoading = false) }
+            this@LoginViewModel.state.update { it.copy(isLoading = true) }
+            val signInResult = authentication.signIn(state.username, state.password)
+            this@LoginViewModel.state.update { it.copy(isLoading = false) }
             handleSignInResult(signInResult)
         }
     }
@@ -56,26 +58,44 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun onStart() {
         viewModelScope.launch {
             state.update { it.copy(isLoading = true) }
-            authentication.ensureInit()
+            val currentUserState = authentication.currentUserState()
             state.update { it.copy(isLoading = false) }
-            val currentUserState = AWSMobileClient.getInstance().currentUserState()
             handleUserState(currentUserState.userState)
         }
     }
 
-    fun setUsername(login: String) {
-        _username.value = login
+    private fun validate() {
+        state.update {
+            it.copy(
+                isUsernameValid = validateUsername(it.username),
+                isPasswordValid = validatePassword(it.password)
+            )
+        }
+    }
+
+    fun setUsername(username: String) {
+        state.update {
+            it.copy(
+                username = username,
+                isUsernameValid = !displayValidErrors || validateUsername(username)
+            )
+        }
     }
 
     fun setPassword(password: String) {
-        _password.value = password
+        state.update {
+            it.copy(
+                password = password,
+                isPasswordValid = !displayValidErrors || validatePassword(password)
+            )
+        }
     }
 
-    private fun isUsernameValid(username: String): Boolean {
+    private fun validateUsername(username: String): Boolean {
         return username.isNotBlank()
     }
 
-    private fun isPasswordValid(password: String): Boolean {
+    private fun validatePassword(password: String): Boolean {
         return password.isNotBlank()
     }
 
@@ -86,24 +106,23 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                     _events.emit(LoginEvent.NavigateToHome)
                 }
             }
-            UserState.SIGNED_OUT -> {
-            }
-            else -> {
-            }
+
+            else -> {}
         }
     }
 
-    private fun handleSignInResult(signInResult: Authentication.SignInResult) {
-        when(signInResult) {
+    private suspend fun handleSignInResult(signInResult: Authentication.SignInResult) {
+        when (signInResult) {
             is Authentication.SignInResult.Success -> {
-                val currentUserState = AWSMobileClient.getInstance().currentUserState()
+                val currentUserState = authentication.currentUserState()
                 handleUserState(currentUserState.userState)
             }
+
             is Authentication.SignInResult.Error -> {
                 viewModelScope.launch {
-                    val messageResId = if(signInResult.exception != null
+                    val messageResId = if (signInResult.exception != null
                         && signInResult.exception is NotAuthorizedException
-                        && signInResult.exception.errorMessage == "Incorrect username or password.") {
+                    ) {
                         R.string.login_error_incorrect_username_or_password
                     } else {
                         R.string.login_error_unknown

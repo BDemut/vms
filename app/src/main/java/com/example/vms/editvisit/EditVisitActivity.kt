@@ -50,42 +50,47 @@ class EditVisitActivity : ComponentActivity() {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                TopBar({
-                    viewModel.onDiscardButtonClicked()
-                },
+                TopBar(
+                    onDiscardClick = {
+                        viewModel.onDiscardButtonClicked()
+                    },
                     onSaveClick = {
                         viewModel.onSaveButtonClicked()
                     })
                 TitleSection(
-                    state.title,
+                    title = state.title,
                     onTitleChange = { viewModel.changeTitle(it) },
-                    !state.displayTitleValidError || state.isTitleValid
+                    isTitleError = state.isTitleError
                 )
                 Divider(modifier = Modifier.fillMaxWidth())
                 DateTimeSection(
-                    state.date,
-                    state.startTime,
-                    state.endTime, {
+                    date = state.date,
+                    startTime = state.startTime,
+                    endTime = state.endTime,
+                    onDateChange = {
                         viewModel.changeDate(it)
-                    }, {
+                    },
+                    onStartTimeChange = {
                         viewModel.changeStartTime(it)
-                    }, {
+                    },
+                    onEndTimeChange = {
                         viewModel.changeEndTime(it)
                     })
                 Divider(modifier = Modifier.fillMaxWidth())
-                LocationSection(state.room,
+                LocationSection(
+                    room = state.room,
                     onClick = {
                         viewModel.onRoomButtonClicked()
                     })
                 Divider(modifier = Modifier.fillMaxWidth())
                 GuestsSection(
-                    state.guests,
+                    guests = state.guests,
                     onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() },
                     onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) },
-                    state.newGuestEmail,
-                    { viewModel.changeNewGuestEmail(it) },
-                    state.isNewGuestEmailValid,
-                    state.displayNewGuestEmailValidError
+                    newGuestEmail = state.newGuestEmail,
+                    onNewGuestEmailChange = { viewModel.changeNewGuestEmail(it) },
+                    isNewGuestEmailError = state.isNewGuestEmailError,
+                    showNewGuestEmailClearInputButton = state.showNewGuestEmailClearInputButton
                 )
                 Divider(modifier = Modifier.fillMaxWidth())
             }

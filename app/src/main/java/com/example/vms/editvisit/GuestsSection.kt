@@ -40,10 +40,9 @@ fun GuestsSection(
     onRemoveGuestButtonClicked: (Guest) -> Unit,
     newGuestEmail: String,
     onNewGuestEmailChange: (String) -> Unit,
-    isNewGuestEmailValid: Boolean,
-    displayNewGuestEmailValidError: Boolean
+    isNewGuestEmailError: Boolean,
+    showNewGuestEmailClearInputButton: Boolean
 ) {
-    val focusRequester = remember { FocusRequester() }
     Row {
         Icon(
             modifier = Modifier.padding(13.dp),
@@ -51,84 +50,111 @@ fun GuestsSection(
             contentDescription = stringResource(R.string.guests_icon_content_description)
         )
         Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    Modifier
-                        .padding(start = 10.dp)
-                        .weight(1.0f)) {
-                    NoShapeTextField(
-                        value = newGuestEmail,
-                        onValueChange = { onNewGuestEmailChange(it) },
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.edit_visit_add_guest_placeholder),
-                                color = MaterialTheme.colors.primary,
-                            )
-                        },
-                        modifier = Modifier
-                            .focusRequester(focusRequester),
-                        isError = newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid
-                    )
-                    if (newGuestEmail.isNotEmpty() && displayNewGuestEmailValidError && !isNewGuestEmailValid) {
-                        Text(
-                            text = stringResource(R.string.new_guest_email_error),
-                            modifier = Modifier
-                                .width(200.dp)
-                                .align(Alignment.BottomStart),
-                            color = MaterialTheme.colors.error
-                        )
-                    }
-                }
-                Row {
-                    if (newGuestEmail.isNotEmpty()) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = stringResource(R.string.remove_guest_content_description),
-                            modifier = Modifier
-                                .padding(13.dp)
-                                .clickable {
-                                    onNewGuestEmailChange("")
-                                }
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            focusRequester.requestFocus()
-                            onAddGuestButtonClicked(newGuestEmail)
-                        },
-                        modifier = Modifier.padding(8.dp, 0.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.remove_guest_content_description),
-                            tint = MaterialTheme.colors.primary,
-                        )
-                    }
-                }
-            }
-            guests.forEach {
-                Guest(guest = it, onRemoveGuestButtonClicked)
-            }
+            NewGuestEmailTextInputLayout(
+                onAddGuestButtonClicked = onAddGuestButtonClicked,
+                newGuestEmail = newGuestEmail,
+                onNewGuestEmailChange = onNewGuestEmailChange,
+                isNewGuestEmailError = isNewGuestEmailError,
+                showNewGuestEmailClearInputButton = showNewGuestEmailClearInputButton
+            )
+            GuestList(
+                guests = guests,
+                onRemoveGuestButtonClicked = onRemoveGuestButtonClicked
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun PreviewGuestsSection() {
-    GuestsSection(
-        guests = emptyList(),
-        onAddGuestButtonClicked = {},
-        onRemoveGuestButtonClicked = {},
-        "",
-        {},
-        true,
-        false
-    )
+fun NewGuestEmailTextInputLayout(
+    onAddGuestButtonClicked: (String) -> Unit,
+    newGuestEmail: String,
+    onNewGuestEmailChange: (String) -> Unit,
+    isNewGuestEmailError: Boolean,
+    showNewGuestEmailClearInputButton: Boolean
+) {
+    val focusRequester = remember { FocusRequester() }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            Modifier
+                .padding(start = 10.dp)
+                .weight(1.0f)
+        ) {
+            NoShapeTextField(
+                value = newGuestEmail,
+                onValueChange = { onNewGuestEmailChange(it) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.edit_visit_add_guest_placeholder),
+                        color = MaterialTheme.colors.primary,
+                    )
+                },
+                modifier = Modifier
+                    .focusRequester(focusRequester),
+                isError = isNewGuestEmailError
+            )
+            if (isNewGuestEmailError) {
+                Text(
+                    text = stringResource(R.string.new_guest_email_error),
+                    modifier = Modifier
+                        .width(200.dp)
+                        .align(Alignment.BottomStart),
+                    color = MaterialTheme.colors.error
+                )
+            }
+        }
+        Row {
+            if (showNewGuestEmailClearInputButton) {
+                ClearInputButton(onClick = {
+                    onNewGuestEmailChange("")
+                })
+            }
+            AddGuestButton(onClick = {
+                focusRequester.requestFocus()
+                onAddGuestButtonClicked(newGuestEmail)
+            })
+        }
+    }
+}
+
+@Composable
+fun ClearInputButton(
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Clear,
+            contentDescription = stringResource(R.string.clear_content_description),
+        )
+    }
+}
+
+@Composable
+fun AddGuestButton(
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(end = 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(R.string.add_guest_content_description),
+            tint = MaterialTheme.colors.primary,
+        )
+    }
+}
+
+@Composable
+private fun GuestList(guests: List<Guest>, onRemoveGuestButtonClicked: (Guest) -> Unit) {
+    guests.forEach {
+        Guest(guest = it, onRemoveGuestButtonClicked)
+    }
 }
 
 @Composable
@@ -152,3 +178,22 @@ private fun Guest(guest: Guest, onRemoveGuestButtonClicked: (Guest) -> Unit) {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewGuestsSection() {
+    GuestsSection(
+        guests = testGuests,
+        onAddGuestButtonClicked = {},
+        onRemoveGuestButtonClicked = {},
+        newGuestEmail = "abc",
+        onNewGuestEmailChange = {},
+        isNewGuestEmailError = false,
+        showNewGuestEmailClearInputButton = false
+    )
+}
+
+private val testGuests = listOf(
+    Guest("michal@test.com"),
+    Guest("bartek@test.com"),
+)

@@ -31,12 +31,12 @@ import com.example.vms.R
 fun TitleSection(
     title: String,
     onTitleChange: (String) -> Unit,
-    isTitleValid: Boolean
+    isTitleError: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
             .let {
-                if (!isTitleValid) {
+                if (isTitleError) {
                     it.background(MaterialTheme.colors.error.copy(alpha = 0.5f))
                 } else {
                     it
@@ -44,7 +44,7 @@ fun TitleSection(
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (!isTitleValid) {
+        if (isTitleError) {
             Icon(
                 modifier = Modifier.padding(13.dp),
                 imageVector = Icons.Default.Error,
@@ -75,5 +75,5 @@ fun TitleSection(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTitle() {
-    TitleSection(title = "", onTitleChange = {}, true)
+    TitleSection(title = "", onTitleChange = {}, false)
 }
