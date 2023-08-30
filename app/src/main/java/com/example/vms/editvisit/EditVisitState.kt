@@ -10,8 +10,7 @@ import java.time.LocalTime
  */
 data class EditVisitState(
     val title: String,
-    val isTitleValid: Boolean,
-    val displayTitleValidError: Boolean,
+    val isTitleError: Boolean,
     val date: LocalDate,
     val startTime: LocalTime,
     val endTime: LocalTime,
@@ -19,6 +18,6 @@ data class EditVisitState(
     val guests: List<Guest>,
     val isDiscardDialogShowing: Boolean,
     val newGuestEmail: String,
-    val isNewGuestEmailValid: Boolean,
-    val displayNewGuestEmailValidError: Boolean
+    val isNewGuestEmailError: Boolean,
+    val showNewGuestEmailClearInputButton: Boolean,
 )
