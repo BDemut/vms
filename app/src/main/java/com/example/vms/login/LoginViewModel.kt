@@ -56,12 +56,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun onStart() {
-        viewModelScope.launch {
-            state.update { it.copy(isLoading = true) }
-            val currentUserState = authentication.currentUserState()
-            state.update { it.copy(isLoading = false) }
-            handleUserState(currentUserState.userState)
-        }
+        state.update { it.copy(isLoading = true) }
+        val currentUserState = authentication.currentUserState()
+        state.update { it.copy(isLoading = false) }
+        handleUserState(currentUserState.userState)
     }
 
     private fun validate() {
