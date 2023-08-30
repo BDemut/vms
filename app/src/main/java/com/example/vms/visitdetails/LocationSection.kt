@@ -35,7 +35,7 @@ fun LocationSection(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewLocationSection() {
     LocationSection(room = Room("1", "Sala 101"))

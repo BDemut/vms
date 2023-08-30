@@ -35,58 +35,95 @@ fun TopBar(
     onCancelVisitClick: () -> Unit,
     showMoreOptions: Boolean
 ) {
-    var showMenu by remember { mutableStateOf(false) }
+    var showMoreOptionsDropdownMenu by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(
-            onClick = {
-                onDiscardClick()
-            }, modifier = Modifier.padding(8.dp, 8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = stringResource(R.string.discard_icon_content_description)
-            )
-        }
-
+        DiscardButton(onClick = onDiscardClick)
         Row {
-            IconButton(
-                onClick = {
-                    onEditClick()
-                }, modifier = Modifier.padding(8.dp, 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.discard_icon_content_description)
+            EditButton(onClick = onEditClick)
+            if (showMoreOptions) {
+                MoreOptionsButton(
+                    onClick = {
+                        showMoreOptionsDropdownMenu = !showMoreOptionsDropdownMenu
+                    }
+                )
+                MoreOptionsDropdownMenu(
+                    expanded = showMoreOptionsDropdownMenu,
+                    onDismissRequest = { showMoreOptionsDropdownMenu = false },
+                    onChangeHostClick = {
+                        showMoreOptionsDropdownMenu = false
+                        onChangeHostClick()
+                    },
+                    onCancelVisitClick = {
+                        showMoreOptionsDropdownMenu = false
+                        onCancelVisitClick()
+                    }
                 )
             }
-            if (showMoreOptions) {
-                IconButton(
-                    onClick = {
-                        showMenu = !showMenu
-                    }, modifier = Modifier.padding(8.dp, 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.discard_icon_content_description)
-                    )
-                }
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(onClick = {
-                        showMenu = false
-                        onChangeHostClick()
-                    }) {
-                        Text(text = "Change the host")
-                    }
-                    DropdownMenuItem(onClick = {
-                        showMenu = false
-                        onCancelVisitClick()
-                    }) {
-                        Text(text = "Cancel")
-                    }
-                }
-            }
+        }
+    }
+}
+
+@Composable
+fun DiscardButton(
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp, 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = stringResource(R.string.discard_icon_content_description)
+        )
+    }
+}
+
+@Composable
+fun EditButton(
+    onClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp, 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Edit,
+            contentDescription = stringResource(R.string.discard_icon_content_description)
+        )
+    }
+}
+
+@Composable
+fun MoreOptionsButton(
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.padding(8.dp, 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = stringResource(R.string.discard_icon_content_description)
+        )
+    }
+}
+
+@Composable
+fun MoreOptionsDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onChangeHostClick: () -> Unit,
+    onCancelVisitClick: () -> Unit,
+
+    ) {
+    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
+        DropdownMenuItem(onClick = onChangeHostClick) {
+            Text(text = stringResource(id = R.string.visit_details_change_host))
+        }
+        DropdownMenuItem(onClick = onCancelVisitClick) {
+            Text(text = stringResource(id = R.string.visit_details_cancel_visit))
         }
     }
 }
@@ -97,8 +134,8 @@ fun PreviewTopBar() {
     TopBar(
         onDiscardClick = {},
         onEditClick = {},
-        {},
-        {},
-        true
+        onChangeHostClick = {},
+        onCancelVisitClick = {},
+        showMoreOptions = true
     )
 }

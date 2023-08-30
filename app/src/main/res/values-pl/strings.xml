@@ -43,4 +43,7 @@
     <string name="add_guest_content_description">ikona dodawania osoby</string>
     <string name="clear_content_description">ikona czyszczenia</string>
     <string name="invitation_status_icon_content_description">Ikona statusu zaproszenia</string>
+    <string name="visit_details_guests">gości</string>
+    <string name="visit_details_change_host">Zmień gospodarza</string>
+    <string name="visit_details_cancel_visit">Anuluj wizytę</string>
 </resources>

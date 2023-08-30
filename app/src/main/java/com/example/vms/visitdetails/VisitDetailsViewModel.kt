@@ -20,14 +20,14 @@ import javax.inject.Named
  */
 class VisitDetailsViewModel(
     visitId: String,
-    signInUser: User,
+    private val signInUser: User,
     private val visitRepository: VisitRepository
 ) : ViewModel() {
     val state = MutableStateFlow(
         VisitDetailsState(
-            true,
-            dummyVisit,
-            dummyVisit.host == signInUser
+            isLoading = true,
+            visit = dummyVisit,
+            showMoreOptions = dummyVisit.host == signInUser
         )
     )
 
@@ -37,7 +37,8 @@ class VisitDetailsViewModel(
             state.update {
                 it.copy(
                     isLoading = false,
-                    visit = visit
+                    visit = visit,
+                    showMoreOptions = visit.host != signInUser
                 )
             }
         }
@@ -84,5 +85,5 @@ class VisitDetailsViewModel(
     }
 }
 
-val dummyVisit =
+private val dummyVisit =
     Visit("", "", LocalDateTime.now(), LocalDateTime.now(), null, emptyList(), User("", ""))

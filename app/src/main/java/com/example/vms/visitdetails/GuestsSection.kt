@@ -40,7 +40,7 @@ fun GuestsSection(
         )
         Column {
             Text(
-                text = "${guests.size} gości",
+                text = "${guests.size} ${stringResource(id = R.string.visit_details_guests)}",
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
             guests.forEach {
@@ -54,7 +54,7 @@ fun GuestsSection(
 @Composable
 fun PreviewGuestsSection() {
     GuestsSection(
-        guests = testGuest
+        guests = testGuests
     )
 }
 
@@ -83,7 +83,7 @@ private fun getInvitationStatusIcon(invitationStatus: Guest.InvitationStatus): I
     }
 }
 
-val testGuest = listOf(
+private val testGuests = listOf(
     Guest("michal@test.com", Guest.InvitationStatus.Accepted),
     Guest("bartek@test.com", Guest.InvitationStatus.Pending),
 )
