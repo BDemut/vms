@@ -5,10 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.example.vms.appComponent
 import com.example.vms.login.LoginActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Created by mśmiech on 28.08.2023.
@@ -16,16 +12,12 @@ import kotlinx.coroutines.withContext
 abstract class UserSessionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CoroutineScope(Dispatchers.IO).launch {
-            val signedIn = appComponent().getAuthentication().isSignedIn()
-            if (signedIn) {
-                withContext(Dispatchers.Main) {
-                    onCreateWithUserSession(savedInstanceState)
-                }
-            } else {
-                launchLoginActivity()
-                finish()
-            }
+        val signedIn = appComponent().getAuthentication().isSignedIn()
+        if (signedIn) {
+            onCreateWithUserSession(savedInstanceState)
+        } else {
+            launchLoginActivity()
+            finish()
         }
     }
 
@@ -33,13 +25,9 @@ abstract class UserSessionActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        CoroutineScope(Dispatchers.IO).launch {
-            val signedIn = appComponent().getAuthentication().isSignedIn()
-            if (signedIn) {
-                withContext(Dispatchers.Main) {
-                    onStartWithUserSession()
-                }
-            }
+        val signedIn = appComponent().getAuthentication().isSignedIn()
+        if (signedIn) {
+            onStartWithUserSession()
         }
     }
 

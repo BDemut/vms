@@ -53,7 +53,10 @@ class HomeActivity : UserSessionActivity() {
         }
         homeViewModel.events.onEach { event ->
             when (event) {
-                is HomeEvent.NavigateToSettings -> launchSettingsActivity()
+                // temporary for testing
+                is HomeEvent.NavigateToSettings -> {
+                    homeViewModel.testRequest()
+                }
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                 is HomeEvent.NavigateToLogin -> {
                     launchLoginActivity()
