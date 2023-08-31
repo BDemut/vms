@@ -5,16 +5,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
-import com.example.vms.login.Authentication
-import com.example.vms.networking.VisitsClient
 import com.example.vms.repository.VisitRepository
+import com.example.vms.login.Authentication
 import com.example.vms.userComponent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
+import java.lang.Thread.sleep
 import javax.inject.Inject
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
@@ -24,6 +24,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         visits = emptyList(),
         requests = testRequests,
         isLogoutDialogShowing = false,
+        dataState = DataState.LOADING
     ))
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
@@ -31,20 +32,11 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     @Inject
     lateinit var authentication: Authentication
 
-    // temporary for testing
-    @Inject
-    lateinit var retrofit: Retrofit
-
     @Inject
     lateinit var visitRepository: VisitRepository
 
     init {
         app.userComponent().inject(this)
-        viewModelScope.launch {
-            val visitList =
-                visitRepository.getVisits().map { Visit(it.id, it.title, it.start, it.end) }
-            state.update { it.copy(visits = visitList) }
-        }
     }
 
     fun changeTab(newTab: Tab) {
@@ -53,15 +45,19 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // temporary for testing
-    fun testRequest() {
-        val api = retrofit.create(VisitsClient::class.java)
-        viewModelScope.launch {
-            try {
-                api.getVisits()
-            } catch(e: Exception) {
-                e.hashCode()
+    fun getVisits() {
+        viewModelScope.launch(Dispatchers.IO) {
+            state.update { it.copy(dataState = DataState.LOADING) }
+            kotlin.runCatching {
+                visitRepository.getVisits()
             }
+                .onSuccess {
+                    val visits = it.map { Visit(it.id, it.title, it.start, it.end) }
+                    state.update { it.copy(visits = visits, dataState = DataState.CONTENT) }
+                }
+                .onFailure {
+                    state.update { it.copy(dataState = DataState.ERROR) }
+                }
         }
     }
 
