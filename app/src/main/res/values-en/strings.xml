@@ -53,4 +53,5 @@
     <string name="edit_visit_discard_dialog_description_edit_visit">Discard changes to this visit?</string>
     <string name="error_icon_content_description">No data</string>
     <string name="reload">Reload</string>
+    <string name="you_have_no_visits">You have no visits!</string>
 </resources>

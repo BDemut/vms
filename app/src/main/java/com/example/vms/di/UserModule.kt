@@ -1,14 +1,12 @@
 package com.example.vms.di
 
-import com.example.vms.networking.VisitsClient
+import com.example.vms.repository.api.VisitsClient
 import com.example.vms.repository.ApiVisitRepositoryImpl
-import com.example.vms.repository.TestVisitRepositoryImpl
 import com.example.vms.repository.VisitRepository
 import com.example.vms.user.User
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * Created by mśmiech on 06.08.2023.
