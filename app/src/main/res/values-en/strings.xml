@@ -44,6 +44,10 @@
     <string name="clear_content_description">clear icon</string>
     <string name="invitation_status_icon_content_description">invitation status icon</string>
     <string name="visit_details_guests">guests</string>
+    <plurals name="visit_details_guests_count">
+        <item quantity="one">%d guest</item>
+        <item quantity="other">%d guests</item>
+    </plurals>
     <string name="visit_details_change_host">Change the host</string>
     <string name="visit_details_cancel_visit">Cancel the visit</string>
     <string name="edit_visit_discard_dialog_description_edit_visit">Discard changes to this visit?</string>

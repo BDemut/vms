@@ -58,6 +58,11 @@ class VisitDetailsActivity : ComponentActivity() {
         }.launchIn(lifecycleScope)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
+    }
+
     private fun launchEditVisitActivity(visitId: String) =
         startActivity(EditVisitActivity.getLaunchIntent(this, visitId))
 
@@ -109,7 +114,8 @@ fun VisitDetailsContent(
             onEditClick = onEditClick,
             onChangeHostClick = onChangeHostClick,
             onCancelVisitClick = onCancelVisitClick,
-            showMoreOptions = state.showMoreOptions
+            showMoreOptions = state.showMoreOptions,
+            showEditButton = state.showEditButton
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -143,7 +149,8 @@ fun PreviewVisitDetailsContent() {
         state = VisitDetailsState(
             isLoading = false,
             visit = testVisit,
-            showMoreOptions = true
+            showMoreOptions = true,
+            showEditButton = true
         ),
         onDiscardClick = {},
         onEditClick = {},

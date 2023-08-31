@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.vms.editvisit.model.Guest
-import com.example.vms.editvisit.model.Room
 import com.example.vms.editvisit.model.Visit
-import com.example.vms.model.repo.VisitRepository
+import com.example.vms.editvisit.model.VisitMapper
+import com.example.vms.repository.VisitRepository
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +32,8 @@ class EditVisitViewModel(
     val events: SharedFlow<EditVisitEvent> = _events
     private var displayNewGuestEmailError = false
     private var displayTitleValidError = false
-    private val initVisit =
+    private var originalVisit: com.example.vms.model.Visit? = null
+    private var initVisit =
         Visit(
             id = Visit.generateNewId(),
             title = "",
@@ -57,6 +58,7 @@ class EditVisitViewModel(
             showNewGuestEmailClearInputButton = false,
             isLoading = visitId != null,
             isNewVisit = visitId == null,
+            isSaving = false
         )
     )
 
@@ -69,28 +71,21 @@ class EditVisitViewModel(
     }
 
     private suspend fun setupVisit(visitId: String) {
-        val visit = visitRepository.getVisit(visitId)
+        initVisit = visitRepository.getVisit(visitId)
             .let {
-                Visit(
-                    id = it.id,
-                    title = it.title,
-                    date = it.start.toLocalDate(),
-                    startTime = it.start.toLocalTime(),
-                    endTime = it.end.toLocalTime(),
-                    room = it.room?.let { room -> Room(room.id, room.name) },
-                    guests = it.guests.map { guest -> Guest(guest.email) }
-                )
+                originalVisit = it
+                VisitMapper.map(it)
             }
         state.update {
             it.copy(
                 isLoading = false,
-                title = visit.title,
-                isTitleError = isTitleError(visit.title),
-                date = visit.date,
-                startTime = visit.startTime,
-                endTime = visit.endTime,
-                room = visit.room,
-                guests = visit.guests,
+                title = initVisit.title,
+                isTitleError = isTitleError(initVisit.title),
+                date = initVisit.date,
+                startTime = initVisit.startTime,
+                endTime = initVisit.endTime,
+                room = initVisit.room,
+                guests = initVisit.guests,
             )
         }
     }
@@ -144,7 +139,11 @@ class EditVisitViewModel(
     }
 
     fun onDiscardButtonClicked() {
-        state.update { it.copy(isDiscardDialogShowing = true) }
+        if (initVisit != getVisit()) {
+            state.update { it.copy(isDiscardDialogShowing = true) }
+        } else {
+            discard()
+        }
     }
 
     fun onSaveButtonClicked() {
@@ -154,13 +153,32 @@ class EditVisitViewModel(
                 this@EditVisitViewModel.state.update { it.copy(isTitleError = isTitleError(it.title)) }
                 return@launch
             }
+            state.update { it.copy(isSaving = true) }
             saveVisit()
             _events.emit(EditVisitEvent.Finish)
         }
     }
 
-    private fun saveVisit() {
-        //TODO
+    private fun getVisit(): Visit {
+        val state = state.value
+        return Visit(
+            visitId ?: Visit.generateNewId(),
+            state.title,
+            state.date,
+            state.startTime,
+            state.endTime,
+            state.room,
+            state.guests
+        )
+    }
+
+    private suspend fun saveVisit() {
+        val visit = getVisit().let { VisitMapper.map(originalVisit!!, it) }
+        if (visitId == null) {
+            visitRepository.addVisit(visit)
+        } else {
+            visitRepository.editVisit(visit)
+        }
     }
 
     fun onAddGuestButtonClicked() {
@@ -203,7 +221,11 @@ class EditVisitViewModel(
     }
 
     fun onBackPressed() {
-        state.update { it.copy(isDiscardDialogShowing = true) }
+        if (initVisit != getVisit()) {
+            state.update { it.copy(isDiscardDialogShowing = true) }
+        } else {
+            discard()
+        }
     }
 
     class Factory(private val visitId: String?) : ViewModelProvider.Factory {

@@ -8,5 +8,6 @@ import com.example.vms.model.Visit
 data class VisitDetailsState(
     val isLoading: Boolean,
     val visit: Visit,
-    val showMoreOptions: Boolean
+    val showMoreOptions: Boolean,
+    val showEditButton: Boolean
 )

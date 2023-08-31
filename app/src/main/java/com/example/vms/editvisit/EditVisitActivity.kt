@@ -136,4 +136,7 @@ fun EditVisitContent(
             isNewVisit = state.isNewVisit
         )
     }
+    if (state.isSaving) {
+        LoadingView(withBackground = true)
+    }
 }

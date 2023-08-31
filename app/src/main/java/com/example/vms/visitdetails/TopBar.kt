@@ -33,7 +33,8 @@ fun TopBar(
     onEditClick: () -> Unit,
     onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
-    showMoreOptions: Boolean
+    showMoreOptions: Boolean,
+    showEditButton: Boolean
 ) {
     var showMoreOptionsDropdownMenu by remember { mutableStateOf(false) }
     Row(
@@ -41,7 +42,9 @@ fun TopBar(
     ) {
         DiscardButton(onClick = onDiscardClick)
         Row {
-            EditButton(onClick = onEditClick)
+            if (showEditButton) {
+                EditButton(onClick = onEditClick)
+            }
             if (showMoreOptions) {
                 MoreOptionsButton(
                     onClick = {
@@ -136,6 +139,7 @@ fun PreviewTopBar() {
         onEditClick = {},
         onChangeHostClick = {},
         onCancelVisitClick = {},
-        showMoreOptions = true
+        showMoreOptions = true,
+        showEditButton = true
     )
 }

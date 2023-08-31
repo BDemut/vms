@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,12 @@ fun GuestsSection(
         )
         Column {
             Text(
-                text = "${guests.size} ${stringResource(id = R.string.visit_details_guests)}",
+
+                text = pluralStringResource(
+                    id = R.plurals.visit_details_guests_count,
+                    count = guests.size,
+                    guests.size
+                ),
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
             guests.forEach {

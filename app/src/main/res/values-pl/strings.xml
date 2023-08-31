@@ -44,6 +44,12 @@
     <string name="clear_content_description">ikona czyszczenia</string>
     <string name="invitation_status_icon_content_description">Ikona statusu zaproszenia</string>
     <string name="visit_details_guests">gości</string>
+    <plurals name="visit_details_guests_count">
+        <item quantity="one">%d gość</item>
+        <item quantity="few">%d gości</item>
+        <item quantity="many">%d gości</item>
+        <item quantity="other">%d gości</item>
+    </plurals>
     <string name="visit_details_change_host">Zmień gospodarza</string>
     <string name="visit_details_cancel_visit">Anuluj wizytę</string>
     <string name="edit_visit_discard_dialog_description_edit_visit">Odrzucić zmiany wprowadzone w tej wizycie?</string>
