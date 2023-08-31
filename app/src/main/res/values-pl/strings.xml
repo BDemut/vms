@@ -56,4 +56,8 @@
     <string name="error_icon_content_description">Brak danych</string>
     <string name="reload">Odśwież</string>
     <string name="you_have_no_visits">Nie masz żadnych wizyt!</string>
+    <string name="cancel_visit_dialog_title">Anulować wizytę?</string>
+    <string name="cancel_visit_dialog_confirm">Tak</string>
+    <string name="cancel_visit_dialog_dismiss">Nie</string>
+    <string name="visit_cancelled">Anulowana</string>
 </resources>

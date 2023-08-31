@@ -1,11 +1,11 @@
 package com.example.vms.home.visits
 
-import com.example.vms.repository.api.ApiVisit
 import java.time.LocalDateTime
 
 data class Visit(
     val id: String,
     val title: String,
     val start: LocalDateTime,
-    val end: LocalDateTime
+    val end: LocalDateTime,
+    val isCancelled: Boolean
 )

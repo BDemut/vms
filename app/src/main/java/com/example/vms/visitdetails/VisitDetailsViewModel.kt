@@ -32,8 +32,9 @@ class VisitDetailsViewModel(
         VisitDetailsState(
             isLoading = true,
             visit = dummyVisit,
-            showMoreOptions = dummyVisit.host == signInUser,
-            showEditButton = dummyVisit.host == signInUser,
+            isMoreOptionsShowing = dummyVisit.host == signInUser,
+            isEditButtonShowing = dummyVisit.host == signInUser,
+            isCancelVisitDialogShowing = false,
         )
     )
 
@@ -43,8 +44,8 @@ class VisitDetailsViewModel(
             it.copy(
                 isLoading = false,
                 visit = visit,
-                showMoreOptions = visit.host == signInUser,
-                showEditButton = visit.host == signInUser
+                isMoreOptionsShowing = visit.host == signInUser && !visit.isCancelled,
+                isEditButtonShowing = visit.host == signInUser && !visit.isCancelled,
             )
         }
     }
@@ -62,11 +63,11 @@ class VisitDetailsViewModel(
     }
 
     fun onChangeHostButtonClicked() {
-        //TODO
+
     }
 
     fun onCancelVisitButtonClicked() {
-        //TODO
+        state.update { it.copy(isCancelVisitDialogShowing = true) }
     }
 
     fun onStart() {
@@ -75,6 +76,27 @@ class VisitDetailsViewModel(
             setupVisit(visitId)
             state.update { it.copy(isLoading = false) }
         }
+    }
+
+    fun onCancelVisitDialogConfirmed() {
+        state.update {
+            it.copy(
+                isLoading = true,
+                isCancelVisitDialogShowing = false
+            )
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            cancelVisit()
+            setupVisit(visitId)
+        }
+    }
+
+    private suspend fun cancelVisit() {
+        visitRepository.cancelVisit(visitId)
+    }
+
+    fun onCancelVisitDialogDismissed() {
+        state.update { it.copy(isCancelVisitDialogShowing = false) }
     }
 
     class Factory(private val visitId: String) : ViewModelProvider.Factory {
@@ -103,4 +125,4 @@ class VisitDetailsViewModel(
 }
 
 private val dummyVisit =
-    Visit("", "", LocalDateTime.now(), LocalDateTime.now(), null, emptyList(), User(""))
+    Visit("", "", LocalDateTime.now(), LocalDateTime.now(), null, emptyList(), User(""), false)

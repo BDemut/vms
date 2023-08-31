@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
-import com.example.vms.repository.VisitRepository
 import com.example.vms.login.Authentication
+import com.example.vms.repository.VisitRepository
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 import javax.inject.Inject
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
@@ -52,7 +51,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                 visitRepository.getVisits()
             }
                 .onSuccess {
-                    val visits = it.map { Visit(it.id, it.title, it.start, it.end) }
+                    val visits = it.map { Visit(it.id, it.title, it.start, it.end, it.isCancelled) }
                     state.update { it.copy(visits = visits, dataState = DataState.CONTENT) }
                 }
                 .onFailure {

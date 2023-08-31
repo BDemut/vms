@@ -24,7 +24,8 @@ class TestVisitRepositoryImpl(
                     LocalDateTime.now().plusHours(1),
                     null,
                     emptyList(),
-                    signInUser
+                    signInUser,
+                    false
                 ),
                 Visit(
                     "2",
@@ -33,7 +34,8 @@ class TestVisitRepositoryImpl(
                     LocalDateTime.now().plusHours(5),
                     null,
                     emptyList(),
-                    signInUser
+                    signInUser,
+                    false
                 ),
                 Visit(
                     "3",
@@ -42,7 +44,8 @@ class TestVisitRepositoryImpl(
                     LocalDateTime.now().plusHours(6),
                     null,
                     emptyList(),
-                    User("")
+                    User(""),
+                    false
                 )
             )
         )
@@ -68,6 +71,10 @@ class TestVisitRepositoryImpl(
         val oldVisit = getVisit(visit.id)
         visits.set(visits.indexOf(oldVisit), visit)
     }
+
+    override suspend fun cancelVisit(visitId: String) {
+
+    }
 }
 
 val dummyVisit =
@@ -78,5 +85,6 @@ val dummyVisit =
         LocalDateTime.now(),
         null,
         emptyList(),
-        User("")
+        User(""),
+        false
     )
