@@ -4,9 +4,7 @@ import android.content.Context
 import com.example.vms.login.Authentication
 import com.example.vms.networking.AuthHeaderInterceptor
 import com.example.vms.networking.RetrofitFactory
-import com.example.vms.networking.VisitsClient
-import com.example.vms.repository.ApiVisitRepositoryImpl
-import com.example.vms.repository.VisitRepository
+import com.example.vms.repository.api.VisitsClient
 import com.example.vms.user.UserManager
 import dagger.Module
 import dagger.Provides

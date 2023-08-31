@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
     kapt 'com.google.dagger:dagger-compiler:2.45'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.73.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

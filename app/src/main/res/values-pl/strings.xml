@@ -55,4 +55,5 @@
     <string name="edit_visit_discard_dialog_description_edit_visit">Odrzucić zmiany wprowadzone w tej wizycie?</string>
     <string name="error_icon_content_description">Brak danych</string>
     <string name="reload">Odśwież</string>
+    <string name="you_have_no_visits">Nie masz żadnych wizyt!</string>
 </resources>
