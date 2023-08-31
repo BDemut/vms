@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.vms.model.Visit
-import com.example.vms.model.repo.VisitRepository
+import com.example.vms.repository.VisitRepository
 import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
@@ -32,15 +32,10 @@ class VisitDetailsViewModel(
         VisitDetailsState(
             isLoading = true,
             visit = dummyVisit,
-            showMoreOptions = dummyVisit.host == signInUser
+            showMoreOptions = dummyVisit.host == signInUser,
+            showEditButton = dummyVisit.host == signInUser,
         )
     )
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            setupVisit(visitId)
-        }
-    }
 
     private suspend fun setupVisit(visitId: String) {
         val visit = visitRepository.getVisit(visitId)
@@ -48,7 +43,8 @@ class VisitDetailsViewModel(
             it.copy(
                 isLoading = false,
                 visit = visit,
-                showMoreOptions = visit.host == signInUser
+                showMoreOptions = visit.host == signInUser,
+                showEditButton = visit.host == signInUser
             )
         }
     }
@@ -71,6 +67,14 @@ class VisitDetailsViewModel(
 
     fun onCancelVisitButtonClicked() {
         //TODO
+    }
+
+    fun onStart() {
+        state.update { it.copy(isLoading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            setupVisit(visitId)
+            state.update { it.copy(isLoading = false) }
+        }
     }
 
     class Factory(private val visitId: String) : ViewModelProvider.Factory {

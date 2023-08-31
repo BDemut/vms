@@ -1,4 +1,4 @@
-package com.example.vms.model.repo
+package com.example.vms.repository
 
 import com.example.vms.model.Visit
 import com.example.vms.user.User
@@ -9,7 +9,9 @@ import java.time.LocalDateTime
 /**
  * Created by mśmiech on 25.08.2023.
  */
-class TestVisitRepositoryImpl : VisitRepository {
+class TestVisitRepositoryImpl(
+    private val signInUser: User
+) : VisitRepository {
     private val visits = mutableListOf<Visit>()
 
     init {
@@ -22,7 +24,7 @@ class TestVisitRepositoryImpl : VisitRepository {
                     LocalDateTime.now().plusHours(1),
                     null,
                     emptyList(),
-                    User("")
+                    signInUser
                 ),
                 Visit(
                     "2",
@@ -31,7 +33,7 @@ class TestVisitRepositoryImpl : VisitRepository {
                     LocalDateTime.now().plusHours(5),
                     null,
                     emptyList(),
-                    User("")
+                    signInUser
                 ),
                 Visit(
                     "3",
@@ -56,6 +58,16 @@ class TestVisitRepositoryImpl : VisitRepository {
         return visits
     }
 
+    override suspend fun addVisit(visit: Visit) {
+        delay(500)
+        visits.add(visit)
+    }
+
+    override suspend fun editVisit(visit: Visit) {
+        delay(500)
+        val oldVisit = getVisit(visit.id)
+        visits.set(visits.indexOf(oldVisit), visit)
+    }
 }
 
 val dummyVisit =

@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
-import com.example.vms.model.repo.VisitRepository
 import com.example.vms.networking.VisitsClient
+import com.example.vms.repository.VisitRepository
 import com.example.vms.userComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
