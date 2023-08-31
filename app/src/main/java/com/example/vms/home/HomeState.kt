@@ -9,4 +9,9 @@ data class HomeState(
     val visits: List<Visit>,
     val requests: List<Request>,
     val isLogoutDialogShowing: Boolean,
+    val dataState: DataState
 )
+
+enum class DataState {
+    CONTENT, LOADING, ERROR
+}

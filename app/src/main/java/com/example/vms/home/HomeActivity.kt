@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -15,13 +18,16 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +40,8 @@ import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.settings.SettingsActivity
+import com.example.vms.ui.ErrorMessage
+import com.example.vms.ui.LoadingSpinner
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity
@@ -54,9 +62,7 @@ class HomeActivity : UserSessionActivity() {
         homeViewModel.events.onEach { event ->
             when (event) {
                 // temporary for testing
-                is HomeEvent.NavigateToSettings -> {
-                    homeViewModel.testRequest()
-                }
+                is HomeEvent.NavigateToSettings -> { launchSettingsActivity() }
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                 is HomeEvent.NavigateToLogin -> {
                     launchLoginActivity()
@@ -66,6 +72,11 @@ class HomeActivity : UserSessionActivity() {
                 is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
             }
         }.launchIn(lifecycleScope)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        homeViewModel.getVisits()
     }
 
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
@@ -117,9 +128,12 @@ fun HomeScreen(
                 .padding(it),
             color = MaterialTheme.colors.background
         ) {
-            when (state.currentTab) {
-                Tab.VISITS -> VisitsTab(visits = state.visits, model::onVisitClicked)
-                Tab.REQUESTS -> RequestsTab(requests = state.requests)
+            when (state.dataState) {
+                DataState.CONTENT -> HomeContent(state = state, model::onVisitClicked)
+                DataState.LOADING -> LoadingSpinner()
+                DataState.ERROR -> ErrorMessage(
+                    onRetry = { model.getVisits() }
+                )
             }
             if (state.isLogoutDialogShowing) {
                 LogoutDialog(
@@ -128,6 +142,14 @@ fun HomeScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun HomeContent(state: HomeState, onVisitClick: (String) -> Unit) {
+    when (state.currentTab) {
+        Tab.VISITS -> VisitsTab(visits = state.visits, onVisitClick)
+        Tab.REQUESTS -> RequestsTab(requests = state.requests)
     }
 }
 

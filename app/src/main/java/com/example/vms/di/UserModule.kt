@@ -17,9 +17,12 @@ class UserModule(private val _signInUser: User) {
     @Named("signInUser")
     fun getSignInUser(): User = _signInUser
 
+    /*
     @Provides
     @UserScope
     fun getVisitRepository(
         @Named("signInUser") signInUser: User
     ): VisitRepository = TestVisitRepositoryImpl(signInUser)
+
+     */
 }
