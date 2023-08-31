@@ -6,15 +6,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -25,11 +22,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.example.vms.editvisit.EditVisitActivity
 import com.example.vms.model.Guest
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
+import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.User
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDateTime
 
 class VisitDetailsActivity : ComponentActivity() {
@@ -48,7 +50,16 @@ class VisitDetailsActivity : ComponentActivity() {
                 VisitDetailsScreen(viewModel)
             }
         }
+        viewModel.events.onEach { event ->
+            when (event) {
+                is VisitDetailsEvent.Finish -> finish()
+                is VisitDetailsEvent.NavigateToEditVisit -> launchEditVisitActivity(event.visitId)
+            }
+        }.launchIn(lifecycleScope)
     }
+
+    private fun launchEditVisitActivity(visitId: String) =
+        startActivity(EditVisitActivity.getLaunchIntent(this, visitId))
 
     companion object {
         const val ARG_VISIT_ID = "visitId"
@@ -79,25 +90,6 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
             )
         }
     }
-}
-
-@Composable
-fun LoadingView() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        LoadingIndicator()
-    }
-}
-
-@Composable
-fun LoadingIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .width(60.dp)
-            .height(60.dp)
-    )
 }
 
 @Composable

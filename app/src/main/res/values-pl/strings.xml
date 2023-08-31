@@ -30,7 +30,7 @@
     <string name="datetime_icon_content_description">ikona daty</string>
     <string name="location_icon_content_description">ikona lokalizacji</string>
     <string name="guests_icon_content_description">ikona gości</string>
-    <string name="edit_visit_discard_dialog_description">Odrzucić tę wizyte?</string>
+    <string name="edit_visit_discard_dialog_description_new_visit">Odrzucić tę wizyte?</string>
     <string name="edit_visit_discard_dialog_confirm">Odrzuć</string>
     <string name="edit_visit_discard_dialog_cancel">Edytuj dalej</string>
     <string name="edit_visit_room_placeholder">Sala konferencyjna</string>
@@ -46,4 +46,5 @@
     <string name="visit_details_guests">gości</string>
     <string name="visit_details_change_host">Zmień gospodarza</string>
     <string name="visit_details_cancel_visit">Anuluj wizytę</string>
+    <string name="edit_visit_discard_dialog_description_edit_visit">Odrzucić zmiany wprowadzone w tej wizycie?</string>
 </resources>

@@ -13,11 +13,17 @@ import com.example.vms.R
 @Composable
 fun DiscardDialog(
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    isNewVisit: Boolean
 ) {
+    val descriptionResId = if (isNewVisit) {
+        R.string.edit_visit_discard_dialog_description_new_visit
+    } else {
+        R.string.edit_visit_discard_dialog_description_edit_visit
+    }
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        text = { Text(stringResource(R.string.edit_visit_discard_dialog_description)) },
+        text = { Text(stringResource(descriptionResId)) },
         confirmButton = {
             TextButton(onClick = { onConfirm() }) {
                 Text(stringResource(R.string.edit_visit_discard_dialog_confirm))

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -34,17 +33,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.R
 import com.example.vms.home.HomeActivity
+import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -105,23 +103,7 @@ fun LoginScreen(
             onLoginButtonClicked = { viewModel.onLoginButtonClicked() }
         )
         if (state.isLoading) {
-            LoadingView()
-        }
-    }
-}
-
-@Composable
-fun LoadingView() {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize(),
-        color = Color.Black.copy(alpha = 0.47f)
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            LoadingIndicator()
+            LoadingView(withBackground = true)
         }
     }
 }
@@ -238,14 +220,4 @@ fun ShowPasswordIcon(showPassword: Boolean, onClick: (Boolean) -> Unit) {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoadingIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .width(60.dp)
-            .height(60.dp)
-    )
 }

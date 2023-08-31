@@ -47,7 +47,7 @@ class TestVisitRepositoryImpl : VisitRepository {
     }
 
     override suspend fun getVisit(id: String): Visit {
-        delay(100)
+        delay(500)
         return visits.firstOrNull { it.id == id } ?: dummyVisit
     }
 

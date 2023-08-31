@@ -20,4 +20,6 @@ data class EditVisitState(
     val newGuestEmail: String,
     val isNewGuestEmailError: Boolean,
     val showNewGuestEmailClearInputButton: Boolean,
+    val isLoading: Boolean,
+    val isNewVisit: Boolean
 )

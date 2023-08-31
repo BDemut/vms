@@ -8,7 +8,10 @@ import com.example.vms.model.Visit
 import com.example.vms.model.repo.VisitRepository
 import com.example.vms.user.User
 import com.example.vms.userComponent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -19,10 +22,12 @@ import javax.inject.Named
  * Created by mśmiech on 24.08.2023.
  */
 class VisitDetailsViewModel(
-    visitId: String,
+    private val visitId: String,
     private val signInUser: User,
     private val visitRepository: VisitRepository
 ) : ViewModel() {
+    private val _events: MutableSharedFlow<VisitDetailsEvent> = MutableSharedFlow()
+    val events: SharedFlow<VisitDetailsEvent> = _events
     val state = MutableStateFlow(
         VisitDetailsState(
             isLoading = true,
@@ -32,24 +37,32 @@ class VisitDetailsViewModel(
     )
 
     init {
-        viewModelScope.launch {
-            val visit = visitRepository.getVisit(visitId)
-            state.update {
-                it.copy(
-                    isLoading = false,
-                    visit = visit,
-                    showMoreOptions = visit.host != signInUser
-                )
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            setupVisit(visitId)
+        }
+    }
+
+    private suspend fun setupVisit(visitId: String) {
+        val visit = visitRepository.getVisit(visitId)
+        state.update {
+            it.copy(
+                isLoading = false,
+                visit = visit,
+                showMoreOptions = visit.host == signInUser
+            )
         }
     }
 
     fun onDiscardButtonClicked() {
-        //TODO
+        viewModelScope.launch {
+            _events.emit(VisitDetailsEvent.Finish)
+        }
     }
 
     fun onEditButtonClicked() {
-        //TODO
+        viewModelScope.launch {
+            _events.emit(VisitDetailsEvent.NavigateToEditVisit(visitId))
+        }
     }
 
     fun onChangeHostButtonClicked() {

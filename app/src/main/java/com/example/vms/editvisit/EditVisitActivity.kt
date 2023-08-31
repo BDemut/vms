@@ -1,7 +1,10 @@
 package com.example.vms.editvisit
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
@@ -14,21 +17,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.example.vms.editvisit.model.Visit
+import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class EditVisitActivity : ComponentActivity() {
-    private var visit: Visit? = null
+    private var visitId: String? = null
     private val viewModel: EditVisitViewModel by viewModels(factoryProducer = {
         EditVisitViewModel.Factory(
-            visit
+            visitId
         )
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        visitId = intent.getStringExtra(ARG_VISIT_ID) ?: throw IllegalStateException("No visit id")
         setContent {
             VisitorManagementSystemTheme {
                 EditVisitScreen(viewModel)
@@ -39,66 +43,97 @@ class EditVisitActivity : ComponentActivity() {
                 is EditVisitEvent.Finish -> finish()
             }
         }.launchIn(lifecycleScope)
+
+        onBackPressedDispatcher.addCallback(this) {
+            viewModel.onBackPressed()
+        }
     }
 
-    @Composable
-    fun EditVisitScreen(viewModel: EditVisitViewModel) {
-        val state = viewModel.state.collectAsStateWithLifecycle().value
-        Surface(
-            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                TopBar(
-                    onDiscardClick = {
-                        viewModel.onDiscardButtonClicked()
-                    },
-                    onSaveClick = {
-                        viewModel.onSaveButtonClicked()
-                    })
-                TitleSection(
-                    title = state.title,
-                    onTitleChange = { viewModel.changeTitle(it) },
-                    isTitleError = state.isTitleError
-                )
-                Divider(modifier = Modifier.fillMaxWidth())
-                DateTimeSection(
-                    date = state.date,
-                    startTime = state.startTime,
-                    endTime = state.endTime,
-                    onDateChange = {
-                        viewModel.changeDate(it)
-                    },
-                    onStartTimeChange = {
-                        viewModel.changeStartTime(it)
-                    },
-                    onEndTimeChange = {
-                        viewModel.changeEndTime(it)
-                    })
-                Divider(modifier = Modifier.fillMaxWidth())
-                LocationSection(
-                    room = state.room,
-                    onClick = {
-                        viewModel.onRoomButtonClicked()
-                    })
-                Divider(modifier = Modifier.fillMaxWidth())
-                GuestsSection(
-                    guests = state.guests,
-                    onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() },
-                    onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) },
-                    newGuestEmail = state.newGuestEmail,
-                    onNewGuestEmailChange = { viewModel.changeNewGuestEmail(it) },
-                    isNewGuestEmailError = state.isNewGuestEmailError,
-                    showNewGuestEmailClearInputButton = state.showNewGuestEmailClearInputButton
-                )
-                Divider(modifier = Modifier.fillMaxWidth())
-            }
-            if (state.isDiscardDialogShowing) {
-                DiscardDialog(
-                    onConfirm = { viewModel.discard() },
-                    onDismiss = { viewModel.discardDialogDismissed() })
-            }
+    companion object {
+        const val ARG_VISIT_ID = "visitId"
+
+        fun getLaunchIntent(context: Context, visitId: String? = null): Intent {
+            val intent = Intent(context, EditVisitActivity::class.java)
+            intent.putExtra(ARG_VISIT_ID, visitId)
+            return intent
         }
+    }
+}
+
+@Composable
+fun EditVisitScreen(viewModel: EditVisitViewModel) {
+    val state = viewModel.state.collectAsStateWithLifecycle().value
+    Surface(
+        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
+    ) {
+        if (state.isLoading) {
+            LoadingView()
+        } else {
+            EditVisitContent(
+                state = state,
+                viewModel = viewModel
+            )
+        }
+    }
+}
+
+@Composable
+fun EditVisitContent(
+    state: EditVisitState,
+    viewModel: EditVisitViewModel
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TopBar(
+            onDiscardClick = {
+                viewModel.onDiscardButtonClicked()
+            },
+            onSaveClick = {
+                viewModel.onSaveButtonClicked()
+            })
+        TitleSection(
+            title = state.title,
+            onTitleChange = { viewModel.changeTitle(it) },
+            isTitleError = state.isTitleError
+        )
+        Divider(modifier = Modifier.fillMaxWidth())
+        DateTimeSection(
+            date = state.date,
+            startTime = state.startTime,
+            endTime = state.endTime,
+            onDateChange = {
+                viewModel.changeDate(it)
+            },
+            onStartTimeChange = {
+                viewModel.changeStartTime(it)
+            },
+            onEndTimeChange = {
+                viewModel.changeEndTime(it)
+            })
+        Divider(modifier = Modifier.fillMaxWidth())
+        LocationSection(
+            room = state.room,
+            onClick = {
+                viewModel.onRoomButtonClicked()
+            })
+        Divider(modifier = Modifier.fillMaxWidth())
+        GuestsSection(
+            guests = state.guests,
+            onAddGuestButtonClicked = { viewModel.onAddGuestButtonClicked() },
+            onRemoveGuestButtonClicked = { viewModel.onRemoveGuestButtonClicked(it) },
+            newGuestEmail = state.newGuestEmail,
+            onNewGuestEmailChange = { viewModel.changeNewGuestEmail(it) },
+            isNewGuestEmailError = state.isNewGuestEmailError,
+            showNewGuestEmailClearInputButton = state.showNewGuestEmailClearInputButton
+        )
+        Divider(modifier = Modifier.fillMaxWidth())
+    }
+    if (state.isDiscardDialogShowing) {
+        DiscardDialog(
+            onConfirm = { viewModel.discard() },
+            onDismiss = { viewModel.discardDialogDismissed() },
+            isNewVisit = state.isNewVisit
+        )
     }
 }

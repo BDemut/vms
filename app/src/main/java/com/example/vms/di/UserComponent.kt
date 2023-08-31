@@ -1,5 +1,6 @@
 package com.example.vms.di
 
+import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
 import com.example.vms.visitdetails.VisitDetailsViewModel
 import dagger.Subcomponent
@@ -21,4 +22,5 @@ interface UserComponent {
 
     fun inject(factory: VisitDetailsViewModel.Factory)
     fun inject(viewModel: HomeViewModel)
+    fun inject(factory: EditVisitViewModel.Factory)
 }

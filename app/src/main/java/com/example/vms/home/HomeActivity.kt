@@ -75,7 +75,7 @@ class HomeActivity : UserSessionActivity() {
     private fun launchLoginActivity() = startActivity(Intent(this, LoginActivity::class.java))
 
     private fun launchEditVisitActivity() =
-        startActivity(Intent(this, EditVisitActivity::class.java))
+        startActivity(EditVisitActivity.getLaunchIntent(this))
 
     private fun launchVisitDetailsActivity(visitId: String) =
         startActivity(VisitDetailsActivity.getLaunchIntent(this, visitId))

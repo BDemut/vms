@@ -29,7 +29,8 @@
     <string name="datetime_icon_content_description">date icon</string>
     <string name="location_icon_content_description">location icon</string>
     <string name="guests_icon_content_description">guests icon</string>
-    <string name="edit_visit_discard_dialog_description">Discard this visit?</string>
+    <string name="edit_visit_discard_dialog_description_new_visit">Discard this visit?</string>
+    <string name="edit_visit_discard_dialog_description_edit_visit">Discard changes to this visit?</string>
     <string name="edit_visit_discard_dialog_confirm">Discard</string>
     <string name="edit_visit_discard_dialog_cancel">Keep editing</string>
     <string name="edit_visit_room_placeholder">Conference room</string>
