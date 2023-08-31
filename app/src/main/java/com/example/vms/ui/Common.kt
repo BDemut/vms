@@ -9,7 +9,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +34,7 @@ fun ErrorMessage(onRetry: () -> Unit) {
     ) {
         Icon(
             modifier = Modifier.size(64.dp),
-            imageVector = Icons.Default.HeartBroken,:wq
+            imageVector = Icons.Default.HeartBroken,
 
             contentDescription = stringResource(R.string.error_icon_content_description)
         )

@@ -49,9 +49,4 @@ class AppModule(val context: Context) {
     @Provides
     @Singleton
     fun provideApi(retrofit: Retrofit) = retrofit.create(VisitsClient::class.java)
-
-
-    @Provides
-    @Singleton
-    fun getVisitRepository(api: VisitsClient): VisitRepository = ApiVisitRepositoryImpl(api)
 }

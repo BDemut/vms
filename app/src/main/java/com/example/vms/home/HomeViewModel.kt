@@ -37,7 +37,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         app.userComponent().inject(this)
-
     }
 
     fun changeTab(newTab: Tab) {
