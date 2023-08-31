@@ -3,6 +3,6 @@ package com.example.vms.user
 /**
  * Created by mśmiech on 06.08.2023.
  */
-class User(
+data class User(
     val email: String
 )

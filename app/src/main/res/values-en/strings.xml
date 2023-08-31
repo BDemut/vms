@@ -30,7 +30,7 @@
     <string name="datetime_icon_content_description">date icon</string>
     <string name="location_icon_content_description">location icon</string>
     <string name="guests_icon_content_description">guests icon</string>
-    <string name="edit_visit_discard_dialog_description">Discard this visit?</string>
+    <string name="edit_visit_discard_dialog_description_new_visit">Discard this visit?</string>
     <string name="edit_visit_discard_dialog_confirm">Discard</string>
     <string name="edit_visit_discard_dialog_cancel">Keep editing</string>
     <string name="edit_visit_room_placeholder">Conference room</string>
@@ -42,4 +42,9 @@
     <string name="title_error_icon_content_description">error icon</string>
     <string name="add_guest_content_description">add guest icon</string>
     <string name="clear_content_description">clear icon</string>
+    <string name="invitation_status_icon_content_description">invitation status icon</string>
+    <string name="visit_details_guests">guests</string>
+    <string name="visit_details_change_host">Change the host</string>
+    <string name="visit_details_cancel_visit">Cancel the visit</string>
+    <string name="edit_visit_discard_dialog_description_edit_visit">Discard changes to this visit?</string>
 </resources>

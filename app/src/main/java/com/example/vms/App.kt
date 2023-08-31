@@ -38,6 +38,5 @@ fun Application.appComponent(): AppComponent =
 fun Context.appComponent(): AppComponent =
     (this.applicationContext as App).appComponent
 
-
 fun Application.userComponent(): UserComponent =
     (this as App).appComponent.getUserManager().userComponent!!

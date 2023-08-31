@@ -1,6 +1,8 @@
 package com.example.vms.di
 
+import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
+import com.example.vms.visitdetails.VisitDetailsViewModel
 import dagger.Subcomponent
 
 /**
@@ -11,12 +13,14 @@ import dagger.Subcomponent
     UserModule::class
 ])
 interface UserComponent {
-    fun inject(viewModel: HomeViewModel)
-
     @Subcomponent.Builder
     interface Builder {
         fun userModule(userModule: UserModule): Builder
 
         fun build(): UserComponent
     }
+
+    fun inject(factory: VisitDetailsViewModel.Factory)
+    fun inject(viewModel: HomeViewModel)
+    fun inject(factory: EditVisitViewModel.Factory)
 }

@@ -4,8 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
-import com.example.vms.home.visits.testVisits
+import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
+import com.example.vms.model.repo.VisitRepository
 import com.example.vms.networking.VisitsClient
 import com.example.vms.userComponent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +21,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val state = MutableStateFlow(HomeState(
         currentTab = Tab.VISITS,
-        visits = testVisits,
+        visits = emptyList(),
         requests = testRequests,
         isLogoutDialogShowing = false,
     ))
@@ -34,8 +35,16 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     @Inject
     lateinit var retrofit: Retrofit
 
+    @Inject
+    lateinit var visitRepository: VisitRepository
+
     init {
         app.userComponent().inject(this)
+        viewModelScope.launch {
+            val visitList =
+                visitRepository.getVisits().map { Visit(it.id, it.title, it.start, it.end) }
+            state.update { it.copy(visits = visitList) }
+        }
     }
 
     fun changeTab(newTab: Tab) {
@@ -80,6 +89,12 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun onAddVisitClicked() {
         viewModelScope.launch {
             _events.emit(HomeEvent.NavigateToEditVisit)
+        }
+    }
+
+    fun onVisitClicked(visitId: String) {
+        viewModelScope.launch {
+            _events.emit(HomeEvent.NavigateToVisitDetails(visitId))
         }
     }
 }
