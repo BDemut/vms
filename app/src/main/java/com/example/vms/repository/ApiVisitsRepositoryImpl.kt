@@ -6,6 +6,7 @@ import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.VisitsClient
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
     override suspend fun getVisit(id: String): Visit {
@@ -36,6 +37,15 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): List<Room> {
-        return api.getRooms(startDateTime, endDateTime).map { it.asModel() }
+        try {
+            val response = api.getRooms(
+                startDate = startDateTime.format(DateTimeFormatter.ISO_DATE_TIME) + 'Z',
+                endDate = endDateTime.format(DateTimeFormatter.ISO_DATE_TIME) + 'Z'
+            )
+            return response.body()?.map { it.asModel() } ?: emptyList()
+        } catch (e: Exception) {
+            Log.e("ApiVisitRepositoryImpl", "getRooms failed.", e)
+            return emptyList()
+        }
     }
 }

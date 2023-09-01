@@ -40,3 +40,6 @@ fun Context.appComponent(): AppComponent =
 
 fun Application.userComponent(): UserComponent =
     (this as App).appComponent.getUserManager().userComponent!!
+
+fun Context.userComponent(): UserComponent =
+    (this.applicationContext as App).appComponent.getUserManager().userComponent!!
