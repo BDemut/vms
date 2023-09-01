@@ -1,6 +1,11 @@
 package com.example.vms.editvisit.model
 
 /**
- * Created by mśmiech on 22.08.2023.
+ * Created by mśmiech on 01.09.2023.
  */
-data class Room(val id: String, val name: String)
+data class Room(
+    val id: String,
+    val name: String,
+    val isAvailable: Boolean,
+    val isSelected: Boolean
+)

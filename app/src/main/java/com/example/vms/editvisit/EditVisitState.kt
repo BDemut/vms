@@ -1,7 +1,7 @@
 package com.example.vms.editvisit
 
 import com.example.vms.editvisit.model.Guest
-import com.example.vms.editvisit.model.Room
+import com.example.vms.editvisit.model.Visit.Room
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -22,5 +22,6 @@ data class EditVisitState(
     val showNewGuestEmailClearInputButton: Boolean,
     val isLoading: Boolean,
     val isNewVisit: Boolean,
-    val isSaving: Boolean
+    val isSaving: Boolean,
+    val isSelectRoomViewShowing: Boolean
 )

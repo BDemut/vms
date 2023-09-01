@@ -33,7 +33,7 @@
     <string name="edit_visit_discard_dialog_description_new_visit">Discard this visit?</string>
     <string name="edit_visit_discard_dialog_confirm">Discard</string>
     <string name="edit_visit_discard_dialog_cancel">Keep editing</string>
-    <string name="edit_visit_room_placeholder">Conference room</string>
+    <string name="edit_visit_room_placeholder">Add conference room</string>
     <string name="edit_visit_add_guest_placeholder">Add guest</string>
     <string name="edit_visit_title_placeholder">Add title</string>
     <string name="edit_visit_save_button_label">Save</string>
@@ -58,4 +58,8 @@
     <string name="cancel_visit_dialog_confirm">Yes</string>
     <string name="cancel_visit_dialog_dismiss">No</string>
     <string name="visit_cancelled">Cancelled</string>
+    <string name="close_icon_content_description">close icon</string>
+    <string name="select_room">Select conference room</string>
+    <string name="room_available">available</string>
+    <string name="room_unavailable">unavailable</string>
 </resources>

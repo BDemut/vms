@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.LinkedList
 import javax.inject.Inject
@@ -58,8 +59,20 @@ class EditVisitViewModel(
             showNewGuestEmailClearInputButton = false,
             isLoading = visitId != null,
             isNewVisit = visitId == null,
-            isSaving = false
+            isSaving = false,
+            isSelectRoomViewShowing = false
         )
+    )
+    val selectRoomViewModel = SelectRoomViewModel(
+        onClose = { room ->
+            state.update {
+                it.copy(
+                    room = room,
+                    isSelectRoomViewShowing = false
+                )
+            }
+        },
+        visitRepository = visitRepository
     )
 
     init {
@@ -199,7 +212,13 @@ class EditVisitViewModel(
     }
 
     fun onRoomButtonClicked() {
-        //TODO
+        val state = state.value
+        selectRoomViewModel.setup(
+            room = state.room,
+            startDateTime = LocalDateTime.of(state.date, state.startTime),
+            endDateTime = LocalDateTime.of(state.date, state.endTime)
+        )
+        this.state.update { it.copy(isSelectRoomViewShowing = true) }
     }
 
     fun onRemoveGuestButtonClicked(guest: Guest) {
