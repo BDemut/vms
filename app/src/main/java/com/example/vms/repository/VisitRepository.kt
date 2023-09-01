@@ -11,4 +11,5 @@ interface VisitRepository {
     suspend fun getVisits(): List<Visit>
     suspend fun addVisit(visit: Visit)
     suspend fun editVisit(visit: Visit)
+    suspend fun cancelVisit(visitId: String)
 }

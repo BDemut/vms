@@ -26,7 +26,8 @@ object VisitMapper {
             end = LocalDateTime.of(newVisit.date, newVisit.endTime),
             room = newVisit.room?.let { room -> com.example.vms.model.Room(room.id, room.name) },
             guests = mergedGuests(oldVisit.guests, newVisit.guests),
-            host = oldVisit.host
+            host = oldVisit.host,
+            isCancelled = oldVisit.isCancelled
         )
     }
 

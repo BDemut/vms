@@ -33,8 +33,8 @@ fun TopBar(
     onEditClick: () -> Unit,
     onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
-    showMoreOptions: Boolean,
-    showEditButton: Boolean
+    isMoreOptionsShowing: Boolean,
+    isEditButtonShowing: Boolean,
 ) {
     var showMoreOptionsDropdownMenu by remember { mutableStateOf(false) }
     Row(
@@ -42,10 +42,10 @@ fun TopBar(
     ) {
         DiscardButton(onClick = onDiscardClick)
         Row {
-            if (showEditButton) {
+            if (isEditButtonShowing) {
                 EditButton(onClick = onEditClick)
             }
-            if (showMoreOptions) {
+            if (isMoreOptionsShowing) {
                 MoreOptionsButton(
                     onClick = {
                         showMoreOptionsDropdownMenu = !showMoreOptionsDropdownMenu
@@ -61,7 +61,7 @@ fun TopBar(
                     onCancelVisitClick = {
                         showMoreOptionsDropdownMenu = false
                         onCancelVisitClick()
-                    }
+                    },
                 )
             }
         }
@@ -119,7 +119,6 @@ fun MoreOptionsDropdownMenu(
     onDismissRequest: () -> Unit,
     onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
-
     ) {
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
         DropdownMenuItem(onClick = onChangeHostClick) {
@@ -139,7 +138,7 @@ fun PreviewTopBar() {
         onEditClick = {},
         onChangeHostClick = {},
         onCancelVisitClick = {},
-        showMoreOptions = true,
-        showEditButton = true
+        isMoreOptionsShowing = true,
+        isEditButtonShowing = true,
     )
 }

@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -82,11 +85,32 @@ fun VisitItem(
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
-                text = "${visit.start.format(visitItemDateFormatter)}, ${visit.start.format(
-                    visitItemTimeFormatter
-                )} - ${visit.end.format(visitItemTimeFormatter)}"
+                text = "${visit.start.format(visitItemDateFormatter)}, ${
+                    visit.start.format(
+                        visitItemTimeFormatter
+                    )
+                } - ${visit.end.format(visitItemTimeFormatter)}"
             )
+            if (visit.isCancelled) {
+                CancelledChip()
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun CancelledChip() {
+    Surface(
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+        elevation = 8.dp,
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colors.error
+    ) {
+        Text(
+            text = stringResource(id = R.string.visit_cancelled),
+            modifier = Modifier.padding(10.dp, 6.dp)
+        )
     }
 }
 
@@ -106,10 +130,12 @@ private val visitItemTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 val testVisits = listOf(
     Visit(
         "0", "wizyta prezesa",
-        LocalDateTime.now(), LocalDateTime.now().plusHours(1)
+        LocalDateTime.now(), LocalDateTime.now().plusHours(1),
+        false
     ),
     Visit(
         "1", "jakas inna wizyta",
-        LocalDateTime.now().plusHours(2), LocalDateTime.now().plusHours(3)
+        LocalDateTime.now().plusHours(2), LocalDateTime.now().plusHours(3),
+        true
     ),
 )

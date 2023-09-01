@@ -54,4 +54,8 @@
     <string name="error_icon_content_description">No data</string>
     <string name="reload">Reload</string>
     <string name="you_have_no_visits">You have no visits!</string>
+    <string name="cancel_visit_dialog_title">Cancel the visit?</string>
+    <string name="cancel_visit_dialog_confirm">Yes</string>
+    <string name="cancel_visit_dialog_dismiss">No</string>
+    <string name="visit_cancelled">Cancelled</string>
 </resources>

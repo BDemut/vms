@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -92,6 +93,8 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
                 onEditClick = { viewModel.onEditButtonClicked() },
                 onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
                 onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
+                onCancelVisitDialogConfirmed = { viewModel.onCancelVisitDialogConfirmed() },
+                onCancelVisitDialogDismissed = { viewModel.onCancelVisitDialogDismissed() }
             )
         }
     }
@@ -104,6 +107,8 @@ fun VisitDetailsContent(
     onEditClick: () -> Unit,
     onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
+    onCancelVisitDialogConfirmed: () -> Unit,
+    onCancelVisitDialogDismissed: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -114,8 +119,8 @@ fun VisitDetailsContent(
             onEditClick = onEditClick,
             onChangeHostClick = onChangeHostClick,
             onCancelVisitClick = onCancelVisitClick,
-            showMoreOptions = state.showMoreOptions,
-            showEditButton = state.showEditButton
+            isMoreOptionsShowing = state.isMoreOptionsShowing,
+            isEditButtonShowing = state.isEditButtonShowing,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,12 +130,22 @@ fun VisitDetailsContent(
             Column {
                 Title(text = state.visit.title)
                 VisitDateTime(start = state.visit.start, end = state.visit.end)
+                Spacer(modifier = Modifier.height(4.dp))
             }
+        }
+        if (state.visit.isCancelled) {
+            CancelledSection()
         }
         if (state.visit.room != null) {
             LocationSection(room = state.visit.room)
         }
         GuestsSection(guests = state.visit.guests)
+    }
+    if (state.isCancelVisitDialogShowing) {
+        CancelVisitDialog(
+            onConfirm = onCancelVisitDialogConfirmed,
+            onDismiss = onCancelVisitDialogDismissed,
+        )
     }
 }
 
@@ -149,13 +164,16 @@ fun PreviewVisitDetailsContent() {
         state = VisitDetailsState(
             isLoading = false,
             visit = testVisit,
-            showMoreOptions = true,
-            showEditButton = true
+            isMoreOptionsShowing = true,
+            isEditButtonShowing = true,
+            isCancelVisitDialogShowing = false,
         ),
         onDiscardClick = {},
         onEditClick = {},
         onChangeHostClick = {},
         onCancelVisitClick = {},
+        onCancelVisitDialogConfirmed = {},
+        onCancelVisitDialogDismissed = {}
     )
 }
 
@@ -178,5 +196,6 @@ private val testVisit =
         end = LocalDateTime.now().plusHours(1),
         room = Room("1", "Sala 101"),
         guests = testGuests,
-        host = User("")
+        host = User(""),
+        isCancelled = false
     )

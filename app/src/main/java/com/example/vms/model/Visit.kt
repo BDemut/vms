@@ -1,6 +1,7 @@
 package com.example.vms.model
 
 import com.example.vms.repository.api.ApiVisit
+import com.example.vms.repository.api.VisitStatus
 import com.example.vms.user.User
 import java.time.LocalDateTime
 
@@ -14,7 +15,8 @@ data class Visit(
     val end: LocalDateTime,
     val room: Room?,
     val guests: List<Guest>,
-    val host: User
+    val host: User,
+    val isCancelled: Boolean
 )
 
 fun ApiVisit.asModelVisit() = Visit(
@@ -23,6 +25,7 @@ fun ApiVisit.asModelVisit() = Visit(
     start = timeframe.start,
     end = timeframe.end,
     room = room.asModelRoom(),
-    guests = guests.map{ it.asModelGuest() },
-    host = User(host.email)
+    guests = guests.map { it.asModelGuest() },
+    host = User(host.email),
+    isCancelled = this.status == VisitStatus.CANCELED
 )
