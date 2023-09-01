@@ -1,7 +1,6 @@
 package com.example.vms.model
 
 import com.example.vms.repository.api.ApiVisit
-import com.example.vms.repository.api.VisitStatus
 import com.example.vms.user.User
 import java.time.LocalDateTime
 
@@ -27,5 +26,5 @@ fun ApiVisit.asModelVisit() = Visit(
     room = room.asModelRoom(),
     guests = guests.map { it.asModelGuest() },
     host = User(host.email),
-    isCancelled = this.status == VisitStatus.CANCELED
+    isCancelled = this.status == ApiVisit.VisitStatus.CANCELED
 )
