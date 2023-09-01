@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.editvisit.EditVisitActivity
 import com.example.vms.model.Guest
-import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
@@ -194,7 +193,7 @@ private val testVisit =
         title = "Title",
         start = LocalDateTime.now(),
         end = LocalDateTime.now().plusHours(1),
-        room = Room("1", "Sala 101"),
+        room = Visit.Room("1", "Sala 101"),
         guests = testGuests,
         host = User(""),
         isCancelled = false

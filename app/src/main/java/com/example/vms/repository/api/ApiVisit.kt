@@ -1,5 +1,6 @@
 package com.example.vms.repository.api
 
+import com.example.vms.model.Visit
 import com.squareup.moshi.JsonClass
 import java.time.LocalDateTime
 
@@ -18,7 +19,9 @@ data class ApiVisit(
         val id: String,
         val name: String,
         val isReservedForThisVisit: Boolean
-    )
+    ) {
+        fun asModelRoom() = Visit.Room(id, name)
+    }
 
     @JsonClass(generateAdapter = true)
     data class Timeframe(

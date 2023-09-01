@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vms.R
-import com.example.vms.model.Room
+import com.example.vms.model.Visit
 
 /**
  * Created by mśmiech on 24.08.2023.
@@ -21,7 +21,7 @@ import com.example.vms.model.Room
 
 @Composable
 fun LocationSection(
-    room: Room,
+    room: Visit.Room,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -38,5 +38,5 @@ fun LocationSection(
 @Preview(showBackground = true)
 @Composable
 fun PreviewLocationSection() {
-    LocationSection(room = Room("1", "Sala 101"))
+    LocationSection(room = Visit.Room("1", "Sala 101"))
 }

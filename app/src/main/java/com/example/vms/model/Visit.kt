@@ -16,7 +16,9 @@ data class Visit(
     val guests: List<Guest>,
     val host: User,
     val isCancelled: Boolean
-)
+) {
+    data class Room(val id: String, val name: String)
+}
 
 fun ApiVisit.asModelVisit() = Visit(
     id = id,
