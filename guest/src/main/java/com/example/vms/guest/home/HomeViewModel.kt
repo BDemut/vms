@@ -1,6 +1,6 @@
-package com.example.vms.guest
+package com.example.vms.guest.home
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,10 +18,12 @@ class HomeViewModel : ViewModel() {
     val events: SharedFlow<HomeEvent> = _events
 
     fun onPinValueChanged(newValue: String) {
-        _pinValue.update { newValue }
-        if (newValue.length == PIN_LENGTH) {
-            viewModelScope.launch {
-                _events.emit(HomeEvent.ConfirmPin)
+        if (newValue.isDigitsOnly()) {
+            _pinValue.update { newValue }
+            if (newValue.length == PIN_LENGTH) {
+                viewModelScope.launch {
+                    _events.emit(HomeEvent.ConfirmPin)
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
-import com.example.vms.guest.PIN_LENGTH
+import com.example.vms.guest.home.PIN_LENGTH
 import com.example.vms.guest.ui.theme.Purple200
 
 
@@ -36,11 +36,11 @@ fun PinInputField(
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
         modifier = modifier.focusRequester(focusRequester)
-            .border(1.dp, Purple200)
+            .border(2.dp, MaterialTheme.colors.primary)
             .padding(vertical = 8.dp, horizontal = 16.dp),
         value = TextFieldValue(pinInput, selection = TextRange(pinInput.length)),
         onValueChange = {
-            if (it.text.length <= PIN_LENGTH && it.text.isDigitsOnly()) {
+            if (it.text.length <= PIN_LENGTH) {
                 onPinInputChanged(it.text)
             }
         },

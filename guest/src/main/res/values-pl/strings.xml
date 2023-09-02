@@ -2,4 +2,9 @@
 <resources>
     <string name="welcome_text">Jeśli masz umówioną wizytę\npodaj pin</string>
     <string name="no_pin_button_text">Nie mam kodu pin</string>
+    <string name="name_placeholder">Imię i nazwisko</string>
+    <string name="phone_number_placeholder">Numer telefonu</string>
+    <string name="visit_title_placeholder">Tytuł wizyty</string>
+    <string name="submit_button_labebl">Zatwierdź</string>
+    <string name="host_name_placeholder">Wybierz hosta</string>
 </resources>
