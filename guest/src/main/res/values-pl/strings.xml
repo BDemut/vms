@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_text">Jeśli masz umówioną wizytę\npodaj pin</string>
+    <string name="no_pin_button_text">Nie mam kodu pin</string>
+</resources>

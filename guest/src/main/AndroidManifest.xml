@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VisitorManagementSystem">
         <activity
-            android:name=".guest.MainActivity"
+            android:name=".guest.HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.VisitorManagementSystem">
