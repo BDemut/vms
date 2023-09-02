@@ -85,7 +85,7 @@ fun VisitItem(
             )
             Text(
                 modifier = Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
-                text = "${visit.start.format(visitItemDateFormatter)}, ${
+                text = "${visit.start.format(visitItemDateFormatter)} • ${
                     visit.start.format(
                         visitItemTimeFormatter
                     )

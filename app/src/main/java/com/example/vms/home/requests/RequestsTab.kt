@@ -25,9 +25,9 @@ import com.example.vms.ui.theme.VisitorManagementSystemTheme
 @Composable
 fun RequestsTab(
     requests: List<Request>,
-    onRequestClick: (Int) -> Unit = {},
-    onRequestAccept: (Int) -> Unit = {},
-    onRequestDecline: (Int) -> Unit = {},
+    onRequestClick: (String) -> Unit = {},
+    onRequestAccept: (String) -> Unit = {},
+    onRequestDecline: (String) -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier.padding(8.dp),
@@ -49,9 +49,9 @@ fun RequestsTab(
 @Composable
 fun RequestItem(
     request: Request,
-    onClick: (Int) -> Unit,
-    onRequestAccept: (Int) -> Unit,
-    onRequestDecline: (Int) -> Unit,
+    onClick: (String) -> Unit,
+    onRequestAccept: (String) -> Unit,
+    onRequestDecline: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -89,9 +89,9 @@ fun RequestDescription(
 
 @Composable
 fun RequestButtons(
-    id: Int,
-    onRequestAccept: (Int) -> Unit,
-    onRequestDecline: (Int) -> Unit,
+    id: String,
+    onRequestAccept: (String) -> Unit,
+    onRequestDecline: (String) -> Unit,
 ) {
     Row {
         IconButton(onClick = { onRequestAccept(id) }) {
@@ -126,9 +126,9 @@ fun DefaultPreview() {
 
 val testRequests = listOf(
     Request(
-        0, RequestType.HOST_CHANGE, "wizyta prezesa"
+        "0", RequestType.HOST_CHANGE, "wizyta prezesa"
     ),
     Request(
-        1, RequestType.INSTANT_VISIT, "kurier DHL"
+        "1", RequestType.INSTANT_VISIT, "kurier DHL"
     ),
 )

@@ -68,7 +68,7 @@ class VisitDetailsActivity : ComponentActivity() {
         startActivity(EditVisitActivity.getLaunchIntent(this, visitId))
 
     companion object {
-        const val ARG_VISIT_ID = "visitId"
+        private const val ARG_VISIT_ID = "visitId"
 
         fun getLaunchIntent(context: Context, visitId: String): Intent {
             val intent = Intent(context, VisitDetailsActivity::class.java)
