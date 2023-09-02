@@ -7,4 +7,10 @@
     <string name="visit_title_placeholder">Visit title</string>
     <string name="submit_button_labebl">SUBMIT</string>
     <string name="host_name_placeholder">Select host</string>
+    <string name="awaiting_host_description">Please wait\nWe notified the host about your arrival</string>
+    <string name="visit_pending_description">Please wait\nWe requested your meeting</string>
+    <string name="visit_accepted_description">The host has accepted your meeting\nPlease wait</string>
+    <string name="visit_declined_description">The host has declined your request</string>
+    <string name="visit_ignored_description">The host did not accept your request in time</string>
+    <string name="back_to_home">Back to home</string>
 </resources>

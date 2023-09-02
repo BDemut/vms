@@ -65,7 +65,7 @@ class InstantVisitViewModel : ViewModel() {
     )
     val state: StateFlow<InstantVisitState> = _state
 
-    val _submitEvent = MutableSharedFlow<Unit>()
+    private val _submitEvent = MutableSharedFlow<Unit>()
     val submitEvent: SharedFlow<Unit> = _submitEvent
 
     fun onNameChanged(name: String) {

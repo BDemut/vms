@@ -13,9 +13,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -27,13 +30,17 @@ import com.example.vms.guest.home.PIN_LENGTH
 import com.example.vms.guest.ui.theme.Purple200
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PinInputField(
-    modifier: Modifier = Modifier,
     pinInput: String,
-    onPinInputChanged: (String) -> Unit
+    shouldShowKeyboard: Boolean,
+    onKeyboardShown: () -> Unit,
+    onPinInputChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
     BasicTextField(
         modifier = modifier.focusRequester(focusRequester)
             .border(2.dp, MaterialTheme.colors.primary)
@@ -58,8 +65,12 @@ fun PinInputField(
             }
         }
     )
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+    LaunchedEffect(shouldShowKeyboard) {
+        if (shouldShowKeyboard) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+            onKeyboardShown()
+        }
     }
 }
 

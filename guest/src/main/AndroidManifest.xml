@@ -24,6 +24,11 @@
             android:name=".guest.instantvisit.InstantVisitActivity"
             android:theme="@style/Theme.VisitorManagementSystem">
         </activity>
+
+        <activity
+            android:name=".guest.summary.SummaryActivity"
+            android:theme="@style/Theme.VisitorManagementSystem">
+        </activity>
     </application>
 
 </manifest>

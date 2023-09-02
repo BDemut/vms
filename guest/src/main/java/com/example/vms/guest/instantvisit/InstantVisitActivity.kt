@@ -21,11 +21,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.example.vms.R
 import com.example.vms.guest.instantvisit.ui.DurationChipGroup
 import com.example.vms.guest.instantvisit.ui.HostChangeDropdown
 import com.example.vms.guest.instantvisit.ui.InstantVisitTextField
+import com.example.vms.guest.summary.SummaryActivity
+import com.example.vms.guest.summary.SummaryEntryType
 import com.example.vms.guest.ui.theme.VisitorManagementSystemTheme
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class InstantVisitActivity : ComponentActivity() {
 
@@ -52,6 +57,16 @@ class InstantVisitActivity : ComponentActivity() {
                 }
             }
         }
+        viewModel.submitEvent
+            .onEach {
+                finishAndRemoveTask()
+                launchSummaryActivity()
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    private fun launchSummaryActivity() {
+        startActivity(SummaryActivity.createIntent(this, SummaryEntryType.INSTANT_VISIT_REQUESTED))
     }
 }
 
