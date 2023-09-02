@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +37,7 @@ import com.example.vms.visitdetails.VisitDetailsContent
 import java.time.LocalDateTime
 
 class RequestDetailsActivity : ComponentActivity() {
-    //private val homeViewModel: HomeViewModel by viewModels()
+    private val viewModel: RequestDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
