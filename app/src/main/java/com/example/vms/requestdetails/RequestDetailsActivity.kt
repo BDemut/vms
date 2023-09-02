@@ -6,13 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -20,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,19 +26,18 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.vms.R
-import com.example.vms.home.HomeScreen
-import com.example.vms.home.HomeViewModel
-import com.example.vms.home.Tab
-import com.example.vms.home.requests.Request
 import com.example.vms.home.requests.RequestType
+import com.example.vms.model.Guest
+import com.example.vms.model.Room
+import com.example.vms.model.Visit
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
-import com.example.vms.visitdetails.VisitDetailsActivity
-import kotlinx.coroutines.launch
+import com.example.vms.user.User
+import com.example.vms.visitdetails.VisitDetailsContent
+import java.time.LocalDateTime
 
 class RequestDetailsActivity : ComponentActivity() {
     //private val homeViewModel: HomeViewModel by viewModels()
 
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -55,12 +50,16 @@ class RequestDetailsActivity : ComponentActivity() {
                         )
                     },
                     bottomBar = {
-                        RequestDetailsButtons(onAccept = { /*TODO*/ }) {
-
-                        }
+                        RequestDetailsButtons(
+                            onAccept = { /*TODO*/ },
+                            onDecline = {  }
+                        )
                     }
                 ) {
-                    //TODO visit details
+                    VisitDetailsContent(
+                        modifier = Modifier.padding(it),
+                        visit = testVisit
+                    )
                 }
             }
         }
@@ -77,10 +76,28 @@ class RequestDetailsActivity : ComponentActivity() {
     }
 }
 
-@Composable
-private fun RequestDetailsScreen() {
+private val testGuests = listOf<Guest>(
+    Guest(
+        "michal@test.com",
+        Guest.InvitationStatus.Accepted
+    ),
+    Guest(
+        "bartek@test.com",
+        Guest.InvitationStatus.Pending
+    ),
+)
 
-}
+private val testVisit =
+    Visit(
+        id = "",
+        title = "Title",
+        start = LocalDateTime.now(),
+        end = LocalDateTime.now().plusHours(1),
+        room = Room("1", "Sala 101"),
+        guests = testGuests,
+        host = User(""),
+        isCancelled = false
+    )
 
 @Composable
 private fun RequestDetailsTopBar(
@@ -107,7 +124,8 @@ fun RequestDetailsButtons(
     onDecline: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {

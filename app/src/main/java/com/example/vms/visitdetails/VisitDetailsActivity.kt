@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,65 +90,30 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
         if (state.isLoading) {
             LoadingView()
         } else {
-            VisitDetailsContent(
-                state = state,
-                onDiscardClick = { viewModel.onDiscardButtonClicked() },
-                onEditClick = { viewModel.onEditButtonClicked() },
-                onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
-                onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
-                onCancelVisitDialogConfirmed = { viewModel.onCancelVisitDialogConfirmed() },
-                onCancelVisitDialogDismissed = { viewModel.onCancelVisitDialogDismissed() }
-            )
-        }
-    }
-}
-
-@Composable
-fun VisitDetailsContent(
-    state: VisitDetailsState,
-    onDiscardClick: () -> Unit,
-    onEditClick: () -> Unit,
-    onChangeHostClick: () -> Unit,
-    onCancelVisitClick: () -> Unit,
-    onCancelVisitDialogConfirmed: () -> Unit,
-    onCancelVisitDialogDismissed: () -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        TopBar(
-            onDiscardClick = onDiscardClick,
-            onEditClick = onEditClick,
-            onChangeHostClick = onChangeHostClick,
-            onCancelVisitClick = onCancelVisitClick,
-            isMoreOptionsShowing = state.isMoreOptionsShowing,
-            isEditButtonShowing = state.isEditButtonShowing,
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Spacer(modifier = Modifier.width(50.dp))
-            Column {
-                Title(text = state.visit.title)
-                VisitDateTime(start = state.visit.start, end = state.visit.end)
-                Spacer(modifier = Modifier.height(4.dp))
+            Scaffold(
+                topBar = {
+                    TopBar(
+                        onDiscardClick = { viewModel.onDiscardButtonClicked() },
+                        onEditClick = { viewModel.onEditButtonClicked() },
+                        onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
+                        onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
+                        isMoreOptionsShowing = state.isMoreOptionsShowing,
+                        isEditButtonShowing = state.isEditButtonShowing,
+                    )
+                }
+            ) {
+                VisitDetailsContent(
+                    modifier = Modifier.padding(it),
+                    visit = state.visit
+                )
+                if (state.isCancelVisitDialogShowing) {
+                    CancelVisitDialog(
+                        onConfirm = { viewModel.onCancelVisitDialogConfirmed() },
+                        onDismiss = { viewModel.onCancelVisitDialogConfirmed() },
+                    )
+                }
             }
         }
-        if (state.visit.isCancelled) {
-            CancelledSection()
-        }
-        if (state.visit.room != null) {
-            LocationSection(room = state.visit.room)
-        }
-        GuestsSection(guests = state.visit.guests)
-    }
-    if (state.isCancelVisitDialogShowing) {
-        CancelVisitDialog(
-            onConfirm = onCancelVisitDialogConfirmed,
-            onDismiss = onCancelVisitDialogDismissed,
-        )
     }
 }
 
@@ -156,46 +124,3 @@ fun Title(text: String) {
         fontSize = 24.sp
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewVisitDetailsContent() {
-    VisitDetailsContent(
-        state = VisitDetailsState(
-            isLoading = false,
-            visit = testVisit,
-            isMoreOptionsShowing = true,
-            isEditButtonShowing = true,
-            isCancelVisitDialogShowing = false,
-        ),
-        onDiscardClick = {},
-        onEditClick = {},
-        onChangeHostClick = {},
-        onCancelVisitClick = {},
-        onCancelVisitDialogConfirmed = {},
-        onCancelVisitDialogDismissed = {}
-    )
-}
-
-private val testGuests = listOf<Guest>(
-    Guest(
-        "michal@test.com",
-        Guest.InvitationStatus.Accepted
-    ),
-    Guest(
-        "bartek@test.com",
-        Guest.InvitationStatus.Pending
-    ),
-)
-
-private val testVisit =
-    Visit(
-        id = "",
-        title = "Title",
-        start = LocalDateTime.now(),
-        end = LocalDateTime.now().plusHours(1),
-        room = Room("1", "Sala 101"),
-        guests = testGuests,
-        host = User(""),
-        isCancelled = false
-    )

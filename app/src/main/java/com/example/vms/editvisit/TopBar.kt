@@ -8,6 +8,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -25,27 +27,29 @@ fun TopBar(
     onDiscardClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        IconButton(
-            onClick = {
-                onDiscardClick()
-            }, modifier = Modifier.padding(8.dp, 8.dp)
+    TopAppBar {
+        Row(
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = stringResource(R.string.discard_icon_content_description)
-            )
-        }
-        Button(
-            onClick = {
-                onSaveClick()
-            }, modifier = Modifier.padding(16.dp, 8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.edit_visit_save_button_label)
-            )
+            IconButton(
+                onClick = {
+                    onDiscardClick()
+                }, modifier = Modifier.padding(8.dp, 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.discard_icon_content_description)
+                )
+            }
+            TextButton(
+                onClick = {
+                    onSaveClick()
+                }, modifier = Modifier.padding(16.dp, 8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.edit_visit_save_button_label)
+                )
+            }
         }
     }
 }
