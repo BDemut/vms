@@ -1,6 +1,7 @@
 package com.example.vms.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vms.home.requests.testRequests
@@ -67,6 +68,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                     state.update { it.copy(visits = visits, dataState = DataState.CONTENT) }
                 }
                 .onFailure {
+                    Log.e("HomeViewModel", "visitRepository.getVisits() failed: ${it.message}")
                     state.update { it.copy(dataState = DataState.ERROR) }
                 }
         }

@@ -42,8 +42,8 @@ class EditVisitViewModel(
             id = Visit.generateNewId(),
             title = "",
             date = LocalDate.now(),
-            startTime = LocalTime.now().plusHours(1).withMinute(0),
-            endTime = LocalTime.now().plusHours(2).withMinute(0),
+            startTime = LocalTime.now().plusHours(1).withMinute(0).withSecond(0).withNano(0),
+            endTime = LocalTime.now().plusHours(2).withMinute(0).withSecond(0).withNano(0),
             room = null,
             guests = emptyList()
         )
