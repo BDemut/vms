@@ -45,6 +45,7 @@ fun VisitDetailsContent(
         if (visit.room != null) {
             LocationSection(room = visit.room)
         }
+        HostSection(user = visit.host)
         GuestsSection(guests = visit.guests)
     }
 }
@@ -74,6 +75,6 @@ private val testVisit =
         end = LocalDateTime.now().plusHours(1),
         room = Visit.Room("1", "Sala 101"),
         guests = testGuests,
-        host = User(""),
+        host = User("michal@test.com"),
         isCancelled = false
     )

@@ -64,4 +64,5 @@
     <string name="select_room">Wybierz sale konferecyjną</string>
     <string name="room_available">wolna</string>
     <string name="room_unavailable">zajęta</string>
+    <string name="host_icon_content_description">ikona gospodarza</string>
 </resources>

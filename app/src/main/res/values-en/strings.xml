@@ -62,4 +62,5 @@
     <string name="select_room">Select conference room</string>
     <string name="room_available">available</string>
     <string name="room_unavailable">unavailable</string>
+    <string name="host_icon_content_description">host icon</string>
 </resources>
