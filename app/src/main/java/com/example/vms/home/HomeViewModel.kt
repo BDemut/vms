@@ -7,6 +7,7 @@ import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
 import com.example.vms.repository.VisitRepository
+import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -24,7 +26,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             visits = emptyList(),
             requests = testRequests,
             isLogoutDialogShowing = false,
-            dataState = DataState.LOADING
+            dataState = DataState.LOADING,
+            signInUserName = ""
         )
     )
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
@@ -36,8 +39,15 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     @Inject
     lateinit var visitRepository: VisitRepository
 
+    @Inject
+    @Named("signInUser")
+    lateinit var signInUser: User
+
     init {
         app.userComponent().inject(this)
+        viewModelScope.launch {
+            state.update { it.copy(signInUserName = signInUser.email) }
+        }
     }
 
     fun changeTab(newTab: Tab) {

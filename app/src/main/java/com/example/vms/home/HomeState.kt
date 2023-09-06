@@ -9,7 +9,8 @@ data class HomeState(
     val visits: List<Visit>,
     val requests: List<Request>,
     val isLogoutDialogShowing: Boolean,
-    val dataState: DataState
+    val dataState: DataState,
+    val signInUserName: String
 )
 
 enum class DataState {
