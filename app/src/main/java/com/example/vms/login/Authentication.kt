@@ -48,11 +48,6 @@ class Authentication(
     private suspend fun initAWSMobileClient() {
         val client = AWSMobileClient.getInstance()
         val result = client.initialize(context)
-        if (result is InitAWSMobileClientResult.Success) {
-            if (isSignedIn(client)) {
-                getUser(client)?.let { userManager.startUserSession(it) }
-            }
-        }
         if (result is InitAWSMobileClientResult.Error) {
             Log.e("LoginManager", "AWSMobileClient initialize: error.", result.exception)
         }
