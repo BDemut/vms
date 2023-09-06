@@ -4,11 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -18,16 +15,13 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -104,7 +98,7 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { HomeToolbar(scaffoldState) },
+        topBar = { HomeToolbar(scaffoldState, state.signInUserName) },
         bottomBar = {
             HomeBottomBar(
                 currentScreen = state.currentTab,
@@ -166,7 +160,7 @@ fun HomeContent(
 }
 
 @Composable
-fun HomeToolbar(scaffoldState: ScaffoldState) {
+fun HomeToolbar(scaffoldState: ScaffoldState, signInUserName: String) {
     val scope = rememberCoroutineScope()
     TopAppBar {
         IconButton(onClick = {
@@ -180,7 +174,7 @@ fun HomeToolbar(scaffoldState: ScaffoldState) {
             )
         }
         Text(
-            text = stringResource(R.string.hello, "Janek"),
+            text = stringResource(R.string.hello, signInUserName),
             fontWeight = FontWeight.Bold
         )
     }
