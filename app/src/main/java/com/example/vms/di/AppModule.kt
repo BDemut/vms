@@ -24,7 +24,8 @@ class AppModule(val context: Context) {
     @Singleton
     fun provideUserManager(
         userComponentBuilder: UserComponent.Builder,
-    ): UserManager = UserManager(userComponentBuilder)
+        context: Context
+    ): UserManager = UserManager(userComponentBuilder, context)
 
     @Provides
     @Singleton
