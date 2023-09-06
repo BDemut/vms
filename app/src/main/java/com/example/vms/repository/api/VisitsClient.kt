@@ -23,6 +23,7 @@ interface VisitsClient {
     @Headers("accept: application/json")
     suspend fun getRooms(
         @Query("startDate") startDate: String,
-        @Query("endDate") endDate: String
-    ): Response<List<ApiRoom>>
+        @Query("endDate") endDate: String,
+        @Query("limit") limit: Int = 50
+    ): Response<GetRoomsDto>
 }

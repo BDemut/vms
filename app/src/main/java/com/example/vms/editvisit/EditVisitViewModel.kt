@@ -240,6 +240,10 @@ class EditVisitViewModel(
     }
 
     fun onBackPressed() {
+        if (state.value.isSelectRoomViewShowing) {
+            state.update { it.copy(isSelectRoomViewShowing = false) }
+            return
+        }
         if (initVisit != getVisit()) {
             state.update { it.copy(isDiscardDialogShowing = true) }
         } else {

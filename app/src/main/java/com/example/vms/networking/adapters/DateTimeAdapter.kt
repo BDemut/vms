@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter
 
 class DateTimeAdapter {
     @ToJson
-    fun toJson(date: LocalDateTime) = date.format(DateTimeFormatter.ISO_DATE_TIME) + 'Z'
+    fun toJson(date: LocalDateTime) = date.format(DateTimeFormatter.ISO_DATE_TIME)
 
     @FromJson
-    fun fromJson(date: String) = LocalDateTime.parse(date.subSequence(0, date.length-1))
+    fun fromJson(date: String) = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
 }

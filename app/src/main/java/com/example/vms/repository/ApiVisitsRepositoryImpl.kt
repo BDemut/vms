@@ -39,10 +39,10 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
     ): List<Room> {
         try {
             val response = api.getRooms(
-                startDate = startDateTime.format(DateTimeFormatter.ISO_DATE_TIME) + 'Z',
-                endDate = endDateTime.format(DateTimeFormatter.ISO_DATE_TIME) + 'Z'
+                startDate = startDateTime.format(DateTimeFormatter.ISO_DATE_TIME),
+                endDate = endDateTime.format(DateTimeFormatter.ISO_DATE_TIME)
             )
-            return response.body()?.map { it.asModel() } ?: emptyList()
+            return response.body()?.rooms?.map { it.asModel() } ?: emptyList()
         } catch (e: Exception) {
             Log.e("ApiVisitRepositoryImpl", "getRooms failed.", e)
             return emptyList()

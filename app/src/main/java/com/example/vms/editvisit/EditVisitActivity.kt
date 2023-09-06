@@ -39,7 +39,7 @@ class EditVisitActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        visitId = intent.getStringExtra(ARG_VISIT_ID) ?: throw IllegalStateException("No visit id")
+        visitId = intent.getStringExtra(ARG_VISIT_ID)
         setContent {
             VisitorManagementSystemTheme {
                 EditVisitScreen(viewModel)

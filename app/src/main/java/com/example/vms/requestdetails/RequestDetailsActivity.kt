@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.vms.home.requests.RequestType
 import com.example.vms.model.Guest
-import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.User
@@ -77,7 +76,7 @@ private val testVisit =
         title = "Title",
         start = LocalDateTime.now(),
         end = LocalDateTime.now().plusHours(1),
-        room = Room("1", "Sala 101"),
+        room = Visit.Room("1", "Sala 101"),
         guests = testGuests,
         host = User(""),
         isCancelled = false
