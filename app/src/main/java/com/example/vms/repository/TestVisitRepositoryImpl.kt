@@ -62,9 +62,10 @@ class TestVisitRepositoryImpl(
         return visits
     }
 
-    override suspend fun addVisit(visit: Visit) {
+    override suspend fun addVisit(visit: Visit): Boolean {
         delay(500)
         visits.add(visit)
+        return true
     }
 
     override suspend fun editVisit(visit: Visit) {
