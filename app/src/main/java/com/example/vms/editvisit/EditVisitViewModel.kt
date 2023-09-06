@@ -9,6 +9,7 @@ import com.example.vms.editvisit.model.Guest
 import com.example.vms.editvisit.model.Visit
 import com.example.vms.editvisit.model.VisitMapper
 import com.example.vms.repository.VisitRepository
+import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,13 +22,15 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.LinkedList
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by mśmiech on 22.08.2023.
  */
 class EditVisitViewModel(
     private val visitId: String?,
-    private val visitRepository: VisitRepository
+    private val visitRepository: VisitRepository,
+    private val signInUser: User
 ) : ViewModel() {
     private val _events: MutableSharedFlow<EditVisitEvent> = MutableSharedFlow()
     val events: SharedFlow<EditVisitEvent> = _events
@@ -186,7 +189,11 @@ class EditVisitViewModel(
     }
 
     private suspend fun saveVisit() {
-        val visit = getVisit().let { VisitMapper.map(originalVisit!!, it) }
+        val visit = if (originalVisit != null) {
+            getVisit().let { VisitMapper.map(originalVisit!!, it) }
+        } else {
+            VisitMapper.map(getVisit(), signInUser)
+        }
         if (visitId == null) {
             visitRepository.addVisit(visit)
         } else {
@@ -255,6 +262,10 @@ class EditVisitViewModel(
         @Inject
         lateinit var visitRepository: VisitRepository
 
+        @Inject
+        @Named("signInUser")
+        lateinit var signInUser: User
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -264,7 +275,8 @@ class EditVisitViewModel(
             application.userComponent().inject(this)
             return EditVisitViewModel(
                 visitId = visitId,
-                visitRepository = visitRepository
+                visitRepository = visitRepository,
+                signInUser = signInUser
             ) as T
         }
     }

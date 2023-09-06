@@ -18,13 +18,15 @@ import javax.inject.Inject
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
-    val state = MutableStateFlow(HomeState(
-        currentTab = Tab.VISITS,
-        visits = emptyList(),
-        requests = testRequests,
-        isLogoutDialogShowing = false,
-        dataState = DataState.LOADING
-    ))
+    val state = MutableStateFlow(
+        HomeState(
+            currentTab = Tab.VISITS,
+            visits = emptyList(),
+            requests = testRequests,
+            isLogoutDialogShowing = false,
+            dataState = DataState.LOADING
+        )
+    )
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
 
@@ -62,7 +64,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun menuItemClicked(item: MenuItemType) {
         viewModelScope.launch {
-            when(item) {
+            when (item) {
                 MenuItemType.SETTINGS -> _events.emit(HomeEvent.NavigateToSettings)
                 MenuItemType.AUDIT_LOG -> _events.emit(HomeEvent.NavigateToAuditLog)
                 MenuItemType.LOGOUT -> state.update { it.copy(isLogoutDialogShowing = true) }
