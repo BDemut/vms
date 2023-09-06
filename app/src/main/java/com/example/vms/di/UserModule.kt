@@ -1,9 +1,8 @@
 package com.example.vms.di
 
-import com.example.vms.repository.api.VisitsClient
 import com.example.vms.repository.ApiVisitRepositoryImpl
-import com.example.vms.repository.TestVisitRepositoryImpl
 import com.example.vms.repository.VisitRepository
+import com.example.vms.repository.api.VisitsClient
 import com.example.vms.user.User
 import dagger.Module
 import dagger.Provides
@@ -21,14 +20,5 @@ class UserModule(private val _signInUser: User) {
 
     @Provides
     @UserScope
-    fun getVisitRepository(
-        @Named("signInUser") signInUser: User
-    ): VisitRepository = TestVisitRepositoryImpl(signInUser)
-
-/*
-    @Provides
-    @UserScope
     fun getVisitRepository(api: VisitsClient): VisitRepository = ApiVisitRepositoryImpl(api)
-
- */
 }

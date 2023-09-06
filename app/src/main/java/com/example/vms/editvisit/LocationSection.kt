@@ -15,8 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vms.R
-import com.example.vms.editvisit.model.Room
-
+import com.example.vms.editvisit.model.Visit.Room
 /**
  * Created by mśmiech on 24.08.2023.
  */

@@ -7,6 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +20,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.ui.LoadingView
@@ -32,7 +39,7 @@ class EditVisitActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        visitId = intent.getStringExtra(ARG_VISIT_ID) ?: throw IllegalStateException("No visit id")
+        visitId = intent.getStringExtra(ARG_VISIT_ID)
         setContent {
             VisitorManagementSystemTheme {
                 EditVisitScreen(viewModel)
@@ -138,5 +145,18 @@ fun EditVisitContent(
     }
     if (state.isSaving) {
         LoadingView(withBackground = true)
+    }
+    val density = LocalDensity.current
+    AnimatedVisibility(visible = state.isSelectRoomViewShowing,
+        enter = slideInVertically {
+            with(density) { 40.dp.roundToPx() }
+        } + fadeIn(
+            initialAlpha = 0.3f
+        ),
+        exit = slideOutVertically {
+            with(density) { 40.dp.roundToPx() }
+        } + fadeOut()
+    ) {
+        SelectRoomView(viewModel.selectRoomViewModel)
     }
 }

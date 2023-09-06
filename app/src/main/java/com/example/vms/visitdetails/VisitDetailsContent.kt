@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vms.model.Guest
-import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.user.User
 import java.time.LocalDateTime
@@ -28,7 +27,8 @@ fun VisitDetailsContent(
         modifier = modifier.fillMaxSize()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -72,7 +72,7 @@ private val testVisit =
         title = "Title",
         start = LocalDateTime.now(),
         end = LocalDateTime.now().plusHours(1),
-        room = Room("1", "Sala 101"),
+        room = Visit.Room("1", "Sala 101"),
         guests = testGuests,
         host = User(""),
         isCancelled = false

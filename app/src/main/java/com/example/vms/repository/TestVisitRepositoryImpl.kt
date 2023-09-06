@@ -1,5 +1,6 @@
 package com.example.vms.repository
 
+import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.user.User
 import kotlinx.coroutines.delay
@@ -74,6 +75,13 @@ class TestVisitRepositoryImpl(
 
     override suspend fun cancelVisit(visitId: String) {
 
+    }
+
+    override suspend fun getRooms(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): List<Room> {
+        TODO("Not yet implemented")
     }
 }
 

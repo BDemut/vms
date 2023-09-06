@@ -1,6 +1,8 @@
 package com.example.vms.repository
 
+import com.example.vms.model.Room
 import com.example.vms.model.Visit
+import java.time.LocalDateTime
 
 
 /**
@@ -12,4 +14,5 @@ interface VisitRepository {
     suspend fun addVisit(visit: Visit)
     suspend fun editVisit(visit: Visit)
     suspend fun cancelVisit(visitId: String)
+    suspend fun getRooms(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Room>
 }

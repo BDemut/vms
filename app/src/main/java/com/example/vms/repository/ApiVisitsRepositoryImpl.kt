@@ -1,9 +1,12 @@
 package com.example.vms.repository
 
 import android.util.Log
+import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.VisitsClient
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
     override suspend fun getVisit(id: String): Visit {
@@ -28,5 +31,21 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
             Log.e("ApiVisitRepositoryImpl", "cancelVisit error", exc)
         }
         //TODO zmienić także status lokalnie w bazie bo backend nie robi tego instant
+    }
+
+    override suspend fun getRooms(
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime
+    ): List<Room> {
+        try {
+            val response = api.getRooms(
+                startDate = startDateTime.format(DateTimeFormatter.ISO_DATE_TIME),
+                endDate = endDateTime.format(DateTimeFormatter.ISO_DATE_TIME)
+            )
+            return response.body()?.rooms?.map { it.asModel() } ?: emptyList()
+        } catch (e: Exception) {
+            Log.e("ApiVisitRepositoryImpl", "getRooms failed.", e)
+            return emptyList()
+        }
     }
 }

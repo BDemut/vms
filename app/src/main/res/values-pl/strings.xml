@@ -33,7 +33,7 @@
     <string name="edit_visit_discard_dialog_description_new_visit">Odrzucić tę wizyte?</string>
     <string name="edit_visit_discard_dialog_confirm">Odrzuć</string>
     <string name="edit_visit_discard_dialog_cancel">Edytuj dalej</string>
-    <string name="edit_visit_room_placeholder">Sala konferencyjna</string>
+    <string name="edit_visit_room_placeholder">Dodaj salę konferencyjną</string>
     <string name="edit_visit_add_guest_placeholder">Dodaj osobę</string>
     <string name="edit_visit_title_placeholder">Dodaj tytuł</string>
     <string name="edit_visit_save_button_label">Zapisz</string>
@@ -60,4 +60,8 @@
     <string name="cancel_visit_dialog_confirm">Tak</string>
     <string name="cancel_visit_dialog_dismiss">Nie</string>
     <string name="visit_cancelled">Anulowana</string>
+    <string name="close_icon_content_description">ikona zamknięcia</string>
+    <string name="select_room">Wybierz sale konferecyjną</string>
+    <string name="room_available">wolna</string>
+    <string name="room_unavailable">zajęta</string>
 </resources>

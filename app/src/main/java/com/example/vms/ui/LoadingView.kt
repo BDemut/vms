@@ -1,8 +1,6 @@
 package com.example.vms.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -19,10 +17,10 @@ import androidx.compose.ui.unit.dp
  */
 
 @Composable
-fun LoadingView(withBackground: Boolean = false) {
+fun LoadingView(withBackground: Boolean = false, modifier: Modifier = Modifier) {
     if (withBackground) {
         Surface(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
             color = Color.Black.copy(alpha = 0.47f)
         ) {
@@ -33,7 +31,7 @@ fun LoadingView(withBackground: Boolean = false) {
             }
         }
     } else {
-        Box {
+        Box(modifier = modifier) {
             LoadingIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )

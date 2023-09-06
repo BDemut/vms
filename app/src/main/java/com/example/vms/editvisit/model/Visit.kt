@@ -16,6 +16,7 @@ data class Visit(
     val room: Room?,
     val guests: List<Guest>
 ) {
+    data class Room(val id: String, val name: String)
     companion object {
         fun generateNewId(): String {
             return UUID.randomUUID().toString()

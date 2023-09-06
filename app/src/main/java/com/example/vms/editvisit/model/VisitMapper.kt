@@ -1,5 +1,6 @@
 package com.example.vms.editvisit.model
 
+import com.example.vms.editvisit.model.Visit.Room
 import java.time.LocalDateTime
 
 /**
@@ -24,7 +25,12 @@ object VisitMapper {
             title = newVisit.title,
             start = LocalDateTime.of(newVisit.date, newVisit.startTime),
             end = LocalDateTime.of(newVisit.date, newVisit.endTime),
-            room = newVisit.room?.let { room -> com.example.vms.model.Room(room.id, room.name) },
+            room = newVisit.room?.let { room ->
+                com.example.vms.model.Visit.Room(
+                    room.id,
+                    room.name
+                )
+            },
             guests = mergedGuests(oldVisit.guests, newVisit.guests),
             host = oldVisit.host,
             isCancelled = oldVisit.isCancelled
