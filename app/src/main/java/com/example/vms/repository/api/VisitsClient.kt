@@ -10,7 +10,9 @@ import retrofit2.http.Query
 interface VisitsClient {
     @GET("/prod/visits")
     @Headers("accept: application/json")
-    suspend fun getVisits(): List<ApiVisit>
+    suspend fun getVisits(
+        @Query("limit") limit: Int = 50
+    ): GetVisitsDto
 
     @PATCH("/prod/visits/{visitId}/cancelVisit")
     suspend fun cancelVisit(@Path("visitId") visitId: String)

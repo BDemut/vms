@@ -14,6 +14,7 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
     }
 
     override suspend fun getVisits(): List<Visit> = api.getVisits()
+        .visits
         .map { it.asModelVisit() }
 
     override suspend fun addVisit(visit: Visit) {
