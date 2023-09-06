@@ -9,6 +9,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -36,33 +37,35 @@ fun TopBar(
     isMoreOptionsShowing: Boolean,
     isEditButtonShowing: Boolean,
 ) {
-    var showMoreOptionsDropdownMenu by remember { mutableStateOf(false) }
-    Row(
-        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        DiscardButton(onClick = onDiscardClick)
-        Row {
-            if (isEditButtonShowing) {
-                EditButton(onClick = onEditClick)
-            }
-            if (isMoreOptionsShowing) {
-                MoreOptionsButton(
-                    onClick = {
-                        showMoreOptionsDropdownMenu = !showMoreOptionsDropdownMenu
-                    }
-                )
-                MoreOptionsDropdownMenu(
-                    expanded = showMoreOptionsDropdownMenu,
-                    onDismissRequest = { showMoreOptionsDropdownMenu = false },
-                    onChangeHostClick = {
-                        showMoreOptionsDropdownMenu = false
-                        onChangeHostClick()
-                    },
-                    onCancelVisitClick = {
-                        showMoreOptionsDropdownMenu = false
-                        onCancelVisitClick()
-                    },
-                )
+    TopAppBar {
+        var showMoreOptionsDropdownMenu by remember { mutableStateOf(false) }
+        Row(
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            DiscardButton(onClick = onDiscardClick)
+            Row {
+                if (isEditButtonShowing) {
+                    EditButton(onClick = onEditClick)
+                }
+                if (isMoreOptionsShowing) {
+                    MoreOptionsButton(
+                        onClick = {
+                            showMoreOptionsDropdownMenu = !showMoreOptionsDropdownMenu
+                        }
+                    )
+                    MoreOptionsDropdownMenu(
+                        expanded = showMoreOptionsDropdownMenu,
+                        onDismissRequest = { showMoreOptionsDropdownMenu = false },
+                        onChangeHostClick = {
+                            showMoreOptionsDropdownMenu = false
+                            onChangeHostClick()
+                        },
+                        onCancelVisitClick = {
+                            showMoreOptionsDropdownMenu = false
+                            onCancelVisitClick()
+                        },
+                    )
+                }
             }
         }
     }

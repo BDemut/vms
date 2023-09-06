@@ -6,4 +6,5 @@ sealed class HomeEvent {
     object NavigateToLogin: HomeEvent()
     object NavigateToEditVisit : HomeEvent()
     class NavigateToVisitDetails(val visitId: String) : HomeEvent()
+    class NavigateToRequestDetails(val requestId: String) : HomeEvent()
 }

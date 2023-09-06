@@ -92,4 +92,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             _events.emit(HomeEvent.NavigateToVisitDetails(visitId))
         }
     }
+
+    fun onRequestClicked(visitId: String) {
+        viewModelScope.launch {
+            _events.emit(HomeEvent.NavigateToRequestDetails(visitId))
+        }
+    }
 }

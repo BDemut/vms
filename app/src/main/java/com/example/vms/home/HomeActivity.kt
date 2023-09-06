@@ -39,6 +39,7 @@ import com.example.vms.editvisit.EditVisitActivity
 import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
+import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.ErrorMessage
 import com.example.vms.ui.LoadingSpinner
@@ -61,7 +62,6 @@ class HomeActivity : UserSessionActivity() {
         }
         homeViewModel.events.onEach { event ->
             when (event) {
-                // temporary for testing
                 is HomeEvent.NavigateToSettings -> { launchSettingsActivity() }
                 is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                 is HomeEvent.NavigateToLogin -> {
@@ -70,6 +70,7 @@ class HomeActivity : UserSessionActivity() {
                 }
                 is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
                 is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
+                is HomeEvent.NavigateToRequestDetails -> launchRequestDetailsActivity(event.requestId)
             }
         }.launchIn(lifecycleScope)
     }
@@ -90,6 +91,9 @@ class HomeActivity : UserSessionActivity() {
 
     private fun launchVisitDetailsActivity(visitId: String) =
         startActivity(VisitDetailsActivity.getLaunchIntent(this, visitId))
+
+    private fun launchRequestDetailsActivity(requestId: String) =
+        startActivity(RequestDetailsActivity.getLaunchIntent(this, requestId))
 }
 
 @Composable
@@ -129,7 +133,11 @@ fun HomeScreen(
             color = MaterialTheme.colors.background
         ) {
             when (state.dataState) {
-                DataState.CONTENT -> HomeContent(state = state, model::onVisitClicked)
+                DataState.CONTENT -> HomeContent(
+                    state = state,
+                    onVisitClick = model::onVisitClicked,
+                    onRequestClick = model::onRequestClicked
+                )
                 DataState.LOADING -> LoadingSpinner()
                 DataState.ERROR -> ErrorMessage(
                     onRetry = { model.getVisits() }
@@ -146,10 +154,14 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeContent(state: HomeState, onVisitClick: (String) -> Unit) {
+fun HomeContent(
+    state: HomeState,
+    onVisitClick: (String) -> Unit,
+    onRequestClick: (String) -> Unit
+) {
     when (state.currentTab) {
-        Tab.VISITS -> VisitsTab(visits = state.visits, onVisitClick)
-        Tab.REQUESTS -> RequestsTab(requests = state.requests)
+        Tab.VISITS -> VisitsTab(visits = state.visits, onVisitClick = onVisitClick)
+        Tab.REQUESTS -> RequestsTab(requests = state.requests, onRequestClick = onRequestClick)
     }
 }
 

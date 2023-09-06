@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.example.vms.R
 
 data class Request(
-    val id: Int,
+    val id: String,
     val type: RequestType,
     val visitName: String
 )
