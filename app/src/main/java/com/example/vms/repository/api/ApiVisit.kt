@@ -12,7 +12,7 @@ data class ApiVisit(
     val timeframe: Timeframe,
     val host: ApiHost,
     val guests: List<ApiGuest>,
-    val room: ApiRoom
+    val room: ApiRoom?
 ) {
     @JsonClass(generateAdapter = true)
     data class ApiRoom(
