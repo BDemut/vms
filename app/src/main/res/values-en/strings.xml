@@ -63,4 +63,8 @@
     <string name="room_available">available</string>
     <string name="room_unavailable">unavailable</string>
     <string name="host_icon_content_description">host icon</string>
+    <string name="visit_start_end_time_error">Visit must be between 07:00 – 18:00</string>
+    <string name="past_visit_error">Past visits are not allowed</string>
+    <string name="saving_failed_snackbar">Saving failed</string>
+    <string name="canceling_failed_snackbar">Canceling failed</string>
 </resources>
