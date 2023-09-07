@@ -9,6 +9,7 @@ import com.example.vms.repository.VisitRepository
 import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -35,6 +36,7 @@ class VisitDetailsViewModel(
             isMoreOptionsShowing = dummyVisit.host == signInUser,
             isEditButtonShowing = dummyVisit.host == signInUser,
             isCancelVisitDialogShowing = false,
+            isCancelingFailedSnackbarShowing = false
         )
     )
 
@@ -86,13 +88,27 @@ class VisitDetailsViewModel(
             )
         }
         viewModelScope.launch(Dispatchers.IO) {
-            cancelVisit()
-            setupVisit(visitId)
+            val succeed = cancelVisit()
+            if (succeed) {
+                delay(2000)
+                setupVisit(visitId)
+            } else {
+                state.update {
+                    it.copy(
+                        isLoading = false,
+                        isCancelingFailedSnackbarShowing = true
+                    )
+                }
+            }
         }
     }
 
-    private suspend fun cancelVisit() {
-        visitRepository.cancelVisit(visitId)
+    fun dismissCancelingFailedSnackbar() {
+        state.update { it.copy(isCancelingFailedSnackbarShowing = false) }
+    }
+
+    private suspend fun cancelVisit(): Boolean {
+        return visitRepository.cancelVisit(visitId)
     }
 
     fun onCancelVisitDialogDismissed() {

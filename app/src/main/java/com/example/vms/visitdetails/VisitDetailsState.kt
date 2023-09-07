@@ -11,4 +11,5 @@ data class VisitDetailsState(
     val isMoreOptionsShowing: Boolean,
     val isEditButtonShowing: Boolean,
     val isCancelVisitDialogShowing: Boolean,
+    val isCancelingFailedSnackbarShowing: Boolean,
 )

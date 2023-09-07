@@ -6,37 +6,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.editvisit.EditVisitActivity
-import com.example.vms.model.Guest
-import com.example.vms.model.Room
-import com.example.vms.model.Visit
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
-import com.example.vms.user.User
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.time.LocalDateTime
+import kotlinx.coroutines.launch
 
 class VisitDetailsActivity : ComponentActivity() {
     private lateinit var visitId: String
@@ -84,34 +76,60 @@ class VisitDetailsActivity : ComponentActivity() {
 @Composable
 fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-    ) {
-        if (state.isLoading) {
-            LoadingView()
-        } else {
-            Scaffold(
-                topBar = {
-                    TopBar(
-                        onDiscardClick = { viewModel.onDiscardButtonClicked() },
-                        onEditClick = { viewModel.onEditButtonClicked() },
-                        onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
-                        onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
-                        isMoreOptionsShowing = state.isMoreOptionsShowing,
-                        isEditButtonShowing = state.isEditButtonShowing,
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(scaffoldState = scaffoldState) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it), color = MaterialTheme.colors.background
+        ) {
+            if (state.isLoading) {
+                LoadingView()
+            } else {
+                Scaffold(
+                    topBar = {
+                        TopBar(
+                            onDiscardClick = { viewModel.onDiscardButtonClicked() },
+                            onEditClick = { viewModel.onEditButtonClicked() },
+                            onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
+                            onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
+                            isMoreOptionsShowing = state.isMoreOptionsShowing,
+                            isEditButtonShowing = state.isEditButtonShowing,
+                        )
+                    }
+                ) {
+                    VisitDetailsContent(
+                        modifier = Modifier.padding(it),
+                        visit = state.visit
                     )
+                    if (state.isCancelVisitDialogShowing) {
+                        CancelVisitDialog(
+                            onConfirm = { viewModel.onCancelVisitDialogConfirmed() },
+                            onDismiss = { viewModel.onCancelVisitDialogDismissed() },
+                        )
+                    }
+                    if (state.isCancelingFailedSnackbarShowing) {
+                        CancelingFailedSnackbar(
+                            onDismiss = { viewModel.dismissCancelingFailedSnackbar() },
+                            snackbarHostState = scaffoldState.snackbarHostState
+                        )
+                    }
                 }
-            ) {
-                VisitDetailsContent(
-                    modifier = Modifier.padding(it),
-                    visit = state.visit
-                )
-                if (state.isCancelVisitDialogShowing) {
-                    CancelVisitDialog(
-                        onConfirm = { viewModel.onCancelVisitDialogConfirmed() },
-                        onDismiss = { viewModel.onCancelVisitDialogConfirmed() },
-                    )
-                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CancelingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    LaunchedEffect("isCancelingFailedSnackbarShowing") {
+        coroutineScope.launch {
+            val snackbarResult = snackbarHostState.showSnackbar(
+                "Canceling failed"
+            )
+            if (snackbarResult == SnackbarResult.Dismissed) {
+                onDismiss()
             }
         }
     }

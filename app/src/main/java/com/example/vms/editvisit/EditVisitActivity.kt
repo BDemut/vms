@@ -15,10 +15,17 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -26,8 +33,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class EditVisitActivity : ComponentActivity() {
     private var visitId: String? = null
@@ -70,16 +79,43 @@ class EditVisitActivity : ComponentActivity() {
 @Composable
 fun EditVisitScreen(viewModel: EditVisitViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-    ) {
-        if (state.isLoading) {
-            LoadingView()
-        } else {
-            EditVisitContent(
-                state = state,
-                viewModel = viewModel
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(scaffoldState = scaffoldState) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            color = MaterialTheme.colors.background
+        ) {
+            if (state.isLoading) {
+                LoadingView()
+            } else {
+                EditVisitContent(
+                    state = state,
+                    viewModel = viewModel
+                )
+            }
+            if (state.isSavingFailedSnackbarShowing) {
+                SavingFailedSnackbar(
+                    onDismiss = { viewModel.dismissSavingFailedSnackbar() },
+                    snackbarHostState = scaffoldState.snackbarHostState
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SavingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    LaunchedEffect("isSavingFailedSnackbarShowing") {
+        coroutineScope.launch {
+            val snackbarResult = snackbarHostState.showSnackbar(
+                "Saving failed"
             )
+            if (snackbarResult == SnackbarResult.Dismissed) {
+                onDismiss()
+            }
         }
     }
 }

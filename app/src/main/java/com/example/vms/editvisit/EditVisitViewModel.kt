@@ -63,7 +63,8 @@ class EditVisitViewModel(
             isLoading = visitId != null,
             isNewVisit = visitId == null,
             isSaving = false,
-            isSelectRoomViewShowing = false
+            isSelectRoomViewShowing = false,
+            isSavingFailedSnackbarShowing = false
         )
     )
     val selectRoomViewModel = SelectRoomViewModel(
@@ -170,9 +171,22 @@ class EditVisitViewModel(
                 return@launch
             }
             state.update { it.copy(isSaving = true) }
-            saveVisit()
-            _events.emit(EditVisitEvent.Finish)
+            val succeed = saveVisit()
+            if (succeed) {
+                _events.emit(EditVisitEvent.Finish)
+            } else {
+                state.update {
+                    it.copy(
+                        isSaving = false,
+                        isSavingFailedSnackbarShowing = true
+                    )
+                }
+            }
         }
+    }
+
+    fun dismissSavingFailedSnackbar() {
+        state.update { it.copy(isSavingFailedSnackbarShowing = false) }
     }
 
     private fun getVisit(): Visit {
@@ -188,13 +202,13 @@ class EditVisitViewModel(
         )
     }
 
-    private suspend fun saveVisit() {
+    private suspend fun saveVisit(): Boolean {
         val visit = if (originalVisit != null) {
             getVisit().let { VisitMapper.map(originalVisit!!, it) }
         } else {
             VisitMapper.map(getVisit(), signInUser)
         }
-        if (visitId == null) {
+        return if (visitId == null) {
             visitRepository.addVisit(visit)
         } else {
             visitRepository.editVisit(visit)
