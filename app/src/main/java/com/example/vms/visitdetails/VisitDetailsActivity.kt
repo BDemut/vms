@@ -19,9 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.example.vms.R
 import com.example.vms.editvisit.EditVisitActivity
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
@@ -123,11 +125,10 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
 @Composable
 private fun CancelingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val text = stringResource(R.string.canceling_failed_snackbar)
     LaunchedEffect("isCancelingFailedSnackbarShowing") {
         coroutineScope.launch {
-            val snackbarResult = snackbarHostState.showSnackbar(
-                "Canceling failed"
-            )
+            val snackbarResult = snackbarHostState.showSnackbar(text)
             if (snackbarResult == SnackbarResult.Dismissed) {
                 onDismiss()
             }

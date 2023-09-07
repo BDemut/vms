@@ -65,4 +65,8 @@
     <string name="room_available">wolna</string>
     <string name="room_unavailable">zajęta</string>
     <string name="host_icon_content_description">ikona gospodarza</string>
+    <string name="visit_start_end_time_error">Wizyta musi być między 07:00 – 18:00</string>
+    <string name="past_visit_error">Czas rozpoczęcia nie może być w przeszłości</string>
+    <string name="saving_failed_snackbar">Zapisywanie się nie powiodło</string>
+    <string name="canceling_failed_snackbar">Anulowanie się nie powiodło</string>
 </resources>

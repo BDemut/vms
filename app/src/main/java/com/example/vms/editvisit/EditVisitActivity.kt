@@ -28,9 +28,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.example.vms.R
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import kotlinx.coroutines.CoroutineScope
@@ -108,11 +110,10 @@ fun EditVisitScreen(viewModel: EditVisitViewModel) {
 @Composable
 private fun SavingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val text = stringResource(R.string.saving_failed_snackbar)
     LaunchedEffect("isSavingFailedSnackbarShowing") {
         coroutineScope.launch {
-            val snackbarResult = snackbarHostState.showSnackbar(
-                "Saving failed"
-            )
+            val snackbarResult = snackbarHostState.showSnackbar(text)
             if (snackbarResult == SnackbarResult.Dismissed) {
                 onDismiss()
             }
@@ -153,7 +154,11 @@ fun EditVisitContent(
             },
             onEndTimeChange = {
                 viewModel.changeEndTime(it)
-            })
+            },
+            isStartTimeError = state.isStartTimeError,
+            isEndTimeError = state.isEndTimeError,
+            isPastVisitError = state.isPastVisitError
+        )
         Divider(modifier = Modifier.fillMaxWidth())
         LocationSection(
             room = state.room,

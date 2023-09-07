@@ -54,6 +54,9 @@ class EditVisitViewModel(
             date = initVisit.date,
             startTime = initVisit.startTime,
             endTime = initVisit.endTime,
+            isStartTimeError = isStartTimeError(initVisit.startTime),
+            isEndTimeError = isEndTimeError(initVisit.endTime),
+            isPastVisitError = isPastVisitError(initVisit.date, initVisit.startTime),
             room = initVisit.room,
             guests = initVisit.guests,
             isDiscardDialogShowing = false,
@@ -101,6 +104,9 @@ class EditVisitViewModel(
                 date = initVisit.date,
                 startTime = initVisit.startTime,
                 endTime = initVisit.endTime,
+                isPastVisitError = isPastVisitError(initVisit.date, initVisit.startTime),
+                isStartTimeError = isStartTimeError(initVisit.startTime),
+                isEndTimeError = isEndTimeError(initVisit.endTime),
                 room = initVisit.room,
                 guests = initVisit.guests,
             )
@@ -108,16 +114,47 @@ class EditVisitViewModel(
     }
 
     fun changeDate(date: LocalDate) {
-        state.update { it.copy(date = date) }
+        state.update {
+            it.copy(
+                date = date,
+                isPastVisitError = isPastVisitError(
+                    date, state.value.startTime
+                )
+            )
+        }
     }
 
     fun changeStartTime(startTime: LocalTime) {
         state.update {
+            val endTime = startTime.plusHours(1)
             it.copy(
                 startTime = startTime,
-                endTime = startTime.plusHours(1)
+                isStartTimeError = isStartTimeError(startTime),
+                endTime = endTime,
+                isEndTimeError = isEndTimeError(endTime),
+                isPastVisitError = isPastVisitError(state.value.date, startTime)
             )
         }
+    }
+
+    private fun isStartTimeError(startTime: LocalTime): Boolean {
+        return !validateStartTime(startTime)
+    }
+
+    private fun isEndTimeError(endTime: LocalTime): Boolean {
+        return !validateEndTime(endTime)
+    }
+
+    private fun isPastVisitError(date: LocalDate, startTime: LocalTime): Boolean {
+        return LocalDateTime.of(date, startTime).isBefore(LocalDateTime.now())
+    }
+
+    private fun validateStartTime(startTime: LocalTime): Boolean {
+        return !startTime.isBefore(LocalTime.of(7, 0))
+    }
+
+    private fun validateEndTime(endTime: LocalTime): Boolean {
+        return !endTime.isAfter(LocalTime.of(18, 0))
     }
 
     private fun isNewGuestEmailError(newGuestEmail: String): Boolean {
@@ -125,7 +162,12 @@ class EditVisitViewModel(
     }
 
     fun changeEndTime(endTime: LocalTime) {
-        state.update { it.copy(endTime = endTime) }
+        state.update {
+            it.copy(
+                endTime = endTime,
+                isEndTimeError = isEndTimeError(endTime)
+            )
+        }
     }
 
     fun changeTitle(title: String) {
@@ -163,9 +205,15 @@ class EditVisitViewModel(
         }
     }
 
+    private fun isValid(): Boolean {
+        return validateTitle(state.value.title)
+                && validateStartTime(state.value.startTime)
+                && validateEndTime(state.value.endTime)
+    }
+
     fun onSaveButtonClicked() {
         viewModelScope.launch {
-            if (!validateTitle(state.value.title)) {
+            if (!isValid()) {
                 displayTitleValidError = true
                 this@EditVisitViewModel.state.update { it.copy(isTitleError = isTitleError(it.title)) }
                 return@launch

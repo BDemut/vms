@@ -34,6 +34,9 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
             visit.room?.id
         )
         val response = api.addVisit(apiNewVisit)
+        if (!response.isSuccessful) {
+            Log.e("ApiVisitRepositoryImpl", "addVisit failed: ${response.errorBody()?.string()}")
+        }
         return response.isSuccessful
     }
 
