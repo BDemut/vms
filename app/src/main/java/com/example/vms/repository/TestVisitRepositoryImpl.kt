@@ -68,10 +68,11 @@ class TestVisitRepositoryImpl(
         return true
     }
 
-    override suspend fun editVisit(visit: Visit) {
+    override suspend fun editVisit(visit: Visit): Boolean {
         delay(500)
         val oldVisit = getVisit(visit.id)
         visits.set(visits.indexOf(oldVisit), visit)
+        return true
     }
 
     override suspend fun cancelVisit(visitId: String) {

@@ -37,8 +37,9 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
         return response.isSuccessful
     }
 
-    override suspend fun editVisit(visit: Visit) {
+    override suspend fun editVisit(visit: Visit): Boolean {
         //TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun cancelVisit(visitId: String) {

@@ -23,5 +23,6 @@ data class EditVisitState(
     val isLoading: Boolean,
     val isNewVisit: Boolean,
     val isSaving: Boolean,
-    val isSelectRoomViewShowing: Boolean
+    val isSelectRoomViewShowing: Boolean,
+    val isSavingFailedSnackbarShowing: Boolean
 )
