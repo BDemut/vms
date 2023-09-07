@@ -36,7 +36,7 @@ import com.example.vms.login.LoginActivity
 import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.ErrorMessage
-import com.example.vms.ui.LoadingSpinner
+import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity
@@ -132,7 +132,8 @@ fun HomeScreen(
                     onVisitClick = model::onVisitClicked,
                     onRequestClick = model::onRequestClicked
                 )
-                DataState.LOADING -> LoadingSpinner()
+
+                DataState.LOADING -> LoadingView()
                 DataState.ERROR -> ErrorMessage(
                     onRetry = { model.getVisits() }
                 )
