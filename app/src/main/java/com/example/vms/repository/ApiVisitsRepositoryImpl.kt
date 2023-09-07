@@ -42,13 +42,9 @@ class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
         return false
     }
 
-    override suspend fun cancelVisit(visitId: String) {
-        try {
-            api.cancelVisit(visitId)
-        } catch (exc: Exception) {
-            Log.e("ApiVisitRepositoryImpl", "cancelVisit error", exc)
-        }
-        //TODO zmienić także status lokalnie w bazie bo backend nie robi tego instant
+    override suspend fun cancelVisit(visitId: String): Boolean {
+        val response = api.cancelVisit(visitId)
+        return response.isSuccessful
     }
 
     override suspend fun getRooms(

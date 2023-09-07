@@ -18,7 +18,7 @@ interface VisitsClient {
     ): GetVisitsDto
 
     @PATCH("/prod/visits/{visitId}/cancelVisit")
-    suspend fun cancelVisit(@Path("visitId") visitId: String)
+    suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
 
     @GET("/prod/visits/{visitId}")
     @Headers("accept: application/json")

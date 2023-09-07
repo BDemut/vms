@@ -96,7 +96,7 @@ fun EditVisitScreen(viewModel: EditVisitViewModel) {
                 )
             }
             if (state.isSavingFailedSnackbarShowing) {
-                ShowSavingFailedSnackbar(
+                SavingFailedSnackbar(
                     onDismiss = { viewModel.dismissSavingFailedSnackbar() },
                     snackbarHostState = scaffoldState.snackbarHostState
                 )
@@ -106,7 +106,7 @@ fun EditVisitScreen(viewModel: EditVisitViewModel) {
 }
 
 @Composable
-private fun ShowSavingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
+private fun SavingFailedSnackbar(onDismiss: () -> Unit, snackbarHostState: SnackbarHostState) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     LaunchedEffect("isSavingFailedSnackbarShowing") {
         coroutineScope.launch {

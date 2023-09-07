@@ -13,6 +13,6 @@ interface VisitRepository {
     suspend fun getVisits(): List<Visit>
     suspend fun addVisit(visit: Visit): Boolean
     suspend fun editVisit(visit: Visit): Boolean
-    suspend fun cancelVisit(visitId: String)
+    suspend fun cancelVisit(visitId: String): Boolean
     suspend fun getRooms(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Room>
 }
