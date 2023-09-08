@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
  * Created by mśmiech on 06.09.2023.
  */
 @JsonClass(generateAdapter = true)
-data class GetVisitsDto(
+data class GetVisitsResponse(
     val cursor: String?,
     val visits: List<ApiVisit>
 )

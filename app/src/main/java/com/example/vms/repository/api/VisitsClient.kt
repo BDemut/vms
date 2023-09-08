@@ -15,7 +15,7 @@ interface VisitsClient {
     @Headers("accept: application/json")
     suspend fun getVisits(
         @Query("limit") limit: Int = 50
-    ): GetVisitsDto
+    ): GetVisitsResponse
 
     @PATCH("/prod/visits/{visitId}/cancelVisit")
     suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
@@ -30,7 +30,7 @@ interface VisitsClient {
         @Query("startDate") startDate: String,
         @Query("endDate") endDate: String,
         @Query("limit") limit: Int = 50
-    ): Response<GetRoomsDto>
+    ): Response<GetRoomsResponse>
 
     @POST("/prod/visits")
     suspend fun addVisit(@Body createVisitBody: ApiNewVisit): Response<ResponseBody>
