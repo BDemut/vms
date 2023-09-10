@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.example.vms.home.requests.testRequests
 import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
 import com.example.vms.repository.VisitRepository
@@ -33,9 +32,8 @@ class HomeViewModel(
         HomeState(
             currentTab = Tab.VISITS,
             visits = emptyFlow(),
-            requests = testRequests,
+            requests = emptyFlow(),
             isLogoutDialogShowing = false,
-            dataState = DataState.LOADING,
             signInUserName = signInUser.email,
         )
     )
@@ -51,11 +49,8 @@ class HomeViewModel(
     fun refreshData() {
         state.update {
             when (state.value.currentTab) {
-                Tab.VISITS -> it.copy(visits = getVisits(), dataState = DataState.CONTENT)
-                Tab.REQUESTS -> it.copy(
-                    requests = testRequests,
-                    dataState = DataState.CONTENT
-                ) //TODO
+                Tab.VISITS -> it.copy(visits = getVisits())
+                Tab.REQUESTS -> it.copy(requests = emptyFlow())
             }
         }
     }

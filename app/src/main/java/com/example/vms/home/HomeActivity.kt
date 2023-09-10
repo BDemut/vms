@@ -35,8 +35,6 @@ import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
-import com.example.vms.ui.ErrorMessage
-import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity
@@ -126,19 +124,12 @@ fun HomeScreen(
                 .padding(it),
             color = MaterialTheme.colors.background
         ) {
-            when (state.dataState) {
-                DataState.CONTENT -> HomeContent(
-                    state = state,
-                    onVisitClick = model::onVisitClicked,
-                    onRequestClick = model::onRequestClicked,
-                    onRefreshData = model::refreshData
-                )
-
-                DataState.LOADING -> LoadingView()
-                DataState.ERROR -> ErrorMessage(
-                    onRetry = { model.refreshData() }
-                )
-            }
+            HomeContent(
+                state = state,
+                onVisitClick = model::onVisitClicked,
+                onRequestClick = model::onRequestClicked,
+                onRefreshData = model::refreshData
+            )
             if (state.isLogoutDialogShowing) {
                 LogoutDialog(
                     onDismissDialog = { model.logoutDialogDismissed() },
@@ -158,12 +149,16 @@ fun HomeContent(
 ) {
     when (state.currentTab) {
         Tab.VISITS -> VisitsTab(
-            visits = state.visits,
+            visitsFlow = state.visits,
             onVisitClick = onVisitClick,
             onRefreshData = onRefreshData
         )
 
-        Tab.REQUESTS -> RequestsTab(requests = state.requests, onRequestClick = onRequestClick)
+        Tab.REQUESTS -> RequestsTab(
+            requestsFlow = state.requests,
+            onRequestClick = onRequestClick,
+            onRefreshData = onRefreshData
+        )
     }
 }
 

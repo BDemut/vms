@@ -69,4 +69,5 @@
     <string name="past_visit_error">Czas rozpoczęcia nie może być minioną datą</string>
     <string name="saving_failed_snackbar">Zapisywanie się nie powiodło</string>
     <string name="canceling_failed_snackbar">Anulowanie się nie powiodło</string>
+    <string name="you_have_no_requests">Nie masz żadnych zapytań!</string>
 </resources>

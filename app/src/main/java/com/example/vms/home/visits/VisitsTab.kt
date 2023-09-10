@@ -48,29 +48,29 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VisitsTab(
-    visits: Flow<PagingData<Visit>>,
+    visitsFlow: Flow<PagingData<Visit>>,
     onVisitClick: (String) -> Unit,
     onRefreshData: () -> Unit
 ) {
-    val visitItems: LazyPagingItems<Visit> = visits.collectAsLazyPagingItems()
+    val visits: LazyPagingItems<Visit> = visitsFlow.collectAsLazyPagingItems()
     var refreshing by remember { mutableStateOf(false) }
     val pullRefreshState = rememberPullRefreshState(refreshing, onRefreshData)
     Box(
         Modifier.pullRefresh(pullRefreshState)
     ) {
-        if (visitItems.loadState.refresh == LoadState.Loading) {
+        if (visits.loadState.refresh == LoadState.Loading) {
             LoadingView(modifier = Modifier.align(Alignment.Center))
             refreshing = true
         } else {
             refreshing = false
         }
-        VisitsList(visits = visitItems, onVisitClick)
-        if (visitItems.loadState.append == LoadState.NotLoading(true)
-            && visitItems.itemCount == 0
+        VisitsList(visits = visits, onVisitClick)
+        if (visits.loadState.append == LoadState.NotLoading(true)
+            && visits.itemCount == 0
         ) {
             NoVisits()
         }
-        if (visitItems.loadState.refresh is LoadState.Error) {
+        if (visits.loadState.refresh is LoadState.Error) {
             ErrorMessage(
                 modifier = Modifier.align(Alignment.Center),
                 onRetry = onRefreshData
@@ -180,7 +180,7 @@ fun CancelledChip() {
 fun DefaultPreview() {
     VisitorManagementSystemTheme {
         VisitsTab(
-            visits = flowOf(PagingData.from(testVisits)),
+            visitsFlow = flowOf(PagingData.from(testVisits)),
             onVisitClick = {},
             onRefreshData = {}
         )
