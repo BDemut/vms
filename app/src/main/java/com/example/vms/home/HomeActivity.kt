@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 
 class HomeActivity : UserSessionActivity() {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = { HomeViewModel.Factory() })
 
     override fun onCreateWithUserSession(savedInstanceState: Bundle?) {
         setContent {
@@ -71,7 +71,7 @@ class HomeActivity : UserSessionActivity() {
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.getVisits()
+        homeViewModel.refreshData()
     }
 
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
@@ -130,12 +130,13 @@ fun HomeScreen(
                 DataState.CONTENT -> HomeContent(
                     state = state,
                     onVisitClick = model::onVisitClicked,
-                    onRequestClick = model::onRequestClicked
+                    onRequestClick = model::onRequestClicked,
+                    onRefreshData = model::refreshData
                 )
 
                 DataState.LOADING -> LoadingView()
                 DataState.ERROR -> ErrorMessage(
-                    onRetry = { model.getVisits() }
+                    onRetry = { model.refreshData() }
                 )
             }
             if (state.isLogoutDialogShowing) {
@@ -152,10 +153,16 @@ fun HomeScreen(
 fun HomeContent(
     state: HomeState,
     onVisitClick: (String) -> Unit,
-    onRequestClick: (String) -> Unit
+    onRequestClick: (String) -> Unit,
+    onRefreshData: () -> Unit
 ) {
     when (state.currentTab) {
-        Tab.VISITS -> VisitsTab(visits = state.visits, onVisitClick = onVisitClick)
+        Tab.VISITS -> VisitsTab(
+            visits = state.visits,
+            onVisitClick = onVisitClick,
+            onRefreshData = onRefreshData
+        )
+
         Tab.REQUESTS -> RequestsTab(requests = state.requests, onRequestClick = onRequestClick)
     }
 }

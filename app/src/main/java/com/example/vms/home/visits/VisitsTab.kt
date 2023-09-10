@@ -7,49 +7,110 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.vms.R
+import com.example.vms.ui.ErrorMessage
+import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.Shapes
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VisitsTab(
-    visits: List<Visit>,
-    onVisitClick: (String) -> Unit = {}
+    visits: Flow<PagingData<Visit>>,
+    onVisitClick: (String) -> Unit,
+    onRefreshData: () -> Unit
 ) {
-    if (visits.isNotEmpty()) {
-        VisitsList(visits = visits, onVisitClick = onVisitClick)
-    } else {
-        NoVisits()
+    val visitItems: LazyPagingItems<Visit> = visits.collectAsLazyPagingItems()
+    var refreshing by remember { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(refreshing, onRefreshData)
+    Box(
+        Modifier.pullRefresh(pullRefreshState)
+    ) {
+        if (visitItems.loadState.refresh == LoadState.Loading) {
+            LoadingView(modifier = Modifier.align(Alignment.Center))
+            refreshing = true
+        } else {
+            refreshing = false
+        }
+        VisitsList(visits = visitItems, onVisitClick)
+        if (visitItems.loadState.append == LoadState.NotLoading(true)
+            && visitItems.itemCount == 0
+        ) {
+            NoVisits()
+        }
+        if (visitItems.loadState.refresh is LoadState.Error) {
+            ErrorMessage(
+                modifier = Modifier.align(Alignment.Center),
+                onRetry = onRefreshData
+            )
+        }
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = false,
+            state = pullRefreshState
+        )
     }
 }
 
 @Composable
-fun VisitsList(visits: List<Visit>, onVisitClick: (String) -> Unit) {
+fun VisitsList(
+    visits: LazyPagingItems<Visit>,
+    onVisitClick: (String) -> Unit,
+) {
     LazyColumn(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        visits.forEach {
-            item {
+        items(count = visits.itemCount) { index ->
+            val visit = visits[index]
+            if (visit != null) {
                 VisitItem(
-                    visit = it,
+                    visit = visit,
                     onClick = onVisitClick
+                )
+            }
+        }
+
+        if (visits.loadState.append == LoadState.Loading) {
+            item {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                 )
             }
         }
@@ -119,7 +180,9 @@ fun CancelledChip() {
 fun DefaultPreview() {
     VisitorManagementSystemTheme {
         VisitsTab(
-            visits = testVisits,
+            visits = flowOf(PagingData.from(testVisits)),
+            onVisitClick = {},
+            onRefreshData = {}
         )
     }
 }

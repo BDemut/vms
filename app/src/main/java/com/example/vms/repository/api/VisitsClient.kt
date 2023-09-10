@@ -14,6 +14,7 @@ interface VisitsClient {
     @GET("/prod/visits")
     @Headers("accept: application/json")
     suspend fun getVisits(
+        @Query("cursor") cursor: String? = null,
         @Query("limit") limit: Int = 50
     ): GetVisitsResponse
 
