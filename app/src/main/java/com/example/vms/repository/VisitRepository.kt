@@ -1,7 +1,9 @@
 package com.example.vms.repository
 
+import androidx.paging.PagingData
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime
  */
 interface VisitRepository {
     suspend fun getVisit(id: String): Visit
-    suspend fun getVisits(): List<Visit>
+    fun getVisits(): Flow<PagingData<Visit>>
     suspend fun addVisit(visit: Visit): Boolean
     suspend fun editVisit(visit: Visit): Boolean
     suspend fun cancelVisit(visitId: String): Boolean

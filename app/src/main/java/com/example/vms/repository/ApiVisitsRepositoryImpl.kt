@@ -1,22 +1,30 @@
 package com.example.vms.repository
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.ApiNewVisit
 import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.paging.VisitsPagingSource
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ApiVisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
+class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
     override suspend fun getVisit(id: String): Visit {
         return api.getVisit(id).asModelVisit()
     }
 
-    override suspend fun getVisits(): List<Visit> = api.getVisits()
-        .visits
-        .map { it.asModelVisit() }
+    override fun getVisits() = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+        ),
+        pagingSourceFactory = {
+            VisitsPagingSource(api)
+        }
+    ).flow
 
     override suspend fun addVisit(visit: Visit): Boolean {
         val apiNewVisit = ApiNewVisit(

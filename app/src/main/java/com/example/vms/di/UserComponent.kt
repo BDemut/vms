@@ -23,4 +23,5 @@ interface UserComponent {
     fun inject(factory: VisitDetailsViewModel.Factory)
     fun inject(viewModel: HomeViewModel)
     fun inject(factory: EditVisitViewModel.Factory)
+    fun inject(factory: HomeViewModel.Factory)
 }

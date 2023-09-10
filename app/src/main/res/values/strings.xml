@@ -66,4 +66,5 @@
     <string name="past_visit_error">Past visits are not allowed</string>
     <string name="saving_failed_snackbar">Saving failed</string>
     <string name="canceling_failed_snackbar">Canceling failed</string>
+    <string name="you_have_no_requests">You have no requests!</string>
 </resources>

@@ -16,8 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.example.vms.R
 
 @Composable
-fun ErrorMessage(onRetry: () -> Unit) {
+fun ErrorMessage(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

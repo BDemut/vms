@@ -35,8 +35,6 @@ import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
-import com.example.vms.ui.ErrorMessage
-import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity
@@ -46,7 +44,7 @@ import kotlinx.coroutines.launch
 
 class HomeActivity : UserSessionActivity() {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels(factoryProducer = { HomeViewModel.Factory() })
 
     override fun onCreateWithUserSession(savedInstanceState: Bundle?) {
         setContent {
@@ -71,7 +69,7 @@ class HomeActivity : UserSessionActivity() {
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.getVisits()
+        homeViewModel.refreshData()
     }
 
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
@@ -126,18 +124,12 @@ fun HomeScreen(
                 .padding(it),
             color = MaterialTheme.colors.background
         ) {
-            when (state.dataState) {
-                DataState.CONTENT -> HomeContent(
-                    state = state,
-                    onVisitClick = model::onVisitClicked,
-                    onRequestClick = model::onRequestClicked
-                )
-
-                DataState.LOADING -> LoadingView()
-                DataState.ERROR -> ErrorMessage(
-                    onRetry = { model.getVisits() }
-                )
-            }
+            HomeContent(
+                state = state,
+                onVisitClick = model::onVisitClicked,
+                onRequestClick = model::onRequestClicked,
+                onRefreshData = model::refreshData
+            )
             if (state.isLogoutDialogShowing) {
                 LogoutDialog(
                     onDismissDialog = { model.logoutDialogDismissed() },
@@ -152,11 +144,21 @@ fun HomeScreen(
 fun HomeContent(
     state: HomeState,
     onVisitClick: (String) -> Unit,
-    onRequestClick: (String) -> Unit
+    onRequestClick: (String) -> Unit,
+    onRefreshData: () -> Unit
 ) {
     when (state.currentTab) {
-        Tab.VISITS -> VisitsTab(visits = state.visits, onVisitClick = onVisitClick)
-        Tab.REQUESTS -> RequestsTab(requests = state.requests, onRequestClick = onRequestClick)
+        Tab.VISITS -> VisitsTab(
+            visitsFlow = state.visits,
+            onVisitClick = onVisitClick,
+            onRefreshData = onRefreshData
+        )
+
+        Tab.REQUESTS -> RequestsTab(
+            requestsFlow = state.requests,
+            onRequestClick = onRequestClick,
+            onRefreshData = onRefreshData
+        )
     }
 }
 
