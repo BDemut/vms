@@ -36,7 +36,7 @@ fun CancelledSection() {
             contentDescription = stringResource(R.string.location_icon_content_description)
         )
         Text(
-            text = "Cancelled",
+            text = stringResource(R.string.visit_cancelled),
             color = MaterialTheme.colors.onError
         )
     }
