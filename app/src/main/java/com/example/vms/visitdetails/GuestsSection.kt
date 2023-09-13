@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -73,7 +76,9 @@ private fun Guest(guest: Guest) {
         Icon(
             modifier = Modifier.padding(end = 8.dp, top = 13.dp, bottom = 13.dp),
             imageVector = getInvitationStatusIcon(guest.invitationStatus),
-            contentDescription = stringResource(R.string.invitation_status_icon_content_description)
+            contentDescription = stringResource(R.string.invitation_status_icon_content_description),
+            tint = getInvitationStatusIconColor(guest.invitationStatus)
+                ?: LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
         )
         Text(
             text = guest.email, modifier = Modifier.padding(0.dp, 8.dp)
@@ -86,6 +91,14 @@ private fun getInvitationStatusIcon(invitationStatus: Guest.InvitationStatus): I
         Guest.InvitationStatus.Accepted -> Icons.Default.CheckCircle
         Guest.InvitationStatus.Declined -> Icons.Default.RemoveCircle
         Guest.InvitationStatus.Pending -> Icons.Default.Pending
+    }
+}
+
+private fun getInvitationStatusIconColor(invitationStatus: Guest.InvitationStatus): Color? {
+    return when (invitationStatus) {
+        Guest.InvitationStatus.Accepted -> Color(0xFF00C853)
+        Guest.InvitationStatus.Declined -> Color(0xFFD50000)
+        Guest.InvitationStatus.Pending -> null
     }
 }
 
