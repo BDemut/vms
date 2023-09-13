@@ -67,7 +67,13 @@
     <string name="host_icon_content_description">ikona gospodarza</string>
     <string name="visit_start_end_time_error">Wizyta musi być między 07:00 – 18:00</string>
     <string name="past_visit_error">Czas rozpoczęcia nie może być minioną datą</string>
-    <string name="saving_failed_snackbar">Zapisywanie się nie powiodło</string>
-    <string name="canceling_failed_snackbar">Anulowanie się nie powiodło</string>
+    <string name="saving_failed_snackbar">Zapisywanie nie powiodło się</string>
+    <string name="canceling_failed_snackbar">Anulowanie nie powiodło się</string>
     <string name="you_have_no_requests">Nie masz żadnych zapytań!</string>
+    <string name="audit_log_title">Audit log</string>
+    <string name="back_icon_content_description">ikona cofania</string>
+    <string name="generate_button">Generuj</string>
+    <string name="generation_failed_snackbar">Generowanie nie powiodło się</string>
+    <string name="generation_succeed_dialog_title">Generowanie przeszło pomyślnie!</string>
+    <string name="generation_succeed_dialog_text">Na adres %1$s został wysłany e-mail wraz z linkiem do pliku do pobrania</string>
 </resources>

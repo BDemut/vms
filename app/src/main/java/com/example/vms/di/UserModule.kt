@@ -1,5 +1,6 @@
 package com.example.vms.di
 
+import com.example.vms.auditlog.GenerateAuditLogUseCase
 import com.example.vms.repository.VisitRepository
 import com.example.vms.repository.VisitRepositoryImpl
 import com.example.vms.repository.api.VisitsClient
@@ -21,4 +22,7 @@ class UserModule(private val _signInUser: User) {
     @Provides
     @UserScope
     fun getVisitRepository(api: VisitsClient): VisitRepository = VisitRepositoryImpl(api)
+
+    @Provides
+    fun provideGenerateAuditLogUseCase() = GenerateAuditLogUseCase()
 }

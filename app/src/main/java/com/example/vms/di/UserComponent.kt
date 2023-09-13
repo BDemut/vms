@@ -1,5 +1,6 @@
 package com.example.vms.di
 
+import com.example.vms.auditlog.AuditLogViewModel
 import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
 import com.example.vms.visitdetails.VisitDetailsViewModel
@@ -24,4 +25,5 @@ interface UserComponent {
     fun inject(viewModel: HomeViewModel)
     fun inject(factory: EditVisitViewModel.Factory)
     fun inject(factory: HomeViewModel.Factory)
+    fun inject(factory: AuditLogViewModel.Factory)
 }

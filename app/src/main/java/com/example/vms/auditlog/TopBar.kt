@@ -1,4 +1,4 @@
-package com.example.vms.requestdetails
+package com.example.vms.auditlog
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -11,9 +11,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.vms.R
 
+/**
+ * Created by mśmiech on 12.09.2023.
+ */
 @Composable
 fun TopBar(
-    requestName: String,
     onBackPressed: () -> Unit
 ) {
     TopAppBar {
@@ -24,7 +26,7 @@ fun TopBar(
             )
         }
         Text(
-            text = requestName,
+            text = stringResource(R.string.audit_log_title),
             fontWeight = FontWeight.Bold
         )
     }

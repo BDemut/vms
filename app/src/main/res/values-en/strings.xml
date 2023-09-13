@@ -68,4 +68,10 @@
     <string name="saving_failed_snackbar">Saving failed</string>
     <string name="canceling_failed_snackbar">Canceling failed</string>
     <string name="you_have_no_requests">You have no requests!</string>
+    <string name="audit_log_title">Audit log</string>
+    <string name="back_icon_content_description">back icon</string>
+    <string name="generate_button">Generate</string>
+    <string name="generation_failed_snackbar">Generation failed</string>
+    <string name="generation_succeed_dialog_title">Generation completed successfully!</string>
+    <string name="generation_succeed_dialog_text">An e-mail was sent to %1$s with a link to the file for download</string>
 </resources>
