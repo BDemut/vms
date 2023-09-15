@@ -5,8 +5,12 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
+import com.example.vms.appComponent
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -73,17 +77,22 @@ class Authentication(
 
     suspend fun signIn(username: String, password: String): SignInResult {
         val client = getClient()
-        val result = suspendCoroutine<SignInResult> { continuation ->
-            client.signIn(
+        val result = client.signIn(username, password)
+        if (result is SignInResult.Success) {
+            getUser(client)?.let { userManager.startUserSession(it) }
+            onSignedIn()
+        }
+        return result
+    }
+
+    private suspend fun AWSMobileClient.signIn(username: String, password: String): SignInResult {
+        return suspendCoroutine { continuation ->
+            this.signIn(
                 username,
                 password,
                 null,
                 object : Callback<com.amazonaws.mobile.client.results.SignInResult> {
                     override fun onResult(result: com.amazonaws.mobile.client.results.SignInResult?) {
-                        Log.i(
-                            "LoginManager",
-                            "AWSMobileClient signIn onResult: " + result?.signInState
-                        )
                         continuation.resume(SignInResult.Success)
                     }
 
@@ -94,10 +103,12 @@ class Authentication(
                 }
             )
         }
-        if (result is SignInResult.Success) {
-            getUser(client)?.let { userManager.startUserSession(it) }
+    }
+
+    private fun onSignedIn() {
+        CoroutineScope(Dispatchers.IO).launch {
+            context.appComponent().getRegisterFCMTokenUseCase().invoke()
         }
-        return result
     }
 
     fun isSignedIn(): Boolean {

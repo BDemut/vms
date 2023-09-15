@@ -35,4 +35,7 @@ interface VisitsClient {
 
     @POST("/prod/visits")
     suspend fun addVisit(@Body createVisitBody: ApiNewVisit): Response<ResponseBody>
+
+    @PUT("/prod/me/addFCMToken")
+    suspend fun addFCMToken(@Body body: AddFCMTokenBody): Response<ResponseBody>
 }
