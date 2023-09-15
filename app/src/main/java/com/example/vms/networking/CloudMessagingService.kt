@@ -54,7 +54,6 @@ class CloudMessagingService : FirebaseMessagingService() {
                     userComponent().getVisitRepository().onVisitsChanged()
                 }
             }
-
             FcmConstants.MessageType.VISIT_REQUESTS_CHANGED -> {
 
             }
