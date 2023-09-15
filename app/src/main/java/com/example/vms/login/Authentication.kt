@@ -32,6 +32,9 @@ class Authentication(
         clientMutex.withLock {
             if (_client == null) {
                 initAWSMobileClient()
+                if (isSignedIn(_client!!)) {
+                    onSignedIn()
+                }
             }
         }
     }

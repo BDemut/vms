@@ -51,6 +51,10 @@ class CloudMessagingService : FirebaseMessagingService() {
             FcmConstants.MessageType.VISITS_CHANGED -> {
 
             }
+
+            FcmConstants.MessageType.VISIT_REQUESTS_CHANGED -> {
+
+            }
         }
     }
 
@@ -59,6 +63,7 @@ class CloudMessagingService : FirebaseMessagingService() {
 
         object MessageType {
             const val VISITS_CHANGED = "VisitsChanged"
+            const val VISIT_REQUESTS_CHANGED = "VisitRequestsChanged"
         }
     }
 }
