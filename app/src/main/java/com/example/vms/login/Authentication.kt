@@ -7,9 +7,6 @@ import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -136,8 +133,6 @@ class Authentication(
 
     fun signOut() {
         getClient().signOut()
-        CoroutineScope(Dispatchers.IO).launch {
-        }
         userManager.closeUserSession()
     }
 }
