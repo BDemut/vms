@@ -17,7 +17,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +41,14 @@ class HomeViewModel(
     )
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
     val events: SharedFlow<HomeEvent> = _events
+
+    init {
+        visitRepository.visitsChangedEvents.onEach {
+            if (state.value.currentTab == Tab.VISITS) {
+                refreshData()
+            }
+        }.launchIn(viewModelScope)
+    }
 
     fun changeTab(newTab: Tab) {
         state.update {

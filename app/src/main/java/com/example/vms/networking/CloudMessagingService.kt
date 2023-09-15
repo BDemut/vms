@@ -2,6 +2,7 @@ package com.example.vms.networking
 
 import android.util.Log
 import com.example.vms.appComponent
+import com.example.vms.userComponent
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +50,9 @@ class CloudMessagingService : FirebaseMessagingService() {
 
         when (messageType) {
             FcmConstants.MessageType.VISITS_CHANGED -> {
-
+                CoroutineScope(Dispatchers.Default).launch {
+                    userComponent().getVisitRepository().onVisitsChanged()
+                }
             }
 
             FcmConstants.MessageType.VISIT_REQUESTS_CHANGED -> {

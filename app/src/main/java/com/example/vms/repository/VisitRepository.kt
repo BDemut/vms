@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDateTime
 
 
@@ -17,4 +18,6 @@ interface VisitRepository {
     suspend fun editVisit(visit: Visit): Boolean
     suspend fun cancelVisit(visitId: String): Boolean
     suspend fun getRooms(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Room>
+    suspend fun onVisitsChanged()
+    val visitsChangedEvents: SharedFlow<Unit>
 }

@@ -3,6 +3,7 @@ package com.example.vms.di
 import com.example.vms.auditlog.AuditLogViewModel
 import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
+import com.example.vms.repository.VisitRepository
 import com.example.vms.visitdetails.VisitDetailsViewModel
 import dagger.Subcomponent
 
@@ -14,6 +15,7 @@ import dagger.Subcomponent
     UserModule::class
 ])
 interface UserComponent {
+    fun getVisitRepository(): VisitRepository
     @Subcomponent.Builder
     interface Builder {
         fun userModule(userModule: UserModule): Builder
