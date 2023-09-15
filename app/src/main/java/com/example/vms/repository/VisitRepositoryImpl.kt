@@ -9,10 +9,15 @@ import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.ApiNewVisit
 import com.example.vms.repository.api.VisitsClient
 import com.example.vms.repository.paging.VisitsPagingSource
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
+    private val _visitsChangedEvents: MutableSharedFlow<Unit> = MutableSharedFlow()
+    override val visitsChangedEvents: SharedFlow<Unit> = _visitsChangedEvents
+
     override suspend fun getVisit(id: String): Visit {
         return api.getVisit(id).asModelVisit()
     }
@@ -72,5 +77,9 @@ class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
             Log.e("ApiVisitRepositoryImpl", "getRooms failed.", e)
             return emptyList()
         }
+    }
+
+    override suspend fun onVisitsChanged() {
+        _visitsChangedEvents.emit(Unit)
     }
 }
