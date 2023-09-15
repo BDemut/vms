@@ -3,7 +3,6 @@ package com.example.vms.di
 import android.content.Context
 import com.example.vms.login.Authentication
 import com.example.vms.networking.AuthHeaderInterceptor
-import com.example.vms.networking.RegisterFCMTokenUseCase
 import com.example.vms.networking.RetrofitFactory
 import com.example.vms.repository.api.VisitsClient
 import com.example.vms.user.UserManager
@@ -49,7 +48,4 @@ class AppModule(val context: Context) {
     @Provides
     @Singleton
     fun provideApi(retrofit: Retrofit) = retrofit.create(VisitsClient::class.java)
-
-    @Provides
-    fun provideRegisterFCMTokenUseCase(api: VisitsClient) = RegisterFCMTokenUseCase(api)
 }

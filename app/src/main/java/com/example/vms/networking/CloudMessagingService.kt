@@ -17,7 +17,7 @@ class CloudMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         CoroutineScope(Dispatchers.IO).launch {
             if (appComponent().getAuthentication().isSignedIn()) {
-                val succeed = appComponent().getRegisterFCMTokenUseCase().invoke()
+                val succeed = userComponent().getRegisterFCMTokenUseCase().invoke()
                 Log.d("asd", "RegisterFCMTokenUseCase $succeed")
             }
         }

@@ -1,14 +1,16 @@
-package com.example.vms.networking
+package com.example.vms.user
 
 import android.util.Log
+import com.example.vms.repository.api.RemoveFCMTokenBody
 import com.example.vms.repository.api.VisitsClient
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 
+
 /**
  * Created by mśmiech on 15.09.2023.
  */
-class RegisterFCMTokenUseCase(private val api: VisitsClient) {
+class UnregisterFCMTokenUseCase(private val api: VisitsClient) {
     suspend operator fun invoke(): Boolean {
         val token = try {
             FirebaseMessaging.getInstance().token.await()
@@ -17,8 +19,7 @@ class RegisterFCMTokenUseCase(private val api: VisitsClient) {
             return false
         }
         Log.d("asd", "token: $token")
-//        val response = api.addFCMToken(AddFCMTokenBody(token))
-//        return response.isSuccessful
-        return true
+        val response = api.removeFCMToken(RemoveFCMTokenBody(token))
+        return response.isSuccessful
     }
 }

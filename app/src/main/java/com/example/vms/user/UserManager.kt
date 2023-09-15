@@ -44,6 +44,9 @@ class UserManager(
         storeScope.launch {
             storeUser(user)
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
+        }
     }
 
     private fun createUserComponent(user: User): UserComponent {
@@ -67,6 +70,9 @@ class UserManager(
                 }
             }
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
+        }
     }
 
     private suspend fun tryRestoreUser(): User? {
@@ -80,6 +86,9 @@ class UserManager(
         _userComponent = null
         storeScope.launch {
             clearStoredUser()
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            _userComponent?.getUnregisterFCMTokenUseCase()?.invoke()
         }
     }
 

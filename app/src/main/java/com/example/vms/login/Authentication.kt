@@ -5,7 +5,6 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
-import com.example.vms.appComponent
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +31,6 @@ class Authentication(
         clientMutex.withLock {
             if (_client == null) {
                 initAWSMobileClient()
-                if (isSignedIn(_client!!)) {
-                    onSignedIn()
-                }
             }
         }
     }
@@ -83,7 +79,6 @@ class Authentication(
         val result = client.signIn(username, password)
         if (result is SignInResult.Success) {
             getUser(client)?.let { userManager.startUserSession(it) }
-            onSignedIn()
         }
         return result
     }
@@ -105,12 +100,6 @@ class Authentication(
                     }
                 }
             )
-        }
-    }
-
-    private fun onSignedIn() {
-        CoroutineScope(Dispatchers.IO).launch {
-            context.appComponent().getRegisterFCMTokenUseCase().invoke()
         }
     }
 
@@ -147,6 +136,8 @@ class Authentication(
 
     fun signOut() {
         getClient().signOut()
+        CoroutineScope(Dispatchers.IO).launch {
+        }
         userManager.closeUserSession()
     }
 }

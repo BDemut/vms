@@ -4,6 +4,8 @@ import com.example.vms.auditlog.AuditLogViewModel
 import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
 import com.example.vms.repository.VisitRepository
+import com.example.vms.user.RegisterFCMTokenUseCase
+import com.example.vms.user.UnregisterFCMTokenUseCase
 import com.example.vms.visitdetails.VisitDetailsViewModel
 import dagger.Subcomponent
 
@@ -16,6 +18,9 @@ import dagger.Subcomponent
 ])
 interface UserComponent {
     fun getVisitRepository(): VisitRepository
+    fun getRegisterFCMTokenUseCase(): RegisterFCMTokenUseCase
+    fun getUnregisterFCMTokenUseCase(): UnregisterFCMTokenUseCase
+
     @Subcomponent.Builder
     interface Builder {
         fun userModule(userModule: UserModule): Builder
