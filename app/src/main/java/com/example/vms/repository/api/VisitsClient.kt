@@ -18,6 +18,13 @@ interface VisitsClient {
         @Query("limit") limit: Int = 50
     ): GetVisitsResponse
 
+    @PUT("/prod/visits/{visitId}/cancelVisit")
+    suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
+
+    @GET("/prod/visits/{visitId}")
+    @Headers("accept: application/json")
+    suspend fun getVisit(@Path("visitId") visitId: String): ApiVisit
+
     @GET("/prod/visit-requests")
     @Headers("accept: application/json")
     suspend fun getRequests(
@@ -25,12 +32,17 @@ interface VisitsClient {
         @Query("limit") limit: Int = 50
     ): GetRequestsResponse
 
-    @PUT("/prod/visits/{visitId}/cancelVisit")
-    suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
-
-    @GET("/prod/visits/{visitId}")
+    @GET("/prod/visit-requests/{requestId}")
     @Headers("accept: application/json")
-    suspend fun getVisit(@Path("visitId") visitId: String): ApiVisit
+    suspend fun getRequest(@Path("requestId") requestId: String): ApiRequest
+
+    @PUT("/prod/visit-requests/{requestId}/accept")
+    @Headers("accept: application/json")
+    suspend fun acceptRequest(@Path("requestId") requestId: String): Response<Unit>
+
+    @PUT("/prod/visit-requests/{requestId}/decline")
+    @Headers("accept: application/json")
+    suspend fun declineRequest(@Path("requestId") requestId: String): Response<Unit>
 
     @GET("/prod/rooms")
     @Headers("accept: application/json")

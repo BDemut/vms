@@ -13,7 +13,7 @@ fun LogoutDialog(
     onLogoutClicked: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = { onDismissDialog() },
+        onDismissRequest = onDismissDialog,
         title = { Text(stringResource(R.string.logout_dialog_title)) },
         text = { Text(stringResource(R.string.logout_dialog_description)) },
         confirmButton = {
@@ -22,7 +22,7 @@ fun LogoutDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = { onDismissDialog() }) {
+            TextButton(onClick = onDismissDialog) {
                 Text(stringResource(R.string.logout_dialog_cancel))
             }
         },

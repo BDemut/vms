@@ -30,15 +30,6 @@ class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
         }
     ).flow
 
-    override fun getRequests() = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-        ),
-        pagingSourceFactory = {
-            RequestsPagingSource(api)
-        }
-    ).flow
-
     override suspend fun addVisit(visit: Visit): Boolean {
         val apiNewVisit = ApiNewVisit(
             visit.title,
@@ -86,4 +77,19 @@ class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
             return emptyList()
         }
     }
+
+    override fun getRequests() = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+        ),
+        pagingSourceFactory = {
+            RequestsPagingSource(api)
+        }
+    ).flow
+
+    override suspend fun acceptRequest(requestId: String): Boolean =
+        api.declineRequest(requestId).isSuccessful
+
+    override suspend fun declineRequest(requestId: String): Boolean =
+        api.declineRequest(requestId).isSuccessful
 }

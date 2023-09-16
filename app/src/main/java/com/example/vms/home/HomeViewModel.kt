@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.example.vms.R
 import com.example.vms.home.requests.Request
 import com.example.vms.home.requests.RequestType
 import com.example.vms.home.visits.Visit
@@ -36,6 +37,7 @@ class HomeViewModel(
             visits = emptyFlow(),
             requests = emptyFlow(),
             isLogoutDialogShowing = false,
+            infoDialog = null,
             signInUserName = signInUser.email,
         )
     )
@@ -50,13 +52,13 @@ class HomeViewModel(
 
     fun refreshVisits() {
         state.update {
-             it.copy(visits = getVisits())
+            it.copy(visits = getVisits())
         }
     }
 
     fun refreshRequests() {
         state.update {
-             it.copy(requests = getRequests())
+            it.copy(requests = getRequests())
         }
     }
 
@@ -124,6 +126,46 @@ class HomeViewModel(
     fun onRequestClicked(visitId: String) {
         viewModelScope.launch {
             _events.emit(HomeEvent.NavigateToRequestDetails(visitId))
+        }
+    }
+
+    fun onRequestAcceptClicked(requestId: String) {
+        viewModelScope.launch {
+            visitRepository.acceptRequest(requestId).let { isSuccess ->
+                if (isSuccess) {
+                    refreshRequests()
+                    state.update {
+                        it.copy(
+                            infoDialog = HomeInfoDialog(
+                                title = R.string.request_accept_success_title,
+                                message = R.string.request_accept_success_message
+                            )
+                        )
+                    }
+                } else {
+                    refreshRequests()
+                    _events.emit(HomeEvent.ShowSnackbar(R.string.request_accept_decline_failure))
+                }
+            }
+        }
+    }
+
+    fun onRequestDeclineClicked(requestId: String) {
+        viewModelScope.launch {
+            visitRepository.declineRequest(requestId).let { isSuccess ->
+                if (isSuccess) {
+                    refreshRequests()
+                } else {
+                    refreshRequests()
+                    _events.emit(HomeEvent.ShowSnackbar(R.string.request_accept_decline_failure))
+                }
+            }
+        }
+    }
+
+    fun onInfoDialogDismissed() {
+        state.update {
+            it.copy(infoDialog = null)
         }
     }
 

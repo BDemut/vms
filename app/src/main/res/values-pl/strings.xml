@@ -76,4 +76,8 @@
     <string name="generation_failed_snackbar">Generowanie nie powiodło się</string>
     <string name="generation_succeed_dialog_title">Generowanie przeszło pomyślnie!</string>
     <string name="generation_succeed_dialog_text">Na adres %1$s został wysłany e-mail wraz z linkiem do pliku do pobrania</string>
+    <string name="request_accept_success_title">Zaakkceptowano wizytę!</string>
+    <string name="request_accept_decline_failure">Wystąpił błąd, spróbuj ponownie!</string>
+    <string name="ok">Ok</string>
+    <string name="request_accept_success_message">Spotkaj się z gościem przy wejściu!</string>
 </resources>

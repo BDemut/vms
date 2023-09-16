@@ -74,4 +74,8 @@
     <string name="generation_failed_snackbar">Generation failed</string>
     <string name="generation_succeed_dialog_title">Generation completed successfully!</string>
     <string name="generation_succeed_dialog_text">An e-mail was sent to %1$s with a link to the file for download</string>
+    <string name="request_accept_success_title">Request accepted!</string>
+    <string name="request_accept_decline_failure">An error ocurred processing your request, please try again!</string>
+    <string name="ok">Ok</string>
+    <string name="request_accept_success_message">Please meet your guest at the door!</string>
 </resources>
