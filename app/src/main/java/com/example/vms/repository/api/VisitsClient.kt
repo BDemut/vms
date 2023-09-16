@@ -25,6 +25,25 @@ interface VisitsClient {
     @Headers("accept: application/json")
     suspend fun getVisit(@Path("visitId") visitId: String): ApiVisit
 
+    @GET("/prod/visit-requests")
+    @Headers("accept: application/json")
+    suspend fun getRequests(
+        @Query("cursor") cursor: String? = null,
+        @Query("limit") limit: Int = 50
+    ): GetRequestsResponse
+
+    @GET("/prod/visit-requests/{requestId}")
+    @Headers("accept: application/json")
+    suspend fun getRequest(@Path("requestId") requestId: String): ApiRequest
+
+    @PUT("/prod/visit-requests/{requestId}/accept")
+    @Headers("accept: application/json")
+    suspend fun acceptRequest(@Path("requestId") requestId: String): Response<Unit>
+
+    @PUT("/prod/visit-requests/{requestId}/decline")
+    @Headers("accept: application/json")
+    suspend fun declineRequest(@Path("requestId") requestId: String): Response<Unit>
+
     @GET("/prod/rooms")
     @Headers("accept: application/json")
     suspend fun getRooms(

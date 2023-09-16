@@ -10,7 +10,7 @@ data class ApiVisit(
     val status: VisitStatus,
     val title: String,
     val timeframe: Timeframe,
-    val host: ApiHost,
+    val host: ApiAttendee,
     val guests: List<ApiGuest>,
     val room: ApiRoom?
 ) {
@@ -30,13 +30,6 @@ data class ApiVisit(
     )
 
     @JsonClass(generateAdapter = true)
-    data class ApiHost(
-        val email: String,
-        val name: String,
-        val type: AttendeeType
-    )
-
-    @JsonClass(generateAdapter = true)
     data class ApiGuest(
         val email: String,
         val name: String,
@@ -46,10 +39,6 @@ data class ApiVisit(
 
     enum class VisitStatus {
         CREATED, CANCELED
-    }
-
-    enum class AttendeeType {
-        VISITOR, EMPLOYEE
     }
 }
 

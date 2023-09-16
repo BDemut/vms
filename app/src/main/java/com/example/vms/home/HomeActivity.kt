@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -48,28 +49,40 @@ class HomeActivity : UserSessionActivity() {
 
     override fun onCreateWithUserSession(savedInstanceState: Bundle?) {
         setContent {
+            val scaffoldState = rememberScaffoldState()
             VisitorManagementSystemTheme {
-                HomeScreen(model = homeViewModel)
+                HomeScreen(
+                    model = homeViewModel,
+                    scaffoldState = scaffoldState
+                )
+            }
+            LaunchedEffect(Unit) {
+                homeViewModel.events.onEach { event ->
+                    when (event) {
+                        is HomeEvent.NavigateToSettings -> {
+                            launchSettingsActivity()
+                        }
+                        is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
+                        is HomeEvent.NavigateToLogin -> {
+                            launchLoginActivity()
+                            finish()
+                        }
+                        is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
+                        is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
+                        is HomeEvent.NavigateToRequestDetails -> launchRequestDetailsActivity(event.requestId)
+                        is HomeEvent.ShowSnackbar -> scaffoldState.snackbarHostState.showSnackbar(
+                            getString(event.message)
+                        )
+                    }
+                }.launchIn(lifecycleScope)
             }
         }
-        homeViewModel.events.onEach { event ->
-            when (event) {
-                is HomeEvent.NavigateToSettings -> { launchSettingsActivity() }
-                is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
-                is HomeEvent.NavigateToLogin -> {
-                    launchLoginActivity()
-                    finish()
-                }
-                is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
-                is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
-                is HomeEvent.NavigateToRequestDetails -> launchRequestDetailsActivity(event.requestId)
-            }
-        }.launchIn(lifecycleScope)
     }
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.refreshData()
+        homeViewModel.refreshVisits()
+        homeViewModel.refreshRequests()
     }
 
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
@@ -90,10 +103,10 @@ class HomeActivity : UserSessionActivity() {
 
 @Composable
 fun HomeScreen(
-    model: HomeViewModel
+    model: HomeViewModel,
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     val state = model.state.collectAsStateWithLifecycle().value
-    val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { HomeToolbar(scaffoldState, state.signInUserName) },
@@ -128,12 +141,20 @@ fun HomeScreen(
                 state = state,
                 onVisitClick = model::onVisitClicked,
                 onRequestClick = model::onRequestClicked,
-                onRefreshData = model::refreshData
+                onRefreshVisits = model::refreshVisits,
+                onRefreshRequests = model::refreshRequests,
+                onRequestAccept = model::onRequestAcceptClicked,
+                onRequestDecline = model::onRequestDeclineClicked
             )
-            if (state.isLogoutDialogShowing) {
-                LogoutDialog(
-                    onDismissDialog = { model.logoutDialogDismissed() },
-                    onLogoutClicked = { model.logout() }
+            when {
+                state.isLogoutDialogShowing -> LogoutDialog(
+                    onDismissDialog = model::logoutDialogDismissed,
+                    onLogoutClicked = model::logout
+                )
+                state.infoDialog != null -> InfoDialog(
+                    title = state.infoDialog.title,
+                    message = state.infoDialog.message,
+                    onDismissDialog = model::onInfoDialogDismissed
                 )
             }
         }
@@ -145,19 +166,24 @@ fun HomeContent(
     state: HomeState,
     onVisitClick: (String) -> Unit,
     onRequestClick: (String) -> Unit,
-    onRefreshData: () -> Unit
+    onRefreshVisits: () -> Unit,
+    onRefreshRequests: () -> Unit,
+    onRequestAccept: (String) -> Unit,
+    onRequestDecline: (String) -> Unit,
 ) {
     when (state.currentTab) {
         Tab.VISITS -> VisitsTab(
             visitsFlow = state.visits,
             onVisitClick = onVisitClick,
-            onRefreshData = onRefreshData
+            onRefreshData = onRefreshVisits
         )
 
         Tab.REQUESTS -> RequestsTab(
             requestsFlow = state.requests,
             onRequestClick = onRequestClick,
-            onRefreshData = onRefreshData
+            onRefreshData = onRefreshRequests,
+            onRequestAccept = onRequestAccept,
+            onRequestDecline = onRequestDecline
         )
     }
 }

@@ -2,6 +2,7 @@ package com.example.vms.networking
 
 import com.example.vms.networking.adapters.AttendeeTypeAdapter
 import com.example.vms.networking.adapters.DateTimeAdapter
+import com.example.vms.networking.adapters.RequestStatusAdapter
 import com.example.vms.networking.adapters.VisitStatusAdapter
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -23,6 +24,7 @@ object RetrofitFactory {
         .add(DateTimeAdapter())
         .add(VisitStatusAdapter())
         .add(AttendeeTypeAdapter())
+        .add(RequestStatusAdapter())
         .build()
 }
 

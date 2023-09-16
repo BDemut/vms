@@ -3,11 +3,14 @@ package com.example.vms.repository
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.vms.home.requests.Request
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.ApiNewVisit
 import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.paging.RequestsPagingSource
 import com.example.vms.repository.paging.VisitsPagingSource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -78,7 +81,20 @@ class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
             return emptyList()
         }
     }
+    override fun getRequests() = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+        ),
+        pagingSourceFactory = {
+            RequestsPagingSource(api)
+        }
+    ).flow
 
+    override suspend fun acceptRequest(requestId: String): Boolean =
+        api.declineRequest(requestId).isSuccessful
+
+    override suspend fun declineRequest(requestId: String): Boolean =
+        api.declineRequest(requestId).isSuccessful
     override suspend fun onVisitsChanged() {
         _visitsChangedEvents.emit(Unit)
     }
