@@ -10,8 +10,7 @@ data class Request(
     val title: String,
     val duration: Int,
     val guestEmail: String,
-    val host: User,
-    val timestamp: LocalDateTime
+    val host: User
 )
 
 fun ApiRequest.asModelRequest() = Request(
@@ -19,6 +18,5 @@ fun ApiRequest.asModelRequest() = Request(
     title = title,
     duration = duration,
     guestEmail = guest.email,
-    host = User(host.email),
-    timestamp = requestDate
+    host = User(host.email)
 )

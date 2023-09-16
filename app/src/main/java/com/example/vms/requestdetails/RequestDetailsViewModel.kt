@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -88,8 +89,8 @@ class RequestDetailsViewModel(
     private fun Request.createRequestedVisit() = Visit(
         id = "",
         title = title,
-        start = timestamp,
-        end = timestamp.plusMinutes(duration.toLong()),
+        start = LocalDateTime.now(),
+        end = LocalDateTime.now().plusMinutes(duration.toLong()),
         room = null,
         guests = listOf(Guest(
             email = guestEmail,
