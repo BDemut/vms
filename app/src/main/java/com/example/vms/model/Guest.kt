@@ -6,7 +6,7 @@ import com.example.vms.repository.api.ApiVisit
 /**
  * Created by mśmiech on 22.08.2023.
  */
-data class Guest(val email: String, val invitationStatus: InvitationStatus) {
+data class Guest(val email: String, val invitationStatus: InvitationStatus, val name: String?) {
     enum class InvitationStatus {
         Accepted,
         Declined,
@@ -20,5 +20,6 @@ fun ApiVisit.ApiGuest.asModelGuest() = Guest(
         true -> Guest.InvitationStatus.Accepted
         false -> Guest.InvitationStatus.Declined
         null -> Guest.InvitationStatus.Pending
-    }
+    },
+    name = name
 )

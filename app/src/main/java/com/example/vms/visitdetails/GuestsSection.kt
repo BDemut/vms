@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.vms.R
 import com.example.vms.model.Guest
 
@@ -44,7 +46,6 @@ fun GuestsSection(
         )
         Column {
             Text(
-
                 text = pluralStringResource(
                     id = R.plurals.visit_details_guests_count,
                     count = guests.size,
@@ -80,9 +81,22 @@ private fun Guest(guest: Guest) {
             tint = getInvitationStatusIconColor(guest.invitationStatus)
                 ?: LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
         )
-        Text(
-            text = guest.email, modifier = Modifier.padding(0.dp, 8.dp)
-        )
+        if (guest.name == null) {
+            Text(
+                text = guest.email
+            )
+        } else {
+            Column {
+                Text(
+                    text = guest.name,
+                )
+                Text(
+                    text = guest.email,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    fontSize = 13.sp
+                )
+            }
+        }
     }
 }
 
@@ -103,6 +117,7 @@ private fun getInvitationStatusIconColor(invitationStatus: Guest.InvitationStatu
 }
 
 private val testGuests = listOf(
-    Guest("michal@test.com", Guest.InvitationStatus.Accepted),
-    Guest("bartek@test.com", Guest.InvitationStatus.Pending),
+    Guest("michal@test.com", Guest.InvitationStatus.Accepted, null),
+    Guest("bartek@test.com", Guest.InvitationStatus.Pending, "Michał"),
+    Guest("bartek@test.com", Guest.InvitationStatus.Declined, "Bartek"),
 )

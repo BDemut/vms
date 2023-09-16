@@ -3,8 +3,6 @@ package com.example.vms.repository
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.example.vms.home.requests.Request
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
@@ -41,12 +39,7 @@ class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
                 visit.start,
                 visit.end
             ),
-            visit.guests.map {
-                ApiNewVisit.ApiGuest(
-                    it.email,
-                    "string" //TODO
-                )
-            },
+            visit.guests.map { it.email },
             visit.room?.id
         )
         val response = api.addVisit(apiNewVisit)
