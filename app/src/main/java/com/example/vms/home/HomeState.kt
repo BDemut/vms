@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.paging.PagingData
 import com.example.vms.home.requests.Request
 import com.example.vms.home.visits.Visit
+import com.example.vms.ui.InfoDialog
 import kotlinx.coroutines.flow.Flow
 
 
@@ -12,11 +13,6 @@ data class HomeState(
     val visits: Flow<PagingData<Visit>>,
     val requests: Flow<PagingData<Request>>,
     val isLogoutDialogShowing: Boolean,
-    val infoDialog: HomeInfoDialog?,
+    val infoDialog: InfoDialog?,
     val signInUserName: String,
-)
-
-data class HomeInfoDialog(
-    @StringRes val title: Int,
-    @StringRes val message: Int
 )

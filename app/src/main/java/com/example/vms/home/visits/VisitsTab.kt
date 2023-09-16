@@ -35,7 +35,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.vms.R
-import com.example.vms.ui.ErrorMessage
+import com.example.vms.ui.LoadingError
 import com.example.vms.ui.LoadingView
 import com.example.vms.ui.theme.Shapes
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
@@ -71,7 +71,7 @@ fun VisitsTab(
             NoVisits()
         }
         if (visits.loadState.refresh is LoadState.Error) {
-            ErrorMessage(
+            LoadingError(
                 modifier = Modifier.align(Alignment.Center),
                 onRetry = onRefreshData
             )

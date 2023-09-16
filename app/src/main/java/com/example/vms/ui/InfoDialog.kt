@@ -1,4 +1,4 @@
-package com.example.vms.home
+package com.example.vms.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.AlertDialog
@@ -26,3 +26,8 @@ fun InfoDialog(
         },
     )
 }
+
+data class InfoDialog(
+    @StringRes val title: Int,
+    @StringRes val message: Int
+)

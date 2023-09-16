@@ -19,6 +19,7 @@ interface VisitRepository {
     suspend fun editVisit(visit: Visit): Boolean
     suspend fun cancelVisit(visitId: String): Boolean
     suspend fun getRooms(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Room>
+    suspend fun getRequest(id: String): Request
     fun getRequests(): Flow<PagingData<Request>>
     suspend fun acceptRequest(requestId: String): Boolean
     suspend fun declineRequest(requestId: String): Boolean
