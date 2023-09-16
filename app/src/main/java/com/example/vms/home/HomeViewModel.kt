@@ -7,6 +7,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.example.vms.home.requests.Request
+import com.example.vms.home.requests.RequestType
 import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
 import com.example.vms.repository.VisitRepository
@@ -46,12 +48,15 @@ class HomeViewModel(
         }
     }
 
-    fun refreshData() {
+    fun refreshVisits() {
         state.update {
-            when (state.value.currentTab) {
-                Tab.VISITS -> it.copy(visits = getVisits())
-                Tab.REQUESTS -> it.copy(requests = emptyFlow())
-            }
+             it.copy(visits = getVisits())
+        }
+    }
+
+    fun refreshRequests() {
+        state.update {
+             it.copy(requests = getRequests())
         }
     }
 
@@ -60,7 +65,26 @@ class HomeViewModel(
             .cachedIn(viewModelScope)
             .map { pagingData ->
                 pagingData.map {
-                    Visit(it.id, it.title, it.start, it.end, it.isCancelled)
+                    Visit(
+                        id = it.id,
+                        title = it.title,
+                        start = it.start,
+                        end = it.end,
+                        isCancelled = it.isCancelled
+                    )
+                }
+            }
+
+    private fun getRequests(): Flow<PagingData<Request>> =
+        visitRepository.getRequests()
+            .cachedIn(viewModelScope)
+            .map { pagingData ->
+                pagingData.map {
+                    Request(
+                        id = it.id,
+                        type = RequestType.INSTANT_VISIT,
+                        visitName = it.title
+                    )
                 }
             }
 

@@ -18,6 +18,13 @@ interface VisitsClient {
         @Query("limit") limit: Int = 50
     ): GetVisitsResponse
 
+    @GET("/prod/visit-requests")
+    @Headers("accept: application/json")
+    suspend fun getRequests(
+        @Query("cursor") cursor: String? = null,
+        @Query("limit") limit: Int = 50
+    ): GetRequestsResponse
+
     @PUT("/prod/visits/{visitId}/cancelVisit")
     suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
 

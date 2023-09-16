@@ -69,7 +69,8 @@ class HomeActivity : UserSessionActivity() {
 
     override fun onStart() {
         super.onStart()
-        homeViewModel.refreshData()
+        homeViewModel.refreshVisits()
+        homeViewModel.refreshRequests()
     }
 
     private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
@@ -128,7 +129,8 @@ fun HomeScreen(
                 state = state,
                 onVisitClick = model::onVisitClicked,
                 onRequestClick = model::onRequestClicked,
-                onRefreshData = model::refreshData
+                onRefreshVisits = model::refreshVisits,
+                onRefreshRequests = model::refreshRequests
             )
             if (state.isLogoutDialogShowing) {
                 LogoutDialog(
@@ -145,19 +147,20 @@ fun HomeContent(
     state: HomeState,
     onVisitClick: (String) -> Unit,
     onRequestClick: (String) -> Unit,
-    onRefreshData: () -> Unit
+    onRefreshVisits: () -> Unit,
+    onRefreshRequests: () -> Unit,
 ) {
     when (state.currentTab) {
         Tab.VISITS -> VisitsTab(
             visitsFlow = state.visits,
             onVisitClick = onVisitClick,
-            onRefreshData = onRefreshData
+            onRefreshData = onRefreshVisits
         )
 
         Tab.REQUESTS -> RequestsTab(
             requestsFlow = state.requests,
             onRequestClick = onRequestClick,
-            onRefreshData = onRefreshData
+            onRefreshData = onRefreshRequests
         )
     }
 }

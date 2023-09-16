@@ -1,6 +1,7 @@
 package com.example.vms.repository
 
 import androidx.paging.PagingData
+import com.example.vms.model.Request
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import kotlinx.coroutines.flow.Flow
@@ -17,4 +18,5 @@ interface VisitRepository {
     suspend fun editVisit(visit: Visit): Boolean
     suspend fun cancelVisit(visitId: String): Boolean
     suspend fun getRooms(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Room>
+    fun getRequests(): Flow<PagingData<Request>>
 }
