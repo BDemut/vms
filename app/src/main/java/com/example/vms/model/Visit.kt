@@ -27,6 +27,6 @@ fun ApiVisit.asModelVisit() = Visit(
     end = timeframe.end,
     room = room?.asModelRoom(),
     guests = guests.map { it.asModelGuest() },
-    host = User(host.email),
+    host = User(host.email, host.name),
     isCancelled = this.status == ApiVisit.VisitStatus.CANCELED
 )
