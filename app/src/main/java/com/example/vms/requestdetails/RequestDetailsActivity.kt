@@ -103,11 +103,13 @@ class RequestDetailsActivity : ComponentActivity() {
 private val testGuests = listOf<Guest>(
     Guest(
         "michal@test.com",
-        Guest.InvitationStatus.Accepted
+        Guest.InvitationStatus.Accepted,
+        null
     ),
     Guest(
         "bartek@test.com",
-        Guest.InvitationStatus.Pending
+        Guest.InvitationStatus.Pending,
+        "Michał"
     ),
 )
 

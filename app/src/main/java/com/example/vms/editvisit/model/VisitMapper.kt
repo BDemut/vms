@@ -53,7 +53,8 @@ object VisitMapper {
             guests = visit.guests.map {
                 com.example.vms.model.Guest(
                     it.email,
-                    com.example.vms.model.Guest.InvitationStatus.Pending
+                    com.example.vms.model.Guest.InvitationStatus.Pending,
+                    null
                 )
             },
             host = host,
@@ -69,7 +70,8 @@ object VisitMapper {
             com.example.vms.model.Guest(
                 email = guest.email,
                 invitationStatus = old.firstOrNull { guest.email == it.email }?.invitationStatus
-                    ?: com.example.vms.model.Guest.InvitationStatus.Pending
+                    ?: com.example.vms.model.Guest.InvitationStatus.Pending,
+                name = null
             )
         }
     }

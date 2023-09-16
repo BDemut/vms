@@ -5,15 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.vms.R
-import com.example.vms.home.HomeEvent
 import com.example.vms.model.Guest
 import com.example.vms.model.Request
 import com.example.vms.model.Visit
 import com.example.vms.repository.VisitRepository
 import com.example.vms.ui.InfoDialog
-import com.example.vms.user.User
 import com.example.vms.userComponent
-import com.example.vms.visitdetails.VisitDetailsViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,7 +18,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
-import javax.inject.Named
 
 class RequestDetailsViewModel(
     private val requestId: String,

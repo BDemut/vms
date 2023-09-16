@@ -32,7 +32,7 @@ data class ApiVisit(
     @JsonClass(generateAdapter = true)
     data class ApiGuest(
         val email: String,
-        val name: String,
+        val name: String?,
         val type: AttendeeType,
         val accepted: Boolean?
     )

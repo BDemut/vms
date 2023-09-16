@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class ApiNewVisit(
     val title: String,
     val timeframe: Timeframe,
-    val guests: List<ApiGuest>,
+    val guestsEmails: List<String>,
     val roomId: String?
 ) {
     @JsonClass(generateAdapter = true)
@@ -21,12 +21,6 @@ data class ApiNewVisit(
     data class Timeframe(
         val start: LocalDateTime,
         val end: LocalDateTime
-    )
-
-    @JsonClass(generateAdapter = true)
-    data class ApiGuest(
-        val email: String,
-        val name: String,
     )
 }
 

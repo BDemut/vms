@@ -1,9 +1,7 @@
 package com.example.vms.model
 
 import com.example.vms.repository.api.ApiRequest
-import com.example.vms.repository.api.ApiVisit
 import com.example.vms.user.User
-import java.time.LocalDateTime
 
 data class Request(
     val id: String,
