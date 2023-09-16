@@ -73,17 +73,21 @@ class Authentication(
 
     suspend fun signIn(username: String, password: String): SignInResult {
         val client = getClient()
-        val result = suspendCoroutine<SignInResult> { continuation ->
-            client.signIn(
+        val result = client.signIn(username, password)
+        if (result is SignInResult.Success) {
+            getUser(client)?.let { userManager.startUserSession(it) }
+        }
+        return result
+    }
+
+    private suspend fun AWSMobileClient.signIn(username: String, password: String): SignInResult {
+        return suspendCoroutine { continuation ->
+            this.signIn(
                 username,
                 password,
                 null,
                 object : Callback<com.amazonaws.mobile.client.results.SignInResult> {
                     override fun onResult(result: com.amazonaws.mobile.client.results.SignInResult?) {
-                        Log.i(
-                            "LoginManager",
-                            "AWSMobileClient signIn onResult: " + result?.signInState
-                        )
                         continuation.resume(SignInResult.Success)
                     }
 
@@ -94,10 +98,6 @@ class Authentication(
                 }
             )
         }
-        if (result is SignInResult.Success) {
-            getUser(client)?.let { userManager.startUserSession(it) }
-        }
-        return result
     }
 
     fun isSignedIn(): Boolean {

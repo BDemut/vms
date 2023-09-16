@@ -5,6 +5,7 @@ import com.example.vms.model.Request
 import com.example.vms.model.Room
 import com.example.vms.model.Visit
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDateTime
 
 
@@ -21,4 +22,6 @@ interface VisitRepository {
     fun getRequests(): Flow<PagingData<Request>>
     suspend fun acceptRequest(requestId: String): Boolean
     suspend fun declineRequest(requestId: String): Boolean
+    suspend fun onVisitsChanged()
+    val visitsChangedEvents: SharedFlow<Unit>
 }

@@ -4,6 +4,8 @@ import com.example.vms.auditlog.GenerateAuditLogUseCase
 import com.example.vms.repository.VisitRepository
 import com.example.vms.repository.VisitRepositoryImpl
 import com.example.vms.repository.api.VisitsClient
+import com.example.vms.user.RegisterFCMTokenUseCase
+import com.example.vms.user.UnregisterFCMTokenUseCase
 import com.example.vms.user.User
 import dagger.Module
 import dagger.Provides
@@ -25,4 +27,10 @@ class UserModule(private val _signInUser: User) {
 
     @Provides
     fun provideGenerateAuditLogUseCase() = GenerateAuditLogUseCase()
+
+    @Provides
+    fun provideRegisterFCMTokenUseCase(api: VisitsClient) = RegisterFCMTokenUseCase(api)
+
+    @Provides
+    fun provideUnregisterFCMTokenUseCase(api: VisitsClient) = UnregisterFCMTokenUseCase(api)
 }

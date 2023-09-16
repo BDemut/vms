@@ -34,6 +34,14 @@
         <activity android:name=".auditlog.AuditLogActivity" />
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".requestdetails.RequestDetailsActivity" />
+
+        <service
+            android:name=".networking.CloudMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

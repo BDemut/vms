@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -108,7 +107,7 @@ fun RoomItem(
             .fillMaxWidth()
             .clickable { onClick(room) },
         shape = Shapes.medium,
-        border = if (room.isSelected) BorderStroke(3.dp, Color(32, 193, 32, 255)) else null
+        border = if (room.isSelected) BorderStroke(3.dp, MaterialTheme.colors.primary) else null
     ) {
         Column {
             Text(
