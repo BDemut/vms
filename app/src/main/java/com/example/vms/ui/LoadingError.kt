@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.vms.R
 
 @Composable
-fun ErrorMessage(modifier: Modifier = Modifier, onRetry: () -> Unit) {
+fun LoadingError(modifier: Modifier = Modifier, onRetry: () -> Unit) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,

@@ -4,6 +4,7 @@ import com.example.vms.auditlog.AuditLogViewModel
 import com.example.vms.editvisit.EditVisitViewModel
 import com.example.vms.home.HomeViewModel
 import com.example.vms.repository.VisitRepository
+import com.example.vms.requestdetails.RequestDetailsViewModel
 import com.example.vms.user.RegisterFCMTokenUseCase
 import com.example.vms.user.UnregisterFCMTokenUseCase
 import com.example.vms.visitdetails.VisitDetailsViewModel
@@ -29,6 +30,7 @@ interface UserComponent {
     }
 
     fun inject(factory: VisitDetailsViewModel.Factory)
+    fun inject(factory: RequestDetailsViewModel.Factory)
     fun inject(viewModel: HomeViewModel)
     fun inject(factory: EditVisitViewModel.Factory)
     fun inject(factory: HomeViewModel.Factory)

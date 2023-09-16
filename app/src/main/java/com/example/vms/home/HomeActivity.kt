@@ -36,6 +36,7 @@ import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
+import com.example.vms.ui.InfoDialog
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity

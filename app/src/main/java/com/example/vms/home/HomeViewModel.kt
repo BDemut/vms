@@ -13,6 +13,7 @@ import com.example.vms.home.requests.RequestType
 import com.example.vms.home.visits.Visit
 import com.example.vms.login.Authentication
 import com.example.vms.repository.VisitRepository
+import com.example.vms.ui.InfoDialog
 import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.flow.Flow
@@ -144,7 +145,7 @@ class HomeViewModel(
                     refreshRequests()
                     state.update {
                         it.copy(
-                            infoDialog = HomeInfoDialog(
+                            infoDialog = InfoDialog(
                                 title = R.string.request_accept_success_title,
                                 message = R.string.request_accept_success_message
                             )
