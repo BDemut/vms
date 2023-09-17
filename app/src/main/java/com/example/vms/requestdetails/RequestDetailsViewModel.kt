@@ -90,7 +90,8 @@ class RequestDetailsViewModel(
         room = null,
         guests = listOf(Guest(
             email = guestEmail,
-            invitationStatus = Guest.InvitationStatus.Accepted
+            invitationStatus = Guest.InvitationStatus.Accepted,
+            name = "?????"
         )),
         host = host,
         isCancelled = false
