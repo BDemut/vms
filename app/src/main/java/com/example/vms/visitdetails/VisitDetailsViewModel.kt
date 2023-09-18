@@ -33,8 +33,8 @@ class VisitDetailsViewModel(
         VisitDetailsState(
             isLoading = true,
             visit = dummyVisit,
-            isMoreOptionsShowing = dummyVisit.host == signInUser,
-            isEditButtonShowing = dummyVisit.host == signInUser,
+            isMoreOptionsShowing = dummyVisit.host.email == signInUser.email,
+            isEditButtonShowing = dummyVisit.host.email == signInUser.email,
             isCancelVisitDialogShowing = false,
             isCancelingFailedSnackbarShowing = false
         )
@@ -46,8 +46,8 @@ class VisitDetailsViewModel(
             it.copy(
                 isLoading = false,
                 visit = visit,
-                isMoreOptionsShowing = visit.host == signInUser && !visit.isCancelled,
-                isEditButtonShowing = visit.host == signInUser && !visit.isCancelled,
+                isMoreOptionsShowing = visit.host.email == signInUser.email && !visit.isCancelled,
+                isEditButtonShowing = visit.host.email == signInUser.email && !visit.isCancelled,
             )
         }
     }
