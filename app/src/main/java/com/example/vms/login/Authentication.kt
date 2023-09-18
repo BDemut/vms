@@ -5,7 +5,6 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
-import com.example.vms.user.User
 import com.example.vms.user.UserManager
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -18,8 +17,7 @@ import kotlin.coroutines.suspendCoroutine
  * Created by mśmiech on 18.08.2023.
  */
 class Authentication(
-    private val context: Context,
-    private val userManager: UserManager
+    private val context: Context
 ) {
     private val clientMutex = Mutex()
     private var _client: AWSMobileClient? = null
@@ -41,9 +39,9 @@ class Authentication(
         return _client!!
     }
 
-    fun accessToken(): String {
-        return getClient().tokens.idToken.tokenString
-    }
+    fun accessToken(): String = getClient().tokens.idToken.tokenString
+
+    fun getUserEmail(): String = getClient().username
 
     private suspend fun initAWSMobileClient() {
         val client = AWSMobileClient.getInstance()
@@ -74,9 +72,6 @@ class Authentication(
     suspend fun signIn(username: String, password: String): SignInResult {
         val client = getClient()
         val result = client.signIn(username, password)
-        if (result is SignInResult.Success) {
-            getUser(client)?.let { userManager.startUserSession(it) }
-        }
         return result
     }
 
@@ -108,15 +103,6 @@ class Authentication(
         return client.isSignedIn
     }
 
-    private fun getUser(client: AWSMobileClient): User? {
-        if (isSignedIn(client)) {
-            return User(
-                client.username
-            )
-        }
-        return null
-    }
-
     fun currentUserState(): UserStateDetails {
         return getClient().currentUserState()
     }
@@ -133,6 +119,5 @@ class Authentication(
 
     fun signOut() {
         getClient().signOut()
-        userManager.closeUserSession()
     }
 }

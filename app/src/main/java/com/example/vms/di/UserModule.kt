@@ -3,7 +3,7 @@ package com.example.vms.di
 import com.example.vms.auditlog.GenerateAuditLogUseCase
 import com.example.vms.repository.VisitRepository
 import com.example.vms.repository.VisitRepositoryImpl
-import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.api.Client
 import com.example.vms.user.RegisterFCMTokenUseCase
 import com.example.vms.user.UnregisterFCMTokenUseCase
 import com.example.vms.user.User
@@ -23,14 +23,14 @@ class UserModule(private val _signInUser: User) {
 
     @Provides
     @UserScope
-    fun getVisitRepository(api: VisitsClient): VisitRepository = VisitRepositoryImpl(api)
+    fun getVisitRepository(api: Client): VisitRepository = VisitRepositoryImpl(api)
 
     @Provides
     fun provideGenerateAuditLogUseCase() = GenerateAuditLogUseCase()
 
     @Provides
-    fun provideRegisterFCMTokenUseCase(api: VisitsClient) = RegisterFCMTokenUseCase(api)
+    fun provideRegisterFCMTokenUseCase(api: Client) = RegisterFCMTokenUseCase(api)
 
     @Provides
-    fun provideUnregisterFCMTokenUseCase(api: VisitsClient) = UnregisterFCMTokenUseCase(api)
+    fun provideUnregisterFCMTokenUseCase(api: Client) = UnregisterFCMTokenUseCase(api)
 }

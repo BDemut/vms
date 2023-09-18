@@ -1,5 +1,6 @@
 package com.example.vms.repository.api
 
+import com.example.vms.user.User
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -10,7 +11,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface VisitsClient {
+interface Client {
     @GET("/prod/visits")
     @Headers("accept: application/json")
     suspend fun getVisits(
@@ -60,4 +61,7 @@ interface VisitsClient {
 
     @PUT("/prod/me/addFCMToken")
     suspend fun removeFCMToken(@Body body: RemoveFCMTokenBody): Response<ResponseBody>
+
+    @GET("/prod/me")
+    suspend fun userData(): User
 }

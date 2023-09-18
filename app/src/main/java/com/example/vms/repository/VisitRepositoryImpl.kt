@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.vms.model.*
 import com.example.vms.repository.api.ApiNewVisit
-import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.api.Client
 import com.example.vms.repository.paging.RequestsPagingSource
 import com.example.vms.repository.paging.VisitsPagingSource
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class VisitRepositoryImpl(val api: VisitsClient) : VisitRepository {
+class VisitRepositoryImpl(val api: Client) : VisitRepository {
     private val _visitsChangedEvents: MutableSharedFlow<Unit> = MutableSharedFlow()
     override val visitsChangedEvents: SharedFlow<Unit> = _visitsChangedEvents
 

@@ -38,6 +38,7 @@ import com.example.vms.requestdetails.RequestDetailsActivity
 import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.InfoDialog
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
+import com.example.vms.user.User
 import com.example.vms.user.UserSessionActivity
 import com.example.vms.visitdetails.VisitDetailsActivity
 import kotlinx.coroutines.flow.launchIn
@@ -110,7 +111,7 @@ fun HomeScreen(
     val state = model.state.collectAsStateWithLifecycle().value
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { HomeToolbar(scaffoldState, state.signInUserName) },
+        topBar = { HomeToolbar(scaffoldState, state.signInUser) },
         bottomBar = {
             HomeBottomBar(
                 currentScreen = state.currentTab,
@@ -190,7 +191,7 @@ fun HomeContent(
 }
 
 @Composable
-fun HomeToolbar(scaffoldState: ScaffoldState, signInUserName: String) {
+fun HomeToolbar(scaffoldState: ScaffoldState, signInUser: User) {
     val scope = rememberCoroutineScope()
     TopAppBar {
         IconButton(onClick = {
@@ -204,7 +205,7 @@ fun HomeToolbar(scaffoldState: ScaffoldState, signInUserName: String) {
             )
         }
         Text(
-            text = stringResource(R.string.hello, signInUserName),
+            text = stringResource(R.string.hello, signInUser.name ?: signInUser.email),
             fontWeight = FontWeight.Bold
         )
     }

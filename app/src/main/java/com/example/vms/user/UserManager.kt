@@ -22,6 +22,7 @@ import kotlinx.coroutines.sync.withLock
  */
 class UserManager(
     private val userComponentBuilder: UserComponent.Builder,
+    private val userProvider: UserProvider,
     context: Context
 ) {
     private var _userComponent: UserComponent? = null
@@ -39,14 +40,13 @@ class UserManager(
     private val storeScope = CoroutineScope(Dispatchers.IO)
     private val mutex = Mutex()
 
-    fun startUserSession(user: User) {
+    suspend fun startUserSession(userEmail: String) {
+        val user = userProvider.getUser() ?: User(email = userEmail)
         _userComponent = createUserComponent(user)
         storeScope.launch {
             storeUser(user)
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
-        }
+        _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
     }
 
     private fun createUserComponent(user: User): UserComponent {
@@ -58,6 +58,7 @@ class UserManager(
     private suspend fun storeUser(user: User) {
         dataStore.edit {
             it[USER_EMAIL] = user.email
+            user.name?.let { name -> it[USER_NAME] = name }
         }
     }
 
@@ -78,7 +79,10 @@ class UserManager(
     private suspend fun tryRestoreUser(): User? {
         return dataStore.data.map {
             val userEmail = it[USER_EMAIL] as String
-            User(userEmail)
+            val userName = if (it.contains(USER_NAME)) {
+                it[USER_NAME] as String
+            } else null
+            User(userEmail, userName)
         }.firstOrNull()
     }
 
@@ -100,6 +104,7 @@ class UserManager(
 
     companion object {
         val USER_EMAIL = stringPreferencesKey("user_email")
+        val USER_NAME = stringPreferencesKey("user_name")
     }
 }
 

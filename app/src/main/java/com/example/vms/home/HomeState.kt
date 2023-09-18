@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import com.example.vms.home.requests.Request
 import com.example.vms.home.visits.Visit
 import com.example.vms.ui.InfoDialog
+import com.example.vms.user.User
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,5 +15,5 @@ data class HomeState(
     val requests: Flow<PagingData<Request>>,
     val isLogoutDialogShowing: Boolean,
     val infoDialog: InfoDialog?,
-    val signInUserName: String,
+    val signInUser: User,
 )
