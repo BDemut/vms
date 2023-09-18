@@ -50,7 +50,6 @@
         <item quantity="many">%d gości</item>
         <item quantity="other">%d gości</item>
     </plurals>
-    <string name="visit_details_change_host">Zmień gospodarza</string>
     <string name="visit_details_cancel_visit">Anuluj wizytę</string>
     <string name="edit_visit_discard_dialog_description_edit_visit">Odrzucić zmiany wprowadzone w tej wizycie?</string>
     <string name="error_icon_content_description">Brak danych</string>

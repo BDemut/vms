@@ -48,7 +48,6 @@
         <item quantity="one">%d guest</item>
         <item quantity="other">%d guests</item>
     </plurals>
-    <string name="visit_details_change_host">Change the host</string>
     <string name="visit_details_cancel_visit">Cancel the visit</string>
     <string name="error_icon_content_description">No data</string>
     <string name="reload">Reload</string>

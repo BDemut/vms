@@ -93,7 +93,6 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
                         TopBar(
                             onDiscardClick = { viewModel.onDiscardButtonClicked() },
                             onEditClick = { viewModel.onEditButtonClicked() },
-                            onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
                             onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
                             isMoreOptionsShowing = state.isMoreOptionsShowing,
                             isEditButtonShowing = state.isEditButtonShowing,

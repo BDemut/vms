@@ -64,10 +64,6 @@ class VisitDetailsViewModel(
         }
     }
 
-    fun onChangeHostButtonClicked() {
-
-    }
-
     fun onCancelVisitButtonClicked() {
         state.update { it.copy(isCancelVisitDialogShowing = true) }
     }
