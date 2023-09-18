@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.vms.R
 import com.example.vms.guest.instantvisit.ui.DurationChipGroup
-import com.example.vms.guest.instantvisit.ui.HostChangeDropdown
+import com.example.vms.guest.instantvisit.ui.DefaultHostSection
 import com.example.vms.guest.instantvisit.ui.InstantVisitTextField
 import com.example.vms.guest.summary.SummaryActivity
 import com.example.vms.guest.summary.SummaryEntryType
@@ -47,12 +47,13 @@ class InstantVisitActivity : ComponentActivity() {
                 ) {
                     Content(
                         state = state,
-                        onNameChanged = { viewModel.onNameChanged(it) },
-                        onPhoneNumberChanged = { viewModel.onPhoneNumber(it) },
-                        onVisitTitleChanged = { viewModel.onVisitTitleChanged(it) },
-                        onHostSelected = { viewModel.onHostSelected(it) },
-                        onDurationSelected = { viewModel.onDurationSelected(it) },
-                        onVisitSubmitted = { viewModel.onVisitSubmitted() }
+                        onNameChanged = viewModel::onNameChanged,
+                        onPhoneNumberChanged = viewModel::onPhoneNumber,
+                        onVisitTitleChanged = viewModel::onVisitTitleChanged,
+                        onHostEmailChanged = viewModel::onHostEmailChanged,
+                        onDurationSelected = viewModel::onDurationSelected,
+                        onDefaultHostChecked = viewModel::onDefaultHostCheck,
+                        onVisitSubmitted = viewModel::onVisitSubmitted,
                     )
                 }
             }
@@ -76,8 +77,9 @@ fun Content(
     onNameChanged: (String) -> Unit,
     onPhoneNumberChanged: (String) -> Unit,
     onVisitTitleChanged: (String) -> Unit,
-    onHostSelected: (String) -> Unit,
+    onHostEmailChanged: (String) -> Unit,
     onDurationSelected: (Duration) -> Unit,
+    onDefaultHostChecked: (Boolean) -> Unit,
     onVisitSubmitted: () -> Unit
 ) {
     Column(
@@ -103,10 +105,15 @@ fun Content(
             onValueChange = onVisitTitleChanged,
             placeholder = stringResource(R.string.visit_title_placeholder)
         )
-        HostChangeDropdown(
-            currentHostName = state.visit.hostName,
-            availableHosts = state.hosts,
-            onHostSelected = onHostSelected
+        DefaultHostSection(
+            isSelected = state.defaultHost,
+            onChecked = onDefaultHostChecked
+        )
+        InstantVisitTextField(
+            value = state.visit.hostEmail,
+            onValueChange = onHostEmailChanged,
+            placeholder = stringResource(R.string.host_email_placeholder),
+            enabled = !state.defaultHost
         )
         DurationChipGroup(
             modifier = Modifier.width(CONTENT_WIDTH),

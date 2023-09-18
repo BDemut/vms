@@ -17,50 +17,10 @@ class InstantVisitViewModel : ViewModel() {
                 name = "",
                 phoneNumber = "",
                 visitTitle = "",
-                hostName = "",
+                hostEmail = DEFAULT_HOST,
                 duration = Duration.SHORT
             ),
-            hosts = listOf(
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-                "Andrzej Andrzej",
-                "Bartek Bartek",
-                "Cezary Cezary",
-            )
+            defaultHost = true
         )
     )
     val state: StateFlow<InstantVisitState> = _state
@@ -82,12 +42,30 @@ class InstantVisitViewModel : ViewModel() {
         _state.update { it.copy(visit = it.visit.copy(visitTitle = title)) }
     }
 
-    fun onHostSelected(hostName: String) {
-        _state.update { it.copy(visit = it.visit.copy(hostName = hostName)) }
+    fun onHostEmailChanged(hostEmail: String) {
+        _state.update { it.copy(visit = it.visit.copy(hostEmail = hostEmail)) }
     }
 
     fun onDurationSelected(duration: Duration) {
         _state.update { it.copy(visit = it.visit.copy(duration = duration)) }
+    }
+
+    fun onDefaultHostCheck(checked: Boolean) {
+        if (checked) {
+            _state.update {
+                it.copy(
+                    visit = it.visit.copy(hostEmail = DEFAULT_HOST),
+                    defaultHost = true
+                )
+            }
+        } else {
+            _state.update {
+                it.copy(
+                    visit = it.visit.copy(hostEmail = ""),
+                    defaultHost = false
+                )
+            }
+        }
     }
 
     fun onVisitSubmitted() {
@@ -97,17 +75,19 @@ class InstantVisitViewModel : ViewModel() {
     }
 }
 
+const val DEFAULT_HOST = "default"
+
 data class InstantVisitState(
     val visit: InstantVisit,
-    val hosts: List<String>
+    val defaultHost: Boolean
 )
 
 data class InstantVisit(
     val name: String,
     val phoneNumber: String,
     val visitTitle: String,
-    val hostName: String,
-    val duration: Duration
+    val hostEmail: String,
+    val duration: Duration,
 )
 
 enum class Duration(val value: String) {
