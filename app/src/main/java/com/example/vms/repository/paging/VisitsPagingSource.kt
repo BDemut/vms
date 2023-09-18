@@ -1,5 +1,6 @@
 package com.example.vms.repository.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.vms.model.Visit
@@ -32,6 +33,7 @@ class VisitsPagingSource(
                     )
                 },
                 onFailure = {
+                    Log.e("VisitsPagingSource", "load failed", it)
                     LoadResult.Error(it)
                 }
             )

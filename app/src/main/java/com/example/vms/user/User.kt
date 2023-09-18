@@ -5,5 +5,6 @@ package com.example.vms.user
  */
 data class User(
     val email: String,
-    val name: String? = null
+    val name: String? = null,
+    val isAdmin: Boolean = false
 )
