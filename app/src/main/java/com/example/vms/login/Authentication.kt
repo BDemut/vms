@@ -5,6 +5,7 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
+import com.auth0.android.jwt.JWT
 import com.example.vms.user.User
 import com.example.vms.user.UserManager
 import kotlinx.coroutines.runBlocking
@@ -30,6 +31,8 @@ class Authentication(
                 initAWSMobileClient()
             }
         }
+        Log.d("Authentication", accessToken())
+        isSignInUserAdmin(_client!!)
     }
 
     private fun getClient(): AWSMobileClient {
@@ -41,8 +44,12 @@ class Authentication(
         return _client!!
     }
 
+    private fun accessToken(client: AWSMobileClient): String {
+        return client.tokens.idToken.tokenString
+    }
+
     fun accessToken(): String {
-        return getClient().tokens.idToken.tokenString
+        return accessToken(getClient())
     }
 
     private suspend fun initAWSMobileClient() {
@@ -100,6 +107,13 @@ class Authentication(
         }
     }
 
+    private fun isSignInUserAdmin(client: AWSMobileClient): Boolean {
+        val accessToken = accessToken(client)
+        val jwt = JWT(accessToken)
+        return jwt.getClaim(CLAIM_COGNITO_GROUP).asArray(String::class.java)
+            .contains(COGNITO_GROUP_ADMINS)
+    }
+
     fun isSignedIn(): Boolean {
         return getClient().isSignedIn
     }
@@ -111,7 +125,8 @@ class Authentication(
     private fun getUser(client: AWSMobileClient): User? {
         if (isSignedIn(client)) {
             return User(
-                client.username
+                client.username,
+                isAdmin = isSignInUserAdmin(client)
             )
         }
         return null
@@ -134,5 +149,10 @@ class Authentication(
     fun signOut() {
         getClient().signOut()
         userManager.closeUserSession()
+    }
+
+    companion object {
+        private const val CLAIM_COGNITO_GROUP = "cognito:groups"
+        private const val COGNITO_GROUP_ADMINS = "AdminsGroup"
     }
 }

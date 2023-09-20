@@ -63,11 +63,13 @@ class HomeActivity : UserSessionActivity() {
                         is HomeEvent.NavigateToSettings -> {
                             launchSettingsActivity()
                         }
+
                         is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                         is HomeEvent.NavigateToLogin -> {
                             launchLoginActivity()
                             finish()
                         }
+
                         is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
                         is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
                         is HomeEvent.NavigateToRequestDetails -> launchRequestDetailsActivity(event.requestId)
@@ -118,7 +120,10 @@ fun HomeScreen(
             )
         },
         drawerContent = {
-            DrawerContent(onMenuItemClick = { item -> model.menuItemClicked(item) })
+            DrawerContent(
+                onMenuItemClick = { item -> model.menuItemClicked(item) },
+                isAuditLogAvailable = state.isAuditLogAvailable
+            )
         },
         floatingActionButton = {
             if (state.currentTab == Tab.VISITS) {
@@ -152,6 +157,7 @@ fun HomeScreen(
                     onDismissDialog = model::logoutDialogDismissed,
                     onLogoutClicked = model::logout
                 )
+
                 state.infoDialog != null -> InfoDialog(
                     title = state.infoDialog.title,
                     message = state.infoDialog.message,

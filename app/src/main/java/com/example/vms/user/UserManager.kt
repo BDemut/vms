@@ -3,6 +3,7 @@ package com.example.vms.user
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -58,6 +59,7 @@ class UserManager(
     private suspend fun storeUser(user: User) {
         dataStore.edit {
             it[USER_EMAIL] = user.email
+            it[IS_USER_ADMIN] = user.isAdmin
         }
     }
 
@@ -78,7 +80,8 @@ class UserManager(
     private suspend fun tryRestoreUser(): User? {
         return dataStore.data.map {
             val userEmail = it[USER_EMAIL] as String
-            User(userEmail)
+            val isAdmin = it[IS_USER_ADMIN]
+            User(email = userEmail, isAdmin = isAdmin ?: false)
         }.firstOrNull()
     }
 
@@ -100,6 +103,7 @@ class UserManager(
 
     companion object {
         val USER_EMAIL = stringPreferencesKey("user_email")
+        val IS_USER_ADMIN = booleanPreferencesKey("is_user_admin")
     }
 }
 

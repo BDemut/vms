@@ -42,6 +42,7 @@ class HomeViewModel(
             isLogoutDialogShowing = false,
             infoDialog = null,
             signInUserName = signInUser.email,
+            isAuditLogAvailable = signInUser.isAdmin
         )
     )
     private val _events: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
