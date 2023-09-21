@@ -31,8 +31,7 @@ class Authentication(
                 initAWSMobileClient()
             }
         }
-        Log.d("Authentication", accessToken())
-        isSignInUserAdmin(_client!!)
+        //Log.d("Authentication", accessToken())
     }
 
     private fun getClient(): AWSMobileClient {
