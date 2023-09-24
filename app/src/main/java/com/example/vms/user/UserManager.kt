@@ -3,6 +3,7 @@ package com.example.vms.user
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -40,8 +41,13 @@ class UserManager(
     private val storeScope = CoroutineScope(Dispatchers.IO)
     private val mutex = Mutex()
 
-    suspend fun startUserSession(userEmail: String) {
-        val user = userProvider.getUser() ?: User(email = userEmail)
+    suspend fun startUserSession(cognitoUser: User) {
+        val backendUser = userProvider.getUser()
+        val user = User(
+            email = backendUser?.email ?: cognitoUser.email,
+            name = backendUser?.name ?: cognitoUser.name,
+            isAdmin = backendUser?.isAdmin ?: cognitoUser.isAdmin
+        )
         _userComponent = createUserComponent(user)
         storeScope.launch {
             storeUser(user)
@@ -59,6 +65,7 @@ class UserManager(
         dataStore.edit {
             it[USER_EMAIL] = user.email
             user.name?.let { name -> it[USER_NAME] = name }
+            it[IS_USER_ADMIN] = user.isAdmin
         }
     }
 
@@ -82,7 +89,8 @@ class UserManager(
             val userName = if (it.contains(USER_NAME)) {
                 it[USER_NAME] as String
             } else null
-            User(userEmail, userName)
+            val isAdmin = it[IS_USER_ADMIN]
+            User(email = userEmail, name = userName, isAdmin = isAdmin ?: false)
         }.firstOrNull()
     }
 
@@ -105,6 +113,7 @@ class UserManager(
     companion object {
         val USER_EMAIL = stringPreferencesKey("user_email")
         val USER_NAME = stringPreferencesKey("user_name")
+        val IS_USER_ADMIN = booleanPreferencesKey("is_user_admin")
     }
 }
 

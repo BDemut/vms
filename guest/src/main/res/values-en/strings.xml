@@ -6,7 +6,7 @@
     <string name="phone_number_placeholder">Phone number</string>
     <string name="visit_title_placeholder">Visit title</string>
     <string name="submit_button_labebl">SUBMIT</string>
-    <string name="host_name_placeholder">Select host</string>
+    <string name="host_email_placeholder">Your host\'s email</string>
     <string name="awaiting_host_description">Please wait\nWe notified the host about your arrival</string>
     <string name="visit_pending_description">Please wait\nWe requested your meeting</string>
     <string name="visit_accepted_description">The host has accepted your meeting\nPlease wait</string>

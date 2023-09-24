@@ -1,6 +1,5 @@
 package com.example.vms.home
 
-import androidx.annotation.StringRes
 import androidx.paging.PagingData
 import com.example.vms.home.requests.Request
 import com.example.vms.home.visits.Visit
@@ -16,4 +15,5 @@ data class HomeState(
     val isLogoutDialogShowing: Boolean,
     val infoDialog: InfoDialog?,
     val signInUser: User,
+    val isAuditLogAvailable: Boolean
 )

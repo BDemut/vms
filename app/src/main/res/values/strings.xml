@@ -48,7 +48,6 @@
         <item quantity="one">%d guest</item>
         <item quantity="other">%d guests</item>
     </plurals>
-    <string name="visit_details_change_host">Change the host</string>
     <string name="visit_details_cancel_visit">Cancel the visit</string>
     <string name="error_icon_content_description">No data</string>
     <string name="reload">Reload</string>
@@ -72,9 +71,9 @@
     <string name="generate_button">Generate</string>
     <string name="generation_failed_snackbar">Generation failed</string>
     <string name="generation_succeed_dialog_title">Generation completed successfully!</string>
-    <string name="generation_succeed_dialog_text">An e-mail was sent to %1$s with a link to the file for download</string>
+    <string name="generation_succeed_dialog_text">An e-mail was sent to %1$s with a file</string>
     <string name="request_accept_success_title">Request accepted!</string>
-    <string name="request_accept_decline_failure">An error ocurred processing your request, please try again!</string>
+    <string name="request_accept_decline_failure">An error occurred processing your request, please try again!</string>
     <string name="ok">Ok</string>
     <string name="request_accept_success_message">Please meet your guest at the door!</string>
 </resources>

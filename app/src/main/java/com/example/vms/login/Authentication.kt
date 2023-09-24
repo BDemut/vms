@@ -5,7 +5,8 @@ import android.util.Log
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.UserStateDetails
-import com.example.vms.user.UserManager
+import com.auth0.android.jwt.JWT
+import com.example.vms.user.User
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -28,6 +29,7 @@ class Authentication(
                 initAWSMobileClient()
             }
         }
+        //Log.d("Authentication", accessToken())
     }
 
     private fun getClient(): AWSMobileClient {
@@ -39,9 +41,15 @@ class Authentication(
         return _client!!
     }
 
-    fun accessToken(): String = getClient().tokens.idToken.tokenString
+    fun getUser(): User? = getUser(getClient())
 
-    fun getUserEmail(): String = getClient().username
+    private fun accessToken(client: AWSMobileClient): String {
+        return client.tokens.idToken.tokenString
+    }
+
+    fun accessToken(): String {
+        return accessToken(getClient())
+    }
 
     private suspend fun initAWSMobileClient() {
         val client = AWSMobileClient.getInstance()
@@ -95,12 +103,29 @@ class Authentication(
         }
     }
 
+    private fun isSignInUserAdmin(client: AWSMobileClient): Boolean {
+        val accessToken = accessToken(client)
+        val jwt = JWT(accessToken)
+        return jwt.getClaim(CLAIM_COGNITO_GROUP).asArray(String::class.java)
+            .contains(COGNITO_GROUP_ADMINS)
+    }
+
     fun isSignedIn(): Boolean {
         return getClient().isSignedIn
     }
 
     private fun isSignedIn(client: AWSMobileClient): Boolean {
         return client.isSignedIn
+    }
+
+    private fun getUser(client: AWSMobileClient): User? {
+        if (isSignedIn(client)) {
+            return User(
+                email = client.username,
+                isAdmin = isSignInUserAdmin(client)
+            )
+        }
+        return null
     }
 
     fun currentUserState(): UserStateDetails {
@@ -119,5 +144,10 @@ class Authentication(
 
     fun signOut() {
         getClient().signOut()
+    }
+
+    companion object {
+        private const val CLAIM_COGNITO_GROUP = "cognito:groups"
+        private const val COGNITO_GROUP_ADMINS = "AdminsGroup"
     }
 }

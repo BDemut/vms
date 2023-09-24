@@ -32,7 +32,6 @@ import com.example.vms.R
 fun TopBar(
     onDiscardClick: () -> Unit,
     onEditClick: () -> Unit,
-    onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
     isMoreOptionsShowing: Boolean,
     isEditButtonShowing: Boolean,
@@ -56,10 +55,6 @@ fun TopBar(
                     MoreOptionsDropdownMenu(
                         expanded = showMoreOptionsDropdownMenu,
                         onDismissRequest = { showMoreOptionsDropdownMenu = false },
-                        onChangeHostClick = {
-                            showMoreOptionsDropdownMenu = false
-                            onChangeHostClick()
-                        },
                         onCancelVisitClick = {
                             showMoreOptionsDropdownMenu = false
                             onCancelVisitClick()
@@ -120,13 +115,9 @@ fun MoreOptionsButton(
 fun MoreOptionsDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    onChangeHostClick: () -> Unit,
     onCancelVisitClick: () -> Unit,
     ) {
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest) {
-        DropdownMenuItem(onClick = onChangeHostClick) {
-            Text(text = stringResource(id = R.string.visit_details_change_host))
-        }
         DropdownMenuItem(onClick = onCancelVisitClick) {
             Text(text = stringResource(id = R.string.visit_details_cancel_visit))
         }
@@ -139,7 +130,6 @@ fun PreviewTopBar() {
     TopBar(
         onDiscardClick = {},
         onEditClick = {},
-        onChangeHostClick = {},
         onCancelVisitClick = {},
         isMoreOptionsShowing = true,
         isEditButtonShowing = true,

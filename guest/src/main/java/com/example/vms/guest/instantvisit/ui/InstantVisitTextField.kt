@@ -14,7 +14,8 @@ fun InstantVisitTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    enabled: Boolean = true
 ) {
     OutlinedTextField(
         modifier = Modifier.width(CONTENT_WIDTH),
@@ -22,6 +23,7 @@ fun InstantVisitTextField(
         onValueChange = onValueChange,
         placeholder = { Text(placeholder) },
         keyboardOptions = keyboardOptions,
-        readOnly = readOnly
+        readOnly = readOnly,
+        enabled = enabled
     )
 }

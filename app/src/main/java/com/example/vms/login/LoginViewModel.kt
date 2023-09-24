@@ -54,7 +54,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             this@LoginViewModel.state.update { it.copy(isLoading = true) }
             val signInResult = authentication.signIn(state.username, state.password)
             if (signInResult is Authentication.SignInResult.Success) {
-                userManager.startUserSession(authentication.getUserEmail())
+                userManager.startUserSession(authentication.getUser()!!)
             }
             this@LoginViewModel.state.update { it.copy(isLoading = false) }
             handleSignInResult(signInResult)

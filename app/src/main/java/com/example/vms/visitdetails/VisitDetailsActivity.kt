@@ -79,7 +79,18 @@ class VisitDetailsActivity : ComponentActivity() {
 fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val scaffoldState = rememberScaffoldState()
-    Scaffold(scaffoldState = scaffoldState) {
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopBar(
+                onDiscardClick = { viewModel.onDiscardButtonClicked() },
+                onEditClick = { viewModel.onEditButtonClicked() },
+                onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
+                isMoreOptionsShowing = state.isMoreOptionsShowing,
+                isEditButtonShowing = state.isEditButtonShowing,
+            )
+        }
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,34 +99,21 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
             if (state.isLoading) {
                 LoadingView()
             } else {
-                Scaffold(
-                    topBar = {
-                        TopBar(
-                            onDiscardClick = { viewModel.onDiscardButtonClicked() },
-                            onEditClick = { viewModel.onEditButtonClicked() },
-                            onChangeHostClick = { viewModel.onChangeHostButtonClicked() },
-                            onCancelVisitClick = { viewModel.onCancelVisitButtonClicked() },
-                            isMoreOptionsShowing = state.isMoreOptionsShowing,
-                            isEditButtonShowing = state.isEditButtonShowing,
-                        )
-                    }
-                ) {
-                    VisitDetailsContent(
-                        modifier = Modifier.padding(it),
-                        visit = state.visit
+                VisitDetailsContent(
+                    modifier = Modifier.padding(it),
+                    visit = state.visit
+                )
+                if (state.isCancelVisitDialogShowing) {
+                    CancelVisitDialog(
+                        onConfirm = { viewModel.onCancelVisitDialogConfirmed() },
+                        onDismiss = { viewModel.onCancelVisitDialogDismissed() },
                     )
-                    if (state.isCancelVisitDialogShowing) {
-                        CancelVisitDialog(
-                            onConfirm = { viewModel.onCancelVisitDialogConfirmed() },
-                            onDismiss = { viewModel.onCancelVisitDialogDismissed() },
-                        )
-                    }
-                    if (state.isCancelingFailedSnackbarShowing) {
-                        CancelingFailedSnackbar(
-                            onDismiss = { viewModel.dismissCancelingFailedSnackbar() },
-                            snackbarHostState = scaffoldState.snackbarHostState
-                        )
-                    }
+                }
+                if (state.isCancelingFailedSnackbarShowing) {
+                    CancelingFailedSnackbar(
+                        onDismiss = { viewModel.dismissCancelingFailedSnackbar() },
+                        snackbarHostState = scaffoldState.snackbarHostState
+                    )
                 }
             }
         }

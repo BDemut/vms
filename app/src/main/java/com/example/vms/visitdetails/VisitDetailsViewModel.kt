@@ -33,8 +33,8 @@ class VisitDetailsViewModel(
         VisitDetailsState(
             isLoading = true,
             visit = dummyVisit,
-            isMoreOptionsShowing = dummyVisit.host == signInUser,
-            isEditButtonShowing = dummyVisit.host == signInUser,
+            isMoreOptionsShowing = false,
+            isEditButtonShowing = false,
             isCancelVisitDialogShowing = false,
             isCancelingFailedSnackbarShowing = false
         )
@@ -46,8 +46,8 @@ class VisitDetailsViewModel(
             it.copy(
                 isLoading = false,
                 visit = visit,
-                isMoreOptionsShowing = visit.host == signInUser && !visit.isCancelled,
-                isEditButtonShowing = visit.host == signInUser && !visit.isCancelled,
+                isMoreOptionsShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin),
+                isEditButtonShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin),
             )
         }
     }
@@ -62,10 +62,6 @@ class VisitDetailsViewModel(
         viewModelScope.launch {
             _events.emit(VisitDetailsEvent.NavigateToEditVisit(visitId))
         }
-    }
-
-    fun onChangeHostButtonClicked() {
-
     }
 
     fun onCancelVisitButtonClicked() {
