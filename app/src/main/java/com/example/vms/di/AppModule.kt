@@ -4,8 +4,9 @@ import android.content.Context
 import com.example.vms.login.Authentication
 import com.example.vms.networking.AuthHeaderInterceptor
 import com.example.vms.networking.RetrofitFactory
-import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.api.Client
 import com.example.vms.user.UserManager
+import com.example.vms.user.UserProvider
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -24,15 +25,15 @@ class AppModule(val context: Context) {
     @Singleton
     fun provideUserManager(
         userComponentBuilder: UserComponent.Builder,
+        userProvider: UserProvider,
         context: Context
-    ): UserManager = UserManager(userComponentBuilder, context)
+    ): UserManager = UserManager(userComponentBuilder, userProvider, context)
 
     @Provides
     @Singleton
     fun provideAuthentication(
-        context: Context,
-        userManager: UserManager
-    ) = Authentication(context, userManager)
+        context: Context
+    ) = Authentication(context)
 
     @Provides
     @Singleton
@@ -47,5 +48,9 @@ class AppModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideApi(retrofit: Retrofit) = retrofit.create(VisitsClient::class.java)
+    fun provideApi(retrofit: Retrofit) = retrofit.create(Client::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserProvider(client: Client) = UserProvider(client)
 }

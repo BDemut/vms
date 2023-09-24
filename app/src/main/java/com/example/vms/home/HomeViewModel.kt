@@ -15,6 +15,7 @@ import com.example.vms.login.Authentication
 import com.example.vms.repository.VisitRepository
 import com.example.vms.ui.InfoDialog
 import com.example.vms.user.User
+import com.example.vms.user.UserManager
 import com.example.vms.userComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,6 +33,7 @@ import javax.inject.Named
 class HomeViewModel(
     private val visitRepository: VisitRepository,
     private val authentication: Authentication,
+    private val userManager: UserManager,
     signInUser: User
 ) : ViewModel() {
     val state = MutableStateFlow(
@@ -41,7 +43,7 @@ class HomeViewModel(
             requests = emptyFlow(),
             isLogoutDialogShowing = false,
             infoDialog = null,
-            signInUserName = signInUser.email,
+            signInUser = signInUser,
             isAuditLogAvailable = signInUser.isAdmin
         )
     )
@@ -113,6 +115,7 @@ class HomeViewModel(
     fun logout() {
         viewModelScope.launch {
             authentication.signOut()
+            userManager.closeUserSession()
             _events.emit(HomeEvent.NavigateToLogin)
         }
     }
@@ -190,6 +193,9 @@ class HomeViewModel(
         @Inject
         lateinit var authentication: Authentication
 
+        @Inject
+        lateinit var userManager: UserManager
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
@@ -201,6 +207,7 @@ class HomeViewModel(
             return HomeViewModel(
                 visitRepository = visitRepository,
                 authentication = authentication,
+                userManager = userManager,
                 signInUser = signInUser
             ) as T
         }

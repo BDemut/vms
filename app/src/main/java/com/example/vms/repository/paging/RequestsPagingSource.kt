@@ -4,10 +4,10 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.vms.model.Request
 import com.example.vms.model.asModelRequest
-import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.api.Client
 
 class RequestsPagingSource(
-    private val api: VisitsClient
+    private val api: Client
 ) : PagingSource<String, Request>() {
     override fun getRefreshKey(state: PagingState<String, Request>): String? {
         return null

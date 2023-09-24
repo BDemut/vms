@@ -5,13 +5,13 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.vms.model.Visit
 import com.example.vms.model.asModelVisit
-import com.example.vms.repository.api.VisitsClient
+import com.example.vms.repository.api.Client
 
 /**
  * Created by mśmiech on 08.09.2023.
  */
 class VisitsPagingSource(
-    private val api: VisitsClient
+    private val api: Client
 ) : PagingSource<String, Visit>() {
     override fun getRefreshKey(state: PagingState<String, Visit>): String? {
         return null

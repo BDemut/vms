@@ -7,6 +7,7 @@ import com.amazonaws.mobile.client.UserState
 import com.amazonaws.services.cognitoidentityprovider.model.NotAuthorizedException
 import com.example.vms.R
 import com.example.vms.appComponent
+import com.example.vms.user.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,6 +36,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     @Inject
     lateinit var authentication: Authentication
+    @Inject
+    lateinit var userManager: UserManager
 
     init {
         app.appComponent().inject(this)
@@ -50,6 +53,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             }
             this@LoginViewModel.state.update { it.copy(isLoading = true) }
             val signInResult = authentication.signIn(state.username, state.password)
+            if (signInResult is Authentication.SignInResult.Success) {
+                userManager.startUserSession(authentication.getUser()!!)
+            }
             this@LoginViewModel.state.update { it.copy(isLoading = false) }
             handleSignInResult(signInResult)
         }

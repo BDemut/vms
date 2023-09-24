@@ -23,6 +23,7 @@ import kotlinx.coroutines.sync.withLock
  */
 class UserManager(
     private val userComponentBuilder: UserComponent.Builder,
+    private val userProvider: UserProvider,
     context: Context
 ) {
     private var _userComponent: UserComponent? = null
@@ -40,14 +41,18 @@ class UserManager(
     private val storeScope = CoroutineScope(Dispatchers.IO)
     private val mutex = Mutex()
 
-    fun startUserSession(user: User) {
+    suspend fun startUserSession(cognitoUser: User) {
+        val backendUser = userProvider.getUser()
+        val user = User(
+            email = backendUser?.email ?: cognitoUser.email,
+            name = backendUser?.name ?: cognitoUser.name,
+            isAdmin = backendUser?.isAdmin ?: cognitoUser.isAdmin
+        )
         _userComponent = createUserComponent(user)
         storeScope.launch {
             storeUser(user)
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
-        }
+        _userComponent?.getRegisterFCMTokenUseCase()?.invoke()
     }
 
     private fun createUserComponent(user: User): UserComponent {
@@ -59,6 +64,7 @@ class UserManager(
     private suspend fun storeUser(user: User) {
         dataStore.edit {
             it[USER_EMAIL] = user.email
+            user.name?.let { name -> it[USER_NAME] = name }
             it[IS_USER_ADMIN] = user.isAdmin
         }
     }
@@ -80,8 +86,11 @@ class UserManager(
     private suspend fun tryRestoreUser(): User? {
         return dataStore.data.map {
             val userEmail = it[USER_EMAIL] as String
+            val userName = if (it.contains(USER_NAME)) {
+                it[USER_NAME] as String
+            } else null
             val isAdmin = it[IS_USER_ADMIN]
-            User(email = userEmail, isAdmin = isAdmin ?: false)
+            User(email = userEmail, name = userName, isAdmin = isAdmin ?: false)
         }.firstOrNull()
     }
 
@@ -103,6 +112,7 @@ class UserManager(
 
     companion object {
         val USER_EMAIL = stringPreferencesKey("user_email")
+        val USER_NAME = stringPreferencesKey("user_name")
         val IS_USER_ADMIN = booleanPreferencesKey("is_user_admin")
     }
 }
