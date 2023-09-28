@@ -20,10 +20,11 @@ import java.time.LocalDateTime
 
 @Composable
 fun VisitDetailsContent(
+    modifier: Modifier = Modifier,
     visit: Visit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Row(
             modifier = Modifier
@@ -52,7 +53,7 @@ fun VisitDetailsContent(
 @Preview(showBackground = true)
 @Composable
 fun PreviewVisitDetailsContent() {
-    VisitDetailsContent(testVisit)
+    VisitDetailsContent(visit = testVisit)
 }
 
 private val testGuests = listOf<Guest>(

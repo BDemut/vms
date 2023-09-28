@@ -64,4 +64,7 @@ interface Client {
 
     @GET("/prod/me")
     suspend fun userData(): User
+
+    @POST("/prod/me/requestAuditLog")
+    suspend fun requestAuditLog(@Body body: RequestAuditLogBody): Response<ResponseBody>
 }

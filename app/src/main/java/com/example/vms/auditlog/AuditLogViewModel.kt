@@ -31,9 +31,9 @@ class AuditLogViewModel(
         AuditLogState(
             isProcessing = false,
             startDate = LocalDate.now().minusDays(1),
-            startTime = LocalTime.now(),
+            startTime = LocalTime.now().withSecond(0).withNano(0),
             endDate = LocalDate.now(),
-            endTime = LocalTime.now(),
+            endTime = LocalTime.now().withSecond(0).withNano(0),
             isGenerationFailedSnackbarShowing = false,
             isGenerationSucceedDialogShowing = false,
             signInUserEmail = signInUser.email
