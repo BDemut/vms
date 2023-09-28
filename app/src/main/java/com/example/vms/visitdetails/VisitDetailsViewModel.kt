@@ -46,8 +46,8 @@ class VisitDetailsViewModel(
             it.copy(
                 isLoading = false,
                 visit = visit,
-                isMoreOptionsShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin),
-                isEditButtonShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin),
+                isMoreOptionsShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin == true),
+                isEditButtonShowing = !visit.isCancelled && (visit.host.email == signInUser.email || signInUser.isAdmin == true),
             )
         }
     }

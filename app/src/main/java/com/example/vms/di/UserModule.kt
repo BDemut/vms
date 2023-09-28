@@ -26,7 +26,7 @@ class UserModule(private val _signInUser: User) {
     fun getVisitRepository(api: Client): VisitRepository = VisitRepositoryImpl(api)
 
     @Provides
-    fun provideGenerateAuditLogUseCase() = GenerateAuditLogUseCase()
+    fun provideGenerateAuditLogUseCase(api: Client) = GenerateAuditLogUseCase(api)
 
     @Provides
     fun provideRegisterFCMTokenUseCase(api: Client) = RegisterFCMTokenUseCase(api)

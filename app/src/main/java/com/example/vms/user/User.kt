@@ -9,5 +9,5 @@ import com.squareup.moshi.JsonClass
 data class User(
     val email: String,
     val name: String? = null,
-    val isAdmin: Boolean = false
+    val isAdmin: Boolean? = null
 )

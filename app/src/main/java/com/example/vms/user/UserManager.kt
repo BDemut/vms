@@ -65,7 +65,11 @@ class UserManager(
         dataStore.edit {
             it[USER_EMAIL] = user.email
             user.name?.let { name -> it[USER_NAME] = name }
-            it[IS_USER_ADMIN] = user.isAdmin
+            if (user.isAdmin == null) {
+                it.remove(IS_USER_ADMIN)
+            } else {
+                it[IS_USER_ADMIN] = user.isAdmin
+            }
         }
     }
 
@@ -90,7 +94,7 @@ class UserManager(
                 it[USER_NAME] as String
             } else null
             val isAdmin = it[IS_USER_ADMIN]
-            User(email = userEmail, name = userName, isAdmin = isAdmin ?: false)
+            User(email = userEmail, name = userName, isAdmin = isAdmin)
         }.firstOrNull()
     }
 
