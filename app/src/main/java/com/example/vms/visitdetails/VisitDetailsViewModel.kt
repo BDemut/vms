@@ -9,10 +9,11 @@ import com.example.vms.repository.VisitRepository
 import com.example.vms.user.User
 import com.example.vms.userComponent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -39,6 +40,12 @@ class VisitDetailsViewModel(
             isCancelingFailedSnackbarShowing = false
         )
     )
+
+    init {
+        visitRepository.visitsChangedEvents.onEach {
+            setupVisit(visitId)
+        }.launchIn(viewModelScope)
+    }
 
     private suspend fun setupVisit(visitId: String) {
         val visit = visitRepository.getVisit(visitId)
@@ -86,7 +93,6 @@ class VisitDetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val succeed = cancelVisit()
             if (succeed) {
-                delay(2000)
                 setupVisit(visitId)
             } else {
                 state.update {
