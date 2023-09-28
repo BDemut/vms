@@ -20,11 +20,10 @@ import java.time.LocalDateTime
 
 @Composable
 fun VisitDetailsContent(
-    visit: Visit,
-    modifier: Modifier = Modifier
+    visit: Visit
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Row(
             modifier = Modifier

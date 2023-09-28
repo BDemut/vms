@@ -100,7 +100,6 @@ fun VisitDetailsScreen(viewModel: VisitDetailsViewModel) {
                 LoadingView()
             } else {
                 VisitDetailsContent(
-                    modifier = Modifier.padding(it),
                     visit = state.visit
                 )
                 if (state.isCancelVisitDialogShowing) {
