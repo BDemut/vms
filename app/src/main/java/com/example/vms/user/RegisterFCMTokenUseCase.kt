@@ -1,6 +1,7 @@
 package com.example.vms.user
 
 import android.util.Log
+import com.example.vms.repository.api.AddFCMTokenBody
 import com.example.vms.repository.api.Client
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
@@ -18,8 +19,7 @@ class RegisterFCMTokenUseCase(private val api: Client) {
             return false
         }
         Log.d("asd", "token: $token")
-//        val response = api.addFCMToken(AddFCMTokenBody(token))
-//        return response.isSuccessful
-        return true
+        val response = api.addFCMToken(AddFCMTokenBody(token))
+        return response.isSuccessful
     }
 }
