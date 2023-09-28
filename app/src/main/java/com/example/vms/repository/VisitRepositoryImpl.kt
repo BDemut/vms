@@ -3,8 +3,13 @@ package com.example.vms.repository
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.example.vms.model.*
+import com.example.vms.model.Request
+import com.example.vms.model.Room
+import com.example.vms.model.Visit
+import com.example.vms.model.asModelRequest
+import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.ApiNewVisit
+import com.example.vms.repository.api.ApiVisit
 import com.example.vms.repository.api.Client
 import com.example.vms.repository.paging.RequestsPagingSource
 import com.example.vms.repository.paging.VisitsPagingSource
@@ -47,9 +52,15 @@ class VisitRepositoryImpl(val api: Client) : VisitRepository {
         return response.isSuccessful
     }
 
-    override suspend fun editVisit(visit: Visit): Boolean {
-        //TODO("Not yet implemented")
-        return false
+    override suspend fun editVisit(originalVisit: Visit, editedVisit: Visit): Boolean {
+        if (originalVisit.start != editedVisit.start || originalVisit.end != editedVisit.end) {
+            val body = ApiVisit.Timeframe(editedVisit.start, editedVisit.end)
+            val response = api.changeVisitTimeframe(editedVisit.id, body)
+            if (!response.isSuccessful) {
+                return false
+            }
+        }
+        return true
     }
 
     override suspend fun cancelVisit(visitId: String): Boolean {

@@ -67,4 +67,10 @@ interface Client {
 
     @POST("/prod/me/requestAuditLog")
     suspend fun requestAuditLog(@Body body: RequestAuditLogBody): Response<ResponseBody>
+
+    @PUT("/prod/visits/{visitId}/changeTimeframe")
+    suspend fun changeVisitTimeframe(
+        @Path("visitId") visitId: String,
+        @Body body: ApiVisit.Timeframe
+    ): Response<ResponseBody>
 }

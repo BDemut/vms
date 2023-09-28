@@ -259,7 +259,7 @@ class EditVisitViewModel(
         return if (visitId == null) {
             visitRepository.addVisit(visit)
         } else {
-            visitRepository.editVisit(visit)
+            visitRepository.editVisit(originalVisit!!, visit)
         }
     }
 
