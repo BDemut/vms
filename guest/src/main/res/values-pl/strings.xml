@@ -3,7 +3,7 @@
     <string name="welcome_text">Jeśli masz umówioną wizytę\npodaj pin</string>
     <string name="no_pin_button_text">Nie mam kodu pin</string>
     <string name="name_placeholder">Imię i nazwisko</string>
-    <string name="phone_number_placeholder">Numer telefonu</string>
+    <string name="email_placeholder">Adres email</string>
     <string name="visit_title_placeholder">Tytuł wizyty</string>
     <string name="submit_button_labebl">Zatwierdź</string>
     <string name="host_email_placeholder">Adres email hosta</string>
@@ -13,4 +13,5 @@
     <string name="visit_declined_description">The host has declined your request</string>
     <string name="visit_ignored_description">The host did not accept your request in time</string>
     <string name="back_to_home">Powrót</string>
+    <string name="instant_visit_submit_error">Coś poszło nie tak, spróbuj ponownie</string>
 </resources>

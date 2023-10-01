@@ -29,7 +29,7 @@ fun DurationChipGroup(
     ) {
         Duration.values().forEach {
             Chip(
-                name = it.value,
+                name = "${it.value}min",
                 isSelected = selectedDuration == it,
                 onDurationSelected = { onDurationSelected(it) },
             )
