@@ -9,16 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -40,30 +36,44 @@ class InstantVisitActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val state = viewModel.state.collectAsStateWithLifecycle().value
+            val scaffoldState = rememberScaffoldState()
             VisitorManagementSystemTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Content(
-                        state = state,
-                        onNameChanged = viewModel::onNameChanged,
-                        onPhoneNumberChanged = viewModel::onPhoneNumber,
-                        onVisitTitleChanged = viewModel::onVisitTitleChanged,
-                        onHostEmailChanged = viewModel::onHostEmailChanged,
-                        onDurationSelected = viewModel::onDurationSelected,
-                        onDefaultHostChecked = viewModel::onDefaultHostCheck,
-                        onVisitSubmitted = viewModel::onVisitSubmitted,
-                    )
+                    Scaffold(
+                        scaffoldState = scaffoldState
+                    ) {
+                        Content(
+                            state = state,
+                            onNameChanged = viewModel::onNameChanged,
+                            onEmailChanged = viewModel::onEmailChanged,
+                            onVisitTitleChanged = viewModel::onVisitTitleChanged,
+                            onHostEmailChanged = viewModel::onHostEmailChanged,
+                            onDurationSelected = viewModel::onDurationSelected,
+                            onDefaultHostChecked = viewModel::onDefaultHostCheck,
+                            onVisitSubmitted = viewModel::onVisitSubmitted,
+                        )
+                    }
                 }
             }
-        }
-        viewModel.submitEvent
-            .onEach {
-                finishAndRemoveTask()
-                launchSummaryActivity()
+            LaunchedEffect(Unit) {
+                viewModel.events
+                    .onEach {
+                        when (it) {
+                            is InstantVisitEvent.GoToSummary -> {
+                                finishAndRemoveTask()
+                                launchSummaryActivity()
+                            }
+                            is InstantVisitEvent.ShowErrorSnackbar -> {
+                                scaffoldState.snackbarHostState.showSnackbar(getString(it.message))
+                            }
+                        }
+                    }
+                    .launchIn(lifecycleScope)
             }
-            .launchIn(lifecycleScope)
+        }
     }
 
     private fun launchSummaryActivity() {
@@ -75,7 +85,7 @@ class InstantVisitActivity : ComponentActivity() {
 fun Content(
     state: InstantVisitState,
     onNameChanged: (String) -> Unit,
-    onPhoneNumberChanged: (String) -> Unit,
+    onEmailChanged: (String) -> Unit,
     onVisitTitleChanged: (String) -> Unit,
     onHostEmailChanged: (String) -> Unit,
     onDurationSelected: (Duration) -> Unit,
@@ -95,13 +105,12 @@ fun Content(
             placeholder = stringResource(R.string.name_placeholder)
         )
         InstantVisitTextField(
-            value = state.visit.phoneNumber,
-            onValueChange = onPhoneNumberChanged,
-            placeholder = stringResource(R.string.phone_number_placeholder),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            value = state.visit.email,
+            onValueChange = onEmailChanged,
+            placeholder = stringResource(R.string.email_placeholder),
         )
         InstantVisitTextField(
-            value = state.visit.visitTitle,
+            value = state.visit.title,
             onValueChange = onVisitTitleChanged,
             placeholder = stringResource(R.string.visit_title_placeholder)
         )

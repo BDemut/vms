@@ -1,8 +1,11 @@
 package com.example.vms.guest.instantvisit
 
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vms.R
+import com.example.vms.guest.api.apiClient
+import com.example.vms.guest.api.model.ApiGuest
+import com.example.vms.guest.api.model.ApiRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -15,8 +18,8 @@ class InstantVisitViewModel : ViewModel() {
         InstantVisitState(
             visit = InstantVisit(
                 name = "",
-                phoneNumber = "",
-                visitTitle = "",
+                email = "",
+                title = "",
                 hostEmail = DEFAULT_HOST,
                 duration = Duration.SHORT
             ),
@@ -25,21 +28,19 @@ class InstantVisitViewModel : ViewModel() {
     )
     val state: StateFlow<InstantVisitState> = _state
 
-    private val _submitEvent = MutableSharedFlow<Unit>()
-    val submitEvent: SharedFlow<Unit> = _submitEvent
+    private val _events = MutableSharedFlow<InstantVisitEvent>()
+    val events: SharedFlow<InstantVisitEvent> = _events
 
     fun onNameChanged(name: String) {
         _state.update { it.copy(visit = it.visit.copy(name = name)) }
     }
 
-    fun onPhoneNumber(phoneNumber: String) {
-        if (phoneNumber.isDigitsOnly()) {
-            _state.update { it.copy(visit = it.visit.copy(phoneNumber = phoneNumber)) }
-        }
+    fun onEmailChanged(email: String) {
+        _state.update { it.copy(visit = it.visit.copy(email = email)) }
     }
 
     fun onVisitTitleChanged(title: String) {
-        _state.update { it.copy(visit = it.visit.copy(visitTitle = title)) }
+        _state.update { it.copy(visit = it.visit.copy(title = title)) }
     }
 
     fun onHostEmailChanged(hostEmail: String) {
@@ -70,9 +71,23 @@ class InstantVisitViewModel : ViewModel() {
 
     fun onVisitSubmitted() {
         viewModelScope.launch {
-            _submitEvent.emit(Unit)
+            if (apiClient.requestVisit(_state.value.visit.asApiRequest()).isSuccessful) {
+                _events.emit(InstantVisitEvent.GoToSummary)
+            } else {
+                _events.emit(InstantVisitEvent.ShowErrorSnackbar(R.string.instant_visit_submit_error))
+            }
         }
     }
+
+    private fun InstantVisit.asApiRequest() = ApiRequest(
+        duration = duration.value,
+        hostEmail = hostEmail,
+        guest = ApiGuest(
+            name = name,
+            email = email
+        ),
+        title = title
+    )
 }
 
 const val DEFAULT_HOST = "default"
@@ -84,14 +99,14 @@ data class InstantVisitState(
 
 data class InstantVisit(
     val name: String,
-    val phoneNumber: String,
-    val visitTitle: String,
+    val email: String,
+    val title: String,
     val hostEmail: String,
     val duration: Duration,
 )
 
-enum class Duration(val value: String) {
-    SHORT("15min"),
-    MEDIUM("30min"),
-    LONG("1h")
+enum class Duration(val value: Int) {
+    SHORT(15),
+    MEDIUM(30),
+    LONG(60)
 }
