@@ -11,29 +11,15 @@ import com.example.vms.R
 
 @Composable
 fun SummaryButton(
-    button: BackButton,
+    secondsRemaining: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    when (button) {
-        BackButton.Gone -> Unit
-        is BackButton.CountDown -> {
-            Button(
-                modifier = modifier,
-                enabled = false,
-                onClick = { }
-            ) {
-                Text("${button.secondsRemaining} s...")
-            }
-        }
-
-        BackButton.Enabled -> {
-            Button(
-                modifier = modifier,
-                onClick = onClick
-            ) {
-                Text(stringResource(R.string.back_to_home).uppercase())
-            }
-        }
+    Button(
+        modifier = modifier,
+        enabled = true,
+        onClick = onClick
+    ) {
+        Text("${stringResource(R.string.back_to_home).uppercase()} $secondsRemaining s.")
     }
 }

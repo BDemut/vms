@@ -14,4 +14,5 @@
     <string name="visit_ignored_description">The host did not accept your request in time</string>
     <string name="back_to_home">Powrót</string>
     <string name="instant_visit_submit_error">Coś poszło nie tak, spróbuj ponownie</string>
+    <string name="error_incorrect_pin">Podano błędny PIN!</string>
 </resources>

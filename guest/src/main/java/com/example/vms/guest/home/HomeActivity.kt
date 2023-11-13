@@ -5,19 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,7 +23,6 @@ import com.example.vms.R
 import com.example.vms.guest.instantvisit.InstantVisitActivity
 import com.example.vms.guest.summary.SummaryActivity
 import com.example.vms.guest.summary.SummaryEntryType
-import com.example.vms.guest.ui.PinInputField
 import com.example.vms.guest.ui.theme.VisitorManagementSystemTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,6 +35,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val state = viewModel.state.collectAsStateWithLifecycle().value
+            val snackbarState = remember { SnackbarHostState() }
             VisitorManagementSystemTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -51,16 +47,36 @@ class HomeActivity : ComponentActivity() {
                         onPinChanged = { viewModel.onPinValueChanged(it) },
                         onNoPinButtonClicked = { viewModel.onNoPinButtonClicked() }
                     )
+                    if (state.isProcessing) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.5f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        SnackbarHost(hostState = snackbarState)
+                    }
                 }
             }
 
-        }
-        viewModel.events.onEach {
-            when (it) {
-                HomeEvent.ConfirmPin -> launchSummaryActivity()
-                HomeEvent.GoToInstantVisitCreator -> launchInstantVisitActivity()
+            LaunchedEffect(Unit) {
+                viewModel.events.onEach {
+                    when (it) {
+                        HomeEvent.GoToSummary -> launchSummaryActivity()
+                        HomeEvent.Error -> snackbarState.showSnackbar(getString(R.string.error_incorrect_pin))
+                        HomeEvent.GoToInstantVisitCreator -> launchInstantVisitActivity()
+                    }
+                }.launchIn(lifecycleScope)
             }
-        }.launchIn(lifecycleScope)
+
+        }
     }
 
     override fun onResume() {

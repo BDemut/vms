@@ -50,7 +50,7 @@ class SummaryActivity : ComponentActivity() {
                         )
                         SummaryButton(
                             modifier = Modifier.padding(top = 8.dp),
-                            button = state.backButton,
+                            secondsRemaining = state.secondsRemaining,
                             onClick = { viewModel.onReturnHomeClicked() }
                         )
                     }
