@@ -10,6 +10,7 @@ import com.example.vms.model.asModelRequest
 import com.example.vms.model.asModelVisit
 import com.example.vms.repository.api.ApiNewVisit
 import com.example.vms.repository.api.ApiVisit
+import com.example.vms.repository.api.ChangeVisitGuestsBody
 import com.example.vms.repository.api.Client
 import com.example.vms.repository.paging.RequestsPagingSource
 import com.example.vms.repository.paging.VisitsPagingSource
@@ -56,6 +57,14 @@ class VisitRepositoryImpl(val api: Client) : VisitRepository {
         if (originalVisit.start != editedVisit.start || originalVisit.end != editedVisit.end) {
             val body = ApiVisit.Timeframe(editedVisit.start, editedVisit.end)
             val response = api.changeVisitTimeframe(editedVisit.id, body)
+            if (!response.isSuccessful) {
+                return false
+            }
+        }
+        if (originalVisit.guests.map { it.email }.toSet() != editedVisit.guests.map { it.email }
+                .toSet()) {
+            val body = ChangeVisitGuestsBody(editedVisit.guests.map { it.email })
+            val response = api.changeVisitGuests(editedVisit.id, body)
             if (!response.isSuccessful) {
                 return false
             }

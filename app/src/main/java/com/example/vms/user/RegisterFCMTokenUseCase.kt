@@ -18,8 +18,9 @@ class RegisterFCMTokenUseCase(private val api: Client) {
             Log.e("RegisterFCMTokenUseCase", "Retrieve FCM token failed", e)
             return false
         }
-        Log.d("asd", "token: $token")
+        Log.d("RegisterFCMTokenUseCase", "token: $token")
         val response = api.addFCMToken(AddFCMTokenBody(token))
+        Log.d("RegisterFCMTokenUseCase", "response: ${response.isSuccessful}")
         return response.isSuccessful
     }
 }
