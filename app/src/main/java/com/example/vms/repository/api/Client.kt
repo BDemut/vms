@@ -19,7 +19,7 @@ interface Client {
         @Query("limit") limit: Int = 50
     ): GetVisitsResponse
 
-    @PUT("/prod/visits/{visitId}/cancelVisit")
+    @PUT("/prod/visits/{visitId}/cancel")
     suspend fun cancelVisit(@Path("visitId") visitId: String): Response<ResponseBody>
 
     @GET("/prod/visits/{visitId}")
@@ -56,21 +56,27 @@ interface Client {
     @POST("/prod/visits")
     suspend fun addVisit(@Body createVisitBody: ApiNewVisit): Response<ResponseBody>
 
-    @PUT("/prod/me/addFCMToken")
+    @PUT("/prod/me/add-fcm-token")
     suspend fun addFCMToken(@Body body: AddFCMTokenBody): Response<ResponseBody>
 
-    @PUT("/prod/me/addFCMToken")
+    @PUT("/prod/me/remove-fcm-token")
     suspend fun removeFCMToken(@Body body: RemoveFCMTokenBody): Response<ResponseBody>
 
     @GET("/prod/me")
     suspend fun userData(): User
 
-    @POST("/prod/me/requestAuditLog")
+    @POST("/prod/me/request-audit-log")
     suspend fun requestAuditLog(@Body body: RequestAuditLogBody): Response<ResponseBody>
 
-    @PUT("/prod/visits/{visitId}/changeTimeframe")
+    @PUT("/prod/visits/{visitId}/change-timeframe")
     suspend fun changeVisitTimeframe(
         @Path("visitId") visitId: String,
         @Body body: ApiVisit.Timeframe
+    ): Response<ResponseBody>
+
+    @PUT("/prod/visits/{visitId}/change-guests")
+    suspend fun changeVisitGuests(
+        @Path("visitId") visitId: String,
+        @Body body: ChangeVisitGuestsBody
     ): Response<ResponseBody>
 }
