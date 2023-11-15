@@ -14,7 +14,10 @@ import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 
 class SummaryViewModel(type: SummaryEntryType) : ViewModel() {
-    private val _state = MutableStateFlow(type.toInitState())
+    private val _state = MutableStateFlow(SummaryState(
+        description = type.toSummaryDescription(),
+        secondsRemaining = 30
+    ))
     val state: StateFlow<SummaryState> = _state
 
     private val _returnEvent = MutableSharedFlow<Unit>()
@@ -23,20 +26,14 @@ class SummaryViewModel(type: SummaryEntryType) : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
-                val button = _state.value.backButton as? BackButton.CountDown
-                button?.let {
-                    if (button.secondsRemaining == 0) {
-                        _state.update {
-                            it.copy(backButton = BackButton.Enabled)
-                        }
-                    } else {
-                        _state.update {
-                            it.copy(
-                                backButton = BackButton.CountDown(
-                                    button.secondsRemaining - 1
-                                )
-                            )
-                        }
+                val secondsRemaining = _state.value.secondsRemaining
+                if (secondsRemaining == 0) {
+                    viewModelScope.launch {
+                        _returnEvent.emit(Unit)
+                    }
+                } else {
+                    _state.update {
+                        it.copy(secondsRemaining = secondsRemaining - 1)
                     }
                 }
                 sleep(1000L)
@@ -50,16 +47,9 @@ class SummaryViewModel(type: SummaryEntryType) : ViewModel() {
         }
     }
 
-    private fun SummaryEntryType.toInitState() = when (this) {
-        SummaryEntryType.PIN_ENTERED -> SummaryState(
-            R.string.awaiting_host_description,
-            BackButton.CountDown(30)
-        )
-
-        SummaryEntryType.INSTANT_VISIT_REQUESTED -> SummaryState(
-            R.string.visit_pending_description,
-            BackButton.Gone
-        )
+    private fun SummaryEntryType.toSummaryDescription() = when (this) {
+        SummaryEntryType.PIN_ENTERED -> R.string.awaiting_host_description
+        SummaryEntryType.INSTANT_VISIT_REQUESTED -> R.string.visit_pending_description
     }
 }
 
@@ -70,11 +60,5 @@ enum class SummaryEntryType {
 
 data class SummaryState(
     @StringRes val description: Int,
-    val backButton: BackButton
+    val secondsRemaining: Int = 30
 )
-
-sealed class BackButton {
-    object Gone : BackButton()
-    object Enabled : BackButton()
-    data class CountDown(val secondsRemaining: Int) : BackButton()
-}
