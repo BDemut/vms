@@ -35,8 +35,16 @@ fun DefaultHostSection(
 
 @Composable
 @Preview
-fun DefaultHostPreview() {
+fun SelectedDefaultHostPreview() {
     MaterialTheme {
         DefaultHostSection(isSelected = true, onChecked = {})
+    }
+}
+
+@Composable
+@Preview
+fun NotSelectedDefaultHostPreview() {
+    MaterialTheme {
+        DefaultHostSection(isSelected = false, onChecked = {})
     }
 }
