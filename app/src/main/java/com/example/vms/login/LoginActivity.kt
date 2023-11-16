@@ -37,6 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -122,6 +124,12 @@ fun LoginContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = stringResource(id = R.string.app_name).replace(" ", "\n"),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h3,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         Username(
             username = state.username,
             onUsernameChange = onUsernameChange,
@@ -133,10 +141,30 @@ fun LoginContent(
             onPasswordChange = onPasswordChange,
             isPasswordValid = state.isPasswordValid
         )
-        TextButton(onClick = onLoginButtonClicked) {
-            Text(stringResource(R.string.login))
+        TextButton(
+            onClick = onLoginButtonClicked,
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
+            Text(text = stringResource(R.string.login))
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLoginContent() {
+    LoginContent(
+        state = LoginState(
+            isLoading = false,
+            username = "",
+            isUsernameValid = true,
+            password = "",
+            isPasswordValid = true
+        ),
+        {},
+        {},
+        {}
+    )
 }
 
 @Composable
