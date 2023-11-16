@@ -105,7 +105,6 @@ class HomeViewModel(
     fun menuItemClicked(item: MenuItemType) {
         viewModelScope.launch {
             when (item) {
-                MenuItemType.SETTINGS -> _events.emit(HomeEvent.NavigateToSettings)
                 MenuItemType.AUDIT_LOG -> _events.emit(HomeEvent.NavigateToAuditLog)
                 MenuItemType.LOGOUT -> state.update { it.copy(isLogoutDialogShowing = true) }
             }

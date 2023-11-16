@@ -3,7 +3,6 @@ package com.example.vms.home
 import androidx.annotation.StringRes
 
 sealed class HomeEvent {
-    object NavigateToSettings: HomeEvent()
     object NavigateToAuditLog: HomeEvent()
     object NavigateToLogin: HomeEvent()
     object NavigateToEditVisit : HomeEvent()
