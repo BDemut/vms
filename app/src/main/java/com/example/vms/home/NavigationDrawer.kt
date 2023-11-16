@@ -2,32 +2,16 @@ package com.example.vms.home
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vms.R
-
-@Composable
-fun DrawerHeader() {
-    Box(
-        modifier = Modifier
-            .width(150.dp)
-            .height(100.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Placeholder header", fontSize = 24.sp)
-    }
-}
 
 @Composable
 fun DrawerContent(
@@ -51,6 +35,15 @@ fun DrawerContent(
 }
 
 @Composable
+fun DrawerHeader() {
+    Text(
+        text = stringResource(id = R.string.app_name),
+        fontSize = 24.sp,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+    )
+}
+
+@Composable
 private fun MenuItem(
     type: MenuItemType,
     onMenuItemClick: (MenuItemType) -> Unit
@@ -58,7 +51,7 @@ private fun MenuItem(
     Text(
         modifier = Modifier
             .clickable { onMenuItemClick(type) }
-            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
             .fillMaxWidth(),
         text = stringResource(type.description)
     )
