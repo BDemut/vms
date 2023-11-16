@@ -37,7 +37,9 @@ fun DefaultHostSection(
 @Preview
 fun SelectedDefaultHostPreview() {
     MaterialTheme {
-        DefaultHostSection(isSelected = true, onChecked = {})
+        Surface(color = MaterialTheme.colors.background) {
+            DefaultHostSection(isSelected = true, onChecked = {})
+        }
     }
 }
 
@@ -45,6 +47,8 @@ fun SelectedDefaultHostPreview() {
 @Preview
 fun NotSelectedDefaultHostPreview() {
     MaterialTheme {
-        DefaultHostSection(isSelected = false, onChecked = {})
+        Surface(color = MaterialTheme.colors.background) {
+            DefaultHostSection(isSelected = false, onChecked = {})
+        }
     }
 }
