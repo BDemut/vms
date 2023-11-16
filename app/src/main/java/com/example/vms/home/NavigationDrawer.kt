@@ -36,10 +36,6 @@ fun DrawerContent(
 ) {
     DrawerHeader()
     Column {
-        MenuItem(
-            type = MenuItemType.SETTINGS,
-            onMenuItemClick = onMenuItemClick
-        )
         if (isAuditLogAvailable) {
             MenuItem(
                 type = MenuItemType.AUDIT_LOG,
@@ -69,7 +65,6 @@ private fun MenuItem(
 }
 
 enum class MenuItemType(@StringRes val description: Int) {
-    SETTINGS(R.string.settings_menu_item),
     AUDIT_LOG(R.string.audit_log_menu_item),
     LOGOUT(R.string.logout_menu_item)
 }

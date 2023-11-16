@@ -35,7 +35,6 @@ import com.example.vms.home.requests.RequestsTab
 import com.example.vms.home.visits.VisitsTab
 import com.example.vms.login.LoginActivity
 import com.example.vms.requestdetails.RequestDetailsActivity
-import com.example.vms.settings.SettingsActivity
 import com.example.vms.ui.InfoDialog
 import com.example.vms.ui.theme.VisitorManagementSystemTheme
 import com.example.vms.user.User
@@ -61,16 +60,11 @@ class HomeActivity : UserSessionActivity() {
             LaunchedEffect(Unit) {
                 homeViewModel.events.onEach { event ->
                     when (event) {
-                        is HomeEvent.NavigateToSettings -> {
-                            launchSettingsActivity()
-                        }
-
                         is HomeEvent.NavigateToAuditLog -> launchAuditLogActivity()
                         is HomeEvent.NavigateToLogin -> {
                             launchLoginActivity()
                             finish()
                         }
-
                         is HomeEvent.NavigateToEditVisit -> launchEditVisitActivity()
                         is HomeEvent.NavigateToVisitDetails -> launchVisitDetailsActivity(event.visitId)
                         is HomeEvent.NavigateToRequestDetails -> launchRequestDetailsActivity(event.requestId)
@@ -88,8 +82,6 @@ class HomeActivity : UserSessionActivity() {
         homeViewModel.refreshVisits()
         homeViewModel.refreshRequests()
     }
-
-    private fun launchSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
 
     private fun launchAuditLogActivity() = startActivity(Intent(this, AuditLogActivity::class.java))
 
