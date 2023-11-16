@@ -27,6 +27,6 @@ fun DefaultHostSection(
         horizontalArrangement = Arrangement.Start
     ) {
         Checkbox(checked = isSelected, onCheckedChange = onChecked)
-        Text("Default host")
+        Text(stringResource(R.string.default_host))
     }
 }

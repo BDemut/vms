@@ -90,7 +90,7 @@ class InstantVisitViewModel : ViewModel() {
     )
 }
 
-const val DEFAULT_HOST = "default"
+const val DEFAULT_HOST = "recepcja"
 
 data class InstantVisitState(
     val visit: InstantVisit,

@@ -31,6 +31,7 @@ class SummaryViewModel(type: SummaryEntryType) : ViewModel() {
                     viewModelScope.launch {
                         _returnEvent.emit(Unit)
                     }
+                    break
                 } else {
                     _state.update {
                         it.copy(secondsRemaining = secondsRemaining - 1)

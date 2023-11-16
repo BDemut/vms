@@ -7,12 +7,13 @@
     <string name="visit_title_placeholder">Tytuł wizyty</string>
     <string name="submit_button_labebl">Zatwierdź</string>
     <string name="host_email_placeholder">Adres email hosta</string>
-    <string name="awaiting_host_description">Please wait\nWe notified the host about your arrival</string>
-    <string name="visit_pending_description">Please wait\nWe requested your meeting</string>
+    <string name="awaiting_host_description">Proszę czekać\nPowiadomiliśmy gospodarza o twoim przybyciu</string>
+    <string name="visit_pending_description">Proszę czekać\nTwoja wizyta została zarejestrowana</string>
     <string name="visit_accepted_description">The host has accepted your meeting\nPlease wait</string>
     <string name="visit_declined_description">The host has declined your request</string>
     <string name="visit_ignored_description">The host did not accept your request in time</string>
     <string name="back_to_home">Powrót</string>
     <string name="instant_visit_submit_error">Coś poszło nie tak, spróbuj ponownie</string>
     <string name="error_incorrect_pin">Podano błędny PIN!</string>
+    <string name="default_host">Domyślny host</string>
 </resources>

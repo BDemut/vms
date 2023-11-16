@@ -15,4 +15,5 @@
     <string name="back_to_home">Back to home</string>
     <string name="instant_visit_submit_error">Oops, something went wrong ;P Please try again</string>
     <string name="error_incorrect_pin">Invalid PIN!</string>
+    <string name="default_host">Default host</string>
 </resources>
