@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.vms.R
 import com.example.vms.guest.instantvisit.CONTENT_WIDTH
+import dagger.Provides
 
 @Composable
 fun DefaultHostSection(
@@ -27,6 +29,26 @@ fun DefaultHostSection(
         horizontalArrangement = Arrangement.Start
     ) {
         Checkbox(checked = isSelected, onCheckedChange = onChecked)
-        Text("Default host")
+        Text(stringResource(R.string.default_host))
+    }
+}
+
+@Composable
+@Preview
+fun SelectedDefaultHostPreview() {
+    MaterialTheme {
+        Surface(color = MaterialTheme.colors.background) {
+            DefaultHostSection(isSelected = true, onChecked = {})
+        }
+    }
+}
+
+@Composable
+@Preview
+fun NotSelectedDefaultHostPreview() {
+    MaterialTheme {
+        Surface(color = MaterialTheme.colors.background) {
+            DefaultHostSection(isSelected = false, onChecked = {})
+        }
     }
 }
