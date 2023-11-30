@@ -1,8 +1,8 @@
 package com.example.vms.user
 
 import android.util.Log
-import com.example.vms.repository.api.RemoveFCMTokenBody
 import com.example.vms.repository.api.Client
+import com.example.vms.repository.api.RemoveFCMTokenBody
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 
@@ -18,8 +18,8 @@ class UnregisterFCMTokenUseCase(private val api: Client) {
             Log.e("RegisterFCMTokenUseCase", "Retrieve FCM token failed", e)
             return false
         }
-        Log.d("asd", "token: $token")
         val response = api.removeFCMToken(RemoveFCMTokenBody(token))
+        Log.d("UnregisterFCMTokenUseCase", "response.isSuccessful=${response.isSuccessful}")
         return response.isSuccessful
     }
 }

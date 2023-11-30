@@ -55,7 +55,9 @@ class CloudMessagingService : FirebaseMessagingService() {
                 }
             }
             FcmConstants.MessageType.VISIT_REQUESTS_CHANGED -> {
-
+                CoroutineScope(Dispatchers.Default).launch {
+                    userComponent().getVisitRepository().onVisitRequestsChanged()
+                }
             }
         }
     }

@@ -24,5 +24,7 @@ interface VisitRepository {
     suspend fun acceptRequest(requestId: String): Boolean
     suspend fun declineRequest(requestId: String): Boolean
     suspend fun onVisitsChanged()
+    suspend fun onVisitRequestsChanged()
     val visitsChangedEvents: SharedFlow<Unit>
+    val visitRequestsChangedEvents: SharedFlow<Unit>
 }

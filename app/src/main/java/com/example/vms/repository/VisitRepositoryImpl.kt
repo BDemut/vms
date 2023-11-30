@@ -22,6 +22,8 @@ import java.time.format.DateTimeFormatter
 class VisitRepositoryImpl(val api: Client) : VisitRepository {
     private val _visitsChangedEvents: MutableSharedFlow<Unit> = MutableSharedFlow()
     override val visitsChangedEvents: SharedFlow<Unit> = _visitsChangedEvents
+    private val _visitRequestsChangedEvents: MutableSharedFlow<Unit> = MutableSharedFlow()
+    override val visitRequestsChangedEvents: SharedFlow<Unit> = _visitsChangedEvents
 
     override suspend fun getVisit(id: String): Visit {
         return api.getVisit(id).asModelVisit()
@@ -114,5 +116,9 @@ class VisitRepositoryImpl(val api: Client) : VisitRepository {
 
     override suspend fun onVisitsChanged() {
         _visitsChangedEvents.emit(Unit)
+    }
+
+    override suspend fun onVisitRequestsChanged() {
+        _visitRequestsChangedEvents.emit(Unit)
     }
 }

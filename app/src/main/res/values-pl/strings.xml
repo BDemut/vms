@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Visitor Management System</string>
-    <string name="requests">Zapytania?</string>
+    <string name="requests">Zapytania</string>
     <string name="visits">Wizyty</string>
     <string name="menu_icon_content_description">ikona menu</string>
     <string name="hello">Witaj %s!</string>
